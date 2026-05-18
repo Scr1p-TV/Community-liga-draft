@@ -337,6 +337,92 @@
     <button onclick="activateAudio()">🔊 Audio aktivieren</button>
   </div>
 
+  <!-- PLAYER CARD POPUP (shown after each draft pick) -->
+  <div id="obsCardPopup" style="
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%) scale(0.8);
+    opacity:0;
+    pointer-events:none;
+    transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    z-index:30;
+  ">
+    <div style="
+      position:relative;
+      width:380px;
+      height:650px;
+      border-radius:34px;
+      overflow:hidden;
+      background:linear-gradient(160deg,#071226 0%,#0f1f3d 45%,#08111f 100%);
+      border:3px solid rgba(90,180,255,.5);
+      box-shadow:0 0 40px rgba(0,140,255,.5),0 0 100px rgba(0,180,255,.3);
+    ">
+      <!-- Glow -->
+      <div style="
+        position:absolute;inset:-40%;
+        background:radial-gradient(circle,rgba(0,180,255,.2),transparent 70%);
+        animation:spin 10s linear infinite;z-index:0;
+      "></div>
+      <!-- Sheen -->
+      <div style="
+        position:absolute;inset:0;
+        background:linear-gradient(135deg,transparent 20%,rgba(0,180,255,.1) 50%,transparent 80%);
+        z-index:1;
+      "></div>
+      <!-- Liga Logo -->
+      <img id="obsCardLiga" src="" style="
+        position:absolute;top:18px;left:50%;
+        transform:translateX(-50%);
+        width:120px;z-index:5;
+        filter:drop-shadow(0 0 10px rgba(0,180,255,.5));
+        object-fit:contain;
+      " onerror="this.style.display='none'"/>
+      <!-- Player Image -->
+      <img id="obsCardPlayer" src="" style="
+        position:absolute;bottom:155px;left:50%;
+        transform:translateX(-50%);
+        width:320px;z-index:4;
+        object-fit:contain;
+        filter:drop-shadow(0 0 16px rgba(0,180,255,.3));
+      " onerror="this.src='https://cdn.sofifa.net/players/notfound_0_120.png'"/>
+      <!-- Fade -->
+      <div style="
+        position:absolute;bottom:145px;left:0;right:0;height:60px;
+        background:linear-gradient(to bottom,transparent,rgba(6,15,28,.95));
+        z-index:5;
+      "></div>
+      <!-- Bottom Panel -->
+      <div style="
+        position:absolute;bottom:0;width:100%;
+        padding:16px 16px 20px;z-index:6;
+        background:linear-gradient(to top,rgba(0,0,0,.95),rgba(0,0,0,.05));
+        backdrop-filter:blur(10px);
+      ">
+        <div id="obsCardName" style="
+          font-family:'Bebas Neue',sans-serif;
+          font-size:44px;letter-spacing:4px;
+          color:#fff;text-align:center;
+          margin-bottom:12px;line-height:1;
+          text-shadow:0 0 20px rgba(0,160,255,.4);
+        ">NAME</div>
+        <div style="display:flex;gap:10px;">
+          <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 6px;text-align:center;">
+            <img id="obsCardNation" src="" style="width:46px;height:46px;object-fit:contain;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto;" onerror="this.style.opacity='.3'"/>
+            <span id="obsCardNationText" style="display:block;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;"></span>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 6px;text-align:center;">
+            <img id="obsCardLigaFlag" src="" style="width:46px;height:46px;object-fit:contain;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto;" onerror="this.style.opacity='.3'"/>
+            <span id="obsCardLigaText" style="display:block;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;"></span>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 6px;text-align:center;">
+            <div id="obsCardPos" style="width:46px;height:46px;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:24px;color:#facc15;margin:0 auto 6px;">?</div>
+            <span style="display:block;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Position</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- PICK FLASH -->
   <div id="pickFlash">
     <div class="flash-badge" id="flashBadge">PICK 1</div>
@@ -348,9 +434,75 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { firebaseConfig } from "./firebase-config.js";
+    import { PLAYER_DATA } from "./players.js";
 
     const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
+
+    // ── Nation/Liga code maps ──
+    const NATION_CODE = {
+      "Frankreich":"fr","England":"gb-eng","Spanien":"es","Deutschland":"de",
+      "Brasilien":"br","Argentinien":"ar","Portugal":"pt","Niederlande":"nl",
+      "Belgien":"be","Norwegen":"no","Polen":"pl","Kroatien":"hr",
+      "Dänemark":"dk","Uruguay":"uy","Kolumbien":"co","Schweiz":"ch",
+      "Österreich":"at","Türkei":"tr","Ungarn":"hu","Schottland":"gb-sct",
+      "Ägypten":"eg","Marokko":"ma","Senegal":"sn","Nigeria":"ng",
+      "Kamerun":"cm","Ghana":"gh","Elfenbeinküste":"ci","Georgien":"ge",
+      "Südkorea":"kr","Japan":"jp","USA":"us","Kanada":"ca","Ecuador":"ec",
+      "Guinea":"gn","Serbien":"rs","Slowenien":"si","Slowakei":"sk",
+      "Ukraine":"ua","Italien":"it","Mexiko":"mx","Armenien":"am",
+    };
+
+    const LIGA_FLAG = {
+      "England 1":"gb-eng","England 2":"gb-eng",
+      "Spanien 1":"es","Spanien 2":"es",
+      "Italien 1":"it","Italien 2":"it",
+      "Niederlande 1":"nl","Portugal 1":"pt",
+      "Österreich 1":"at","Belgien 1":"be",
+      "Frankreich 1":"fr","Polen 1":"pl","Schweiz 1":"ch",
+      "Rest der Welt":"un",
+    };
+
+    // ── Show player card popup ──
+    function showObsCard(playerName) {
+      const data   = PLAYER_DATA ? PLAYER_DATA[playerName] : null;
+      const popup  = document.getElementById("obsCardPopup");
+
+      document.getElementById("obsCardName").textContent = playerName.toUpperCase();
+
+      if (data) {
+        document.getElementById("obsCardPlayer").src =
+          "https://cdn.sofifa.net/players/" + data.eaId + "/25_120.png";
+        const nCode = NATION_CODE[data.nation] || "un";
+        document.getElementById("obsCardNation").src     = "https://flagcdn.com/w80/" + nCode + ".png";
+        document.getElementById("obsCardNationText").textContent = data.nation.toUpperCase();
+        const lCode = LIGA_FLAG[data.liga] || "un";
+        document.getElementById("obsCardLigaFlag").src   = "https://flagcdn.com/w80/" + lCode + ".png";
+        document.getElementById("obsCardLigaText").textContent  = data.liga.toUpperCase();
+        document.getElementById("obsCardPos").textContent = data.pos;
+        document.getElementById("obsCardLiga").src =
+          "https://upload.wikimedia.org/wikipedia/de/thumb/0/04/UFL_video_game_logo.png/240px-UFL_video_game_logo.png";
+      } else {
+        document.getElementById("obsCardPlayer").src = "https://cdn.sofifa.net/players/notfound_0_120.png";
+        document.getElementById("obsCardNation").src = "";
+        document.getElementById("obsCardNationText").textContent = "";
+        document.getElementById("obsCardLigaFlag").src = "";
+        document.getElementById("obsCardLigaText").textContent = "";
+        document.getElementById("obsCardPos").textContent = "?";
+        document.getElementById("obsCardLiga").src = "";
+      }
+
+      // Animate in
+      popup.style.opacity = "1";
+      popup.style.transform = "translate(-50%,-50%) scale(1)";
+      popup.style.pointerEvents = "none";
+
+      // Auto hide after 5 seconds
+      setTimeout(function() {
+        popup.style.opacity = "0";
+        popup.style.transform = "translate(-50%,-50%) scale(0.8)";
+      }, 5000);
+    }
 
     // ── State ──
     let teams        = [];
@@ -424,6 +576,8 @@
         const newest = all[all.length - 1];
         if (newest) {
           showFlash("PICK " + newest.num, newest.team, newest.player, "type-draft");
+          // Show player card popup
+          setTimeout(function() { showObsCard(newest.player); }, 500);
           // NFL-style announcement
           const announcement =
             "Mit dem " + ordinal(newest.num) + " Pick — " +
@@ -559,119 +713,82 @@
     }
 
     // ── SPEECH ──
-    let audioEnabled = false;
-    let speechQueue  = [];
-    let isSpeaking   = false;
+    // ── TTS via Google Translate Audio (works in OBS without installed voices) ──
+    let speechQueue = [];
+    let isSpeaking  = false;
+    let audioCtx    = null;
 
-    // ── OBS AUDIO UNLOCK ──
-    // OBS 28+ supports "Allow autoplay" in browser source settings.
-    // We also try multiple unlock strategies for older OBS versions.
-
-    function tryUnlockAudio() {
-      if (audioEnabled) return;
-
-      // Strategy 1: AudioContext unlock (works in OBS without click)
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === "suspended") {
-          ctx.resume();
-        }
-      } catch(e) {}
-
-      // Strategy 2: Silent speech utterance
-      if (window.speechSynthesis) {
-        const unlock = new SpeechSynthesisUtterance(" ");
-        unlock.volume = 0;
-        unlock.lang = "de-DE";
-        window.speechSynthesis.speak(unlock);
-        unlock.onend = function() {
-          audioEnabled = true;
-          document.getElementById("audioActivate").classList.add("hidden");
-          console.log("Audio unlocked via speech");
-          processQueue();
-        };
-        unlock.onerror = function() {
-          // Will retry on click
-        };
-      }
-    }
-
-    // Try unlock immediately on page load (works if OBS "Allow autoplay" is enabled)
+    // Unlock AudioContext on load — works with OBS "Allow autoplay"
     window.addEventListener("load", function() {
-      setTimeout(tryUnlockAudio, 1000);
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        document.getElementById("audioActivate").classList.add("hidden");
+        // Play silent buffer to unlock
+        const buf = audioCtx.createBuffer(1, 1, 22050);
+        const src = audioCtx.createBufferSource();
+        src.buffer = buf;
+        src.connect(audioCtx.destination);
+        src.start(0);
+      } catch(e) { console.warn("AudioContext:", e); }
     });
 
-    // Also unlock on any interaction
     document.addEventListener("click", function() {
-      if (!audioEnabled) {
-        audioEnabled = true;
-        document.getElementById("audioActivate").classList.add("hidden");
-        speak("Audio aktiviert.");
-      }
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      document.getElementById("audioActivate").classList.add("hidden");
     }, { once: true });
 
     window.activateAudio = function() {
-      audioEnabled = true;
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
       document.getElementById("audioActivate").classList.add("hidden");
-      const unlock = new SpeechSynthesisUtterance("Audio aktiviert. Bereit für den Draft.");
-      unlock.lang = "de-DE";
-      window.speechSynthesis.speak(unlock);
+      speak("Audio aktiviert. Bereit für den Draft.");
     };
 
-    // Pre-load German voices
-    if (window.speechSynthesis) {
-      window.speechSynthesis.getVoices();
-      window.speechSynthesis.addEventListener("voiceschanged", function() {
-        window.speechSynthesis.getVoices();
-        // Retry unlock after voices load
-        if (!audioEnabled) tryUnlockAudio();
-      });
-    }
-
+    // Speak via Google Translate TTS — no voice installation needed
     function speak(text) {
-      if (!window.speechSynthesis) return;
-      if (!audioEnabled) {
-        // Queue it anyway — will play once unlocked
-        speechQueue.push(text);
-        return;
-      }
-      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
       speechQueue.push(text);
       processQueue();
     }
 
     function processQueue() {
       if (isSpeaking || speechQueue.length === 0) return;
-      if (!audioEnabled) return;
       isSpeaking = true;
       const text = speechQueue.shift();
-      const utt  = new SpeechSynthesisUtterance(text);
-      utt.lang   = "de-DE";
-      utt.rate   = 0.88;
-      utt.pitch  = 1.0;
-      utt.volume = 1.0;
 
-      const voices = window.speechSynthesis.getVoices();
-      const german = voices.find(v => v.lang === "de-DE" && v.localService) ||
-                     voices.find(v => v.lang === "de-DE") ||
-                     voices.find(v => v.lang && v.lang.startsWith("de"));
-      if (german) utt.voice = german;
+      // Google Translate TTS — reliable in OBS Chromium
+      const encoded = encodeURIComponent(text);
+      const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=de&client=tw-ob&q=" + encoded;
 
-      const watchdog = setTimeout(function() {
-        if (isSpeaking) {
-          window.speechSynthesis.cancel();
-          isSpeaking = false;
-          processQueue();
-        }
-      }, 10000);
+      const audio = new Audio(url);
+      audio.volume = 1.0;
 
-      utt.onend = utt.onerror = function() {
-        clearTimeout(watchdog);
+      audio.onended = function() {
         isSpeaking = false;
         setTimeout(processQueue, 300);
       };
+      audio.onerror = function() {
+        console.warn("TTS error, retrying with Web Speech API");
+        // Fallback to Web Speech API
+        if (window.speechSynthesis) {
+          const utt = new SpeechSynthesisUtterance(text);
+          utt.lang = "de-DE";
+          utt.rate = 0.88;
+          utt.onend = utt.onerror = function() {
+            isSpeaking = false;
+            setTimeout(processQueue, 300);
+          };
+          window.speechSynthesis.speak(utt);
+        } else {
+          isSpeaking = false;
+          setTimeout(processQueue, 300);
+        }
+      };
 
-      window.speechSynthesis.speak(utt);
+      audio.play().catch(function(e) {
+        console.warn("Audio play failed:", e);
+        isSpeaking = false;
+        processQueue();
+      });
     }
 
     // Ordinal helper

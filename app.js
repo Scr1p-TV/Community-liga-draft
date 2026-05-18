@@ -1138,7 +1138,7 @@ window.showCard = function(playerName) {
   if (data) {
     // Player photo
     document.getElementById("cardPlayerImg").src =
-      "https://cdn.futwiz.com/assets/img/fc25/players/" + data.eaId + ".png";
+      "https://cdn.sofifa.net/players/" + data.eaId + "/25_120.png";
 
     // Nation flag (w80 for bigger display)
     var nationCode = NATION_CODE[data.nation] || "un";
