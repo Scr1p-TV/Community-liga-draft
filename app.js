@@ -1092,6 +1092,98 @@ function showPickAnimation(pick, type) {
 onValue(ref(db, "draftConfig"), function(snap) { draftConfig = snap.val(); });
 
 // ─────────────────────────────────────────────────────────────
+// IMAGE URL EDITOR (Commissioner Panel)
+// ─────────────────────────────────────────────────────────────
+window.filterImgPlayers = function() {
+  var search = document.getElementById("imgPlayerSearch")
+    ? document.getElementById("imgPlayerSearch").value.toLowerCase() : "";
+  renderImgPlayerList(search);
+};
+
+function renderImgPlayerList(search) {
+  var el = document.getElementById("imgPlayerList");
+  if (!el) return;
+  el.innerHTML = "";
+
+  var names = Object.keys(PLAYER_DATA).filter(function(n) {
+    return !search || n.toLowerCase().includes(search);
+  });
+
+  names.forEach(function(name) {
+    var data    = PLAYER_DATA[name];
+    var row     = document.createElement("div");
+    row.style.cssText = "display:flex;gap:8px;align-items:center;";
+
+    var label   = document.createElement("span");
+    label.textContent = name;
+    label.style.cssText = "flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+
+    var inp     = document.createElement("input");
+    inp.type    = "text";
+    inp.placeholder = "https://i.imgur.com/...";
+    inp.value   = data.imgUrl || "";
+    inp.style.cssText = "flex:2;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px;font-size:12px;font-family:inherit;outline:none;";
+    inp.dataset.player = name;
+    inp.className = "img-url-input";
+
+    // Preview button
+    var prev    = document.createElement("button");
+    prev.textContent = "👁";
+    prev.title  = "Vorschau";
+    prev.style.cssText = "background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:5px 8px;cursor:pointer;font-size:13px;flex-shrink:0;";
+    prev.onclick = (function(i) { return function() {
+      var url = i.value.trim();
+      if (url) window.open(url, "_blank");
+    }; })(inp);
+
+    row.appendChild(label);
+    row.appendChild(inp);
+    row.appendChild(prev);
+    el.appendChild(row);
+  });
+}
+
+window.saveImgUrls = function() {
+  var inputs = document.querySelectorAll(".img-url-input");
+  inputs.forEach(function(inp) {
+    var name = inp.dataset.player;
+    if (PLAYER_DATA[name]) {
+      PLAYER_DATA[name].imgUrl = inp.value.trim();
+    }
+  });
+  // Save to Firebase so it persists
+  var imgData = {};
+  Object.keys(PLAYER_DATA).forEach(function(name) {
+    if (PLAYER_DATA[name].imgUrl) {
+      imgData[name.replace(/[.#$/\[\]]/g, "_")] = PLAYER_DATA[name].imgUrl;
+    }
+  });
+  set(ref(db, "playerImages"), imgData).then(function() {
+    alert("✅ Bilder gespeichert!");
+  });
+};
+
+// Load saved image URLs from Firebase on startup
+onValue(ref(db, "playerImages"), function(snap) {
+  var data = snap.val() || {};
+  Object.keys(data).forEach(function(key) {
+    // Find matching player (key has special chars replaced with _)
+    var matched = Object.keys(PLAYER_DATA).find(function(name) {
+      return name.replace(/[.#$\/\[\]]/g, "_") === key;
+    });
+    if (matched) PLAYER_DATA[matched].imgUrl = data[key];
+  });
+});
+
+// Load img list when commissioner panel opens
+var _origLoadComm = loadCommissionerPanel;
+loadCommissionerPanel = function() {
+  var result = _origLoadComm();
+  setTimeout(function() { renderImgPlayerList(""); }, 500);
+  return result;
+};
+
+// ─────────────────────────────────────────────────────────────
 // PLAYER CARD
 // ─────────────────────────────────────────────────────────────
 
@@ -1136,9 +1228,13 @@ window.showCard = function(playerName) {
   document.getElementById("cardPlayerName").textContent = playerName.toUpperCase();
 
   if (data) {
-    // Player photo
-    document.getElementById("cardPlayerImg").src =
-      "https://cdn.sofifa.net/players/" + data.eaId + "/25_120.png";
+    // Player photo — use custom imgUrl if set, else silhouette
+    var playerImg = document.getElementById("cardPlayerImg");
+    if (data.imgUrl && data.imgUrl.trim() !== "") {
+      playerImg.src = data.imgUrl;
+    } else {
+      playerImg.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
+    }
 
     // Nation flag (w80 for bigger display)
     var nationCode = NATION_CODE[data.nation] || "un";
@@ -1154,7 +1250,7 @@ window.showCard = function(playerName) {
     document.getElementById("cardPosBadge").textContent = data.pos;
 
   } else {
-    document.getElementById("cardPlayerImg").src = "https://cdn.sofifa.net/players/notfound_0_120.png";
+    document.getElementById("cardPlayerImg").src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
     document.getElementById("cardNationImg").src = "";
     document.getElementById("cardNationText").textContent = "—";
     document.getElementById("cardLigaImg").src = "";

@@ -345,7 +345,7 @@
     opacity:0;
     pointer-events:none;
     transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
-    z-index:30;
+    z-index:25;
   ">
     <div style="
       position:relative;
@@ -384,7 +384,7 @@
         width:320px;z-index:4;
         object-fit:contain;
         filter:drop-shadow(0 0 16px rgba(0,180,255,.3));
-      " onerror="this.src='https://cdn.sofifa.net/players/notfound_0_120.png'"/>
+      " onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg=='"/>
       <!-- Fade -->
       <div style="
         position:absolute;bottom:145px;left:0;right:0;height:60px;
@@ -471,8 +471,12 @@
       document.getElementById("obsCardName").textContent = playerName.toUpperCase();
 
       if (data) {
-        document.getElementById("obsCardPlayer").src =
-          "https://cdn.sofifa.net/players/" + data.eaId + "/25_120.png";
+        var obsImg = document.getElementById("obsCardPlayer");
+        if (data.imgUrl && data.imgUrl.trim() !== "") {
+          obsImg.src = data.imgUrl;
+        } else {
+          obsImg.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
+        }
         const nCode = NATION_CODE[data.nation] || "un";
         document.getElementById("obsCardNation").src     = "https://flagcdn.com/w80/" + nCode + ".png";
         document.getElementById("obsCardNationText").textContent = data.nation.toUpperCase();
@@ -483,7 +487,7 @@
         document.getElementById("obsCardLiga").src =
           "https://upload.wikimedia.org/wikipedia/de/thumb/0/04/UFL_video_game_logo.png/240px-UFL_video_game_logo.png";
       } else {
-        document.getElementById("obsCardPlayer").src = "https://cdn.sofifa.net/players/notfound_0_120.png";
+        document.getElementById("obsCardPlayer").src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
         document.getElementById("obsCardNation").src = "";
         document.getElementById("obsCardNationText").textContent = "";
         document.getElementById("obsCardLigaFlag").src = "";
@@ -576,8 +580,8 @@
         const newest = all[all.length - 1];
         if (newest) {
           showFlash("PICK " + newest.num, newest.team, newest.player, "type-draft");
-          // Show player card popup
-          setTimeout(function() { showObsCard(newest.player); }, 500);
+          // Show player card AFTER flash disappears (2500ms flash + 300ms gap)
+          setTimeout(function() { showObsCard(newest.player); }, 2800);
           // NFL-style announcement
           const announcement =
             "Mit dem " + ordinal(newest.num) + " Pick — " +
@@ -806,7 +810,8 @@
       document.getElementById("flashTeam").textContent   = team;
       document.getElementById("flashPlayer").textContent = player;
       el.className = "active " + typeClass;
-      setTimeout(() => { el.classList.remove("active"); }, 3500);
+      // Auto-hide after 2.5s (shorter so card can follow)
+      setTimeout(() => { el.classList.remove("active"); }, 2500);
     }
 
     // ── ANNOUNCEMENTS ──

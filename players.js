@@ -1,967 +1,140 @@
-// UFL Community Liga — Spielerdatenbank
-// Liga-Mapping: England 1, England 2, Spanien 1, Spanien 2, Italien 1, Italien 2,
-//               Niederlande 1, Portugal 1, Österreich 1, Belgien 1, Frankreich 1,
-//               Polen 1, Schweiz 1, Rest der Welt
-//
-// Spielerfoto: https://cdn.futwiz.com/assets/img/fc25/players/{eaId}.png
-// Flagge:      https://flagcdn.com/w40/{countryCode}.png
-//
-// Um Spieler hinzuzufügen: gleiche Struktur verwenden
-
 export const PLAYER_DATA = {
-  "Erling Haaland": {
-    pos: "ST",
-    nation: "Norwegen",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 239085
-  },
-  "Rodri": {
-    pos: "CDM",
-    nation: "Spanien",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 231866
-  },
-  "Mohamed Salah": {
-    pos: "RW",
-    nation: "Ägypten",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 209331
-  },
-  "Kevin De Bruyne": {
-    pos: "CAM",
-    nation: "Belgien",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 192985
-  },
-  "Phil Foden": {
-    pos: "CAM",
-    nation: "England",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 237692
-  },
-  "Bukayo Saka": {
-    pos: "RW",
-    nation: "England",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 246669
-  },
-  "Marcus Rashford": {
-    pos: "LW",
-    nation: "England",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 231678
-  },
-  "Thibaut Courtois": {
-    pos: "GK",
-    nation: "Belgien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 192119
-  },
-  "Virgil van Dijk": {
-    pos: "CB",
-    nation: "Niederlande",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 203376
-  },
-  "Rúben Dias": {
-    pos: "CB",
-    nation: "Portugal",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 239354
-  },
-  "William Saliba": {
-    pos: "CB",
-    nation: "Frankreich",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 246669
-  },
-  "Trent Alexander-Arnold": {
-    pos: "RB",
-    nation: "England",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 209331
-  },
-  "Bernardo Silva": {
-    pos: "CM",
-    nation: "Portugal",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 214826
-  },
-  "Son Heung-min": {
-    pos: "LW",
-    nation: "Südkorea",
-    liga: "England 1",
-    club: "Tottenham",
-    eaId: 245369
-  },
-  "Bruno Fernandes": {
-    pos: "CAM",
-    nation: "Portugal",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 212747
-  },
-  "Declan Rice": {
-    pos: "CDM",
-    nation: "England",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 236496
-  },
-  "Martin Ødegaard": {
-    pos: "CAM",
-    nation: "Norwegen",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 246804
-  },
-  "Alisson": {
-    pos: "GK",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 212831
-  },
-  "Ederson": {
-    pos: "GK",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Man City",
-    eaId: 232592
-  },
-  "Cole Palmer": {
-    pos: "CAM",
-    nation: "England",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 256567
-  },
-  "Enzo Fernández": {
-    pos: "CM",
-    nation: "Argentinien",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 241452
-  },
-  "Moises Caicedo": {
-    pos: "CDM",
-    nation: "Ecuador",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 252596
-  },
-  "Reece James": {
-    pos: "RB",
-    nation: "England",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 240025
-  },
-  "Nicolás Jackson": {
-    pos: "ST",
-    nation: "Senegal",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 258923
-  },
-  "Gabriel Martinelli": {
-    pos: "LW",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 252596
-  },
-  "Gabriel Magalhães": {
-    pos: "CB",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 241025
-  },
-  "Kai Havertz": {
-    pos: "CAM",
-    nation: "Deutschland",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 230672
-  },
-  "David Raya": {
-    pos: "GK",
-    nation: "Spanien",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 212747
-  },
-  "Andrew Robertson": {
-    pos: "LB",
-    nation: "Schottland",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 209331
-  },
-  "Alexis Mac Allister": {
-    pos: "CM",
-    nation: "Argentinien",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 241637
-  },
-  "Dominik Szoboszlai": {
-    pos: "CAM",
-    nation: "Ungarn",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 248054
-  },
-  "Luis Díaz": {
-    pos: "LW",
-    nation: "Kolumbien",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 243817
-  },
-  "Darwin Núñez": {
-    pos: "ST",
-    nation: "Uruguay",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 252596
-  },
-  "Cody Gakpo": {
-    pos: "LW",
-    nation: "Niederlande",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 248054
-  },
-  "Casemiro": {
-    pos: "CDM",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 188545
-  },
-  "Lisandro Martínez": {
-    pos: "CB",
-    nation: "Argentinien",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 248054
-  },
-  "Rasmus Højlund": {
-    pos: "ST",
-    nation: "Dänemark",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 258923
-  },
-  "Alejandro Garnacho": {
-    pos: "LW",
-    nation: "Argentinien",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 261778
-  },
-  "Kobbie Mainoo": {
-    pos: "CM",
-    nation: "England",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 261000
-  },
-  "Ollie Watkins": {
-    pos: "ST",
-    nation: "England",
-    liga: "England 1",
-    club: "Aston Villa",
-    eaId: 231678
-  },
-  "Raheem Sterling": {
-    pos: "LW",
-    nation: "England",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 212107
-  },
-  "Mykhailo Mudryk": {
-    pos: "LW",
-    nation: "Ukraine",
-    liga: "England 1",
-    club: "Chelsea",
-    eaId: 254327
-  },
-  "Ibrahima Konaté": {
-    pos: "CB",
-    nation: "Frankreich",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 246804
-  },
-  "Diogo Jota": {
-    pos: "LW",
-    nation: "Portugal",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 230672
-  },
-  "Richarlison": {
-    pos: "ST",
-    nation: "Brasilien",
-    liga: "England 1",
-    club: "Tottenham",
-    eaId: 241452
-  },
-  "Amad Diallo": {
-    pos: "RW",
-    nation: "Elfenbeinküste",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 258923
-  },
-  "Ben White": {
-    pos: "RB",
-    nation: "England",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 244477
-  },
-  "Thomas Partey": {
-    pos: "CDM",
-    nation: "Ghana",
-    liga: "England 1",
-    club: "Arsenal",
-    eaId: 214826
-  },
-  "Federico Chiesa": {
-    pos: "RW",
-    nation: "Italien",
-    liga: "England 1",
-    club: "Liverpool",
-    eaId: 241637
-  },
-  "Dominic Solanke": {
-    pos: "ST",
-    nation: "England",
-    liga: "England 1",
-    club: "Tottenham",
-    eaId: 231678
-  },
-  "Noussair Mazraoui": {
-    pos: "RB",
-    nation: "Marokko",
-    liga: "England 1",
-    club: "Man Utd",
-    eaId: 241025
-  },
-  "Kylian Mbappé": {
-    pos: "ST",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 231747
-  },
-  "Jude Bellingham": {
-    pos: "CAM",
-    nation: "England",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 237692
-  },
-  "Vinícius Jr.": {
-    pos: "LW",
-    nation: "Brasilien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 238794
-  },
-  "Pedri": {
-    pos: "CM",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 239829
-  },
-  "Lamine Yamal": {
-    pos: "RW",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 261778
-  },
-  "Antoine Griezmann": {
-    pos: "CAM",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 194765
-  },
-  "Robert Lewandowski": {
-    pos: "ST",
-    nation: "Polen",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 188545
-  },
-  "Rodrygo": {
-    pos: "RW",
-    nation: "Brasilien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 245369
-  },
-  "Eduardo Camavinga": {
-    pos: "CM",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 254327
-  },
-  "Aurélien Tchouaméni": {
-    pos: "CDM",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 252596
-  },
-  "Antonio Rüdiger": {
-    pos: "CB",
-    nation: "Deutschland",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 209331
-  },
-  "Dani Carvajal": {
-    pos: "RB",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 188545
-  },
-  "Luka Modrić": {
-    pos: "CM",
-    nation: "Kroatien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 158023
-  },
-  "Federico Valverde": {
-    pos: "CM",
-    nation: "Uruguay",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 240025
-  },
-  "Eder Militão": {
-    pos: "CB",
-    nation: "Brasilien",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 241025
-  },
-  "Ferland Mendy": {
-    pos: "LB",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Real Madrid",
-    eaId: 231443
-  },
-  "Raphinha": {
-    pos: "RW",
-    nation: "Brasilien",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 243817
-  },
-  "Frenkie de Jong": {
-    pos: "CM",
-    nation: "Niederlande",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 239354
-  },
-  "Gavi": {
-    pos: "CM",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 258731
-  },
-  "Dani Olmo": {
-    pos: "CAM",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 243817
-  },
-  "Jules Koundé": {
-    pos: "RB",
-    nation: "Frankreich",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 246804
-  },
-  "Marc-André ter Stegen": {
-    pos: "GK",
-    nation: "Deutschland",
-    liga: "Spanien 1",
-    club: "Barcelona",
-    eaId: 192985
-  },
-  "Jan Oblak": {
-    pos: "GK",
-    nation: "Slowenien",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 192119
-  },
-  "Álvaro Morata": {
-    pos: "ST",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 202126
-  },
-  "Marcos Llorente": {
-    pos: "CM",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 231678
-  },
-  "José Giménez": {
-    pos: "CB",
-    nation: "Uruguay",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 214826
-  },
-  "Nahuel Molina": {
-    pos: "RB",
-    nation: "Argentinien",
-    liga: "Spanien 1",
-    club: "Atletico Madrid",
-    eaId: 245369
-  },
-  "Nico Williams": {
-    pos: "LW",
-    nation: "Spanien",
-    liga: "Spanien 1",
-    club: "Athletic Club",
-    eaId: 261778
-  },
-  "Youssef En-Nesyri": {
-    pos: "ST",
-    nation: "Marokko",
-    liga: "Spanien 1",
-    club: "Sevilla",
-    eaId: 243817
-  },
-  "Alessandro Bastoni": {
-    pos: "CB",
-    nation: "Italien",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 244477
-  },
-  "Lautaro Martínez": {
-    pos: "ST",
-    nation: "Argentinien",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 239403
-  },
-  "Rafael Leão": {
-    pos: "LW",
-    nation: "Portugal",
-    liga: "Italien 1",
-    club: "AC Milan",
-    eaId: 241637
-  },
-  "Victor Osimhen": {
-    pos: "ST",
-    nation: "Nigeria",
-    liga: "Italien 1",
-    club: "Napoli",
-    eaId: 238033
-  },
-  "Mike Maignan": {
-    pos: "GK",
-    nation: "Frankreich",
-    liga: "Italien 1",
-    club: "AC Milan",
-    eaId: 230672
-  },
-  "Theo Hernández": {
-    pos: "LB",
-    nation: "Frankreich",
-    liga: "Italien 1",
-    club: "AC Milan",
-    eaId: 241452
-  },
-  "Tijjani Reijnders": {
-    pos: "CM",
-    nation: "Niederlande",
-    liga: "Italien 1",
-    club: "AC Milan",
-    eaId: 248054
-  },
-  "Christian Pulisic": {
-    pos: "RW",
-    nation: "USA",
-    liga: "Italien 1",
-    club: "AC Milan",
-    eaId: 231443
-  },
-  "Yann Sommer": {
-    pos: "GK",
-    nation: "Schweiz",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 190871
-  },
-  "Nicolò Barella": {
-    pos: "CM",
-    nation: "Italien",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 236496
-  },
-  "Hakan Çalhanoğlu": {
-    pos: "CDM",
-    nation: "Türkei",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 214826
-  },
-  "Marcus Thuram": {
-    pos: "ST",
-    nation: "Frankreich",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 248054
-  },
-  "Benjamin Pavard": {
-    pos: "CB",
-    nation: "Frankreich",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 231866
-  },
-  "Federico Dimarco": {
-    pos: "LB",
-    nation: "Italien",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 241637
-  },
-  "Denzel Dumfries": {
-    pos: "RB",
-    nation: "Niederlande",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 243817
-  },
-  "Stanislav Lobotka": {
-    pos: "CDM",
-    nation: "Slowakei",
-    liga: "Italien 1",
-    club: "Napoli",
-    eaId: 231866
-  },
-  "Scott McTominay": {
-    pos: "CM",
-    nation: "Schottland",
-    liga: "Italien 1",
-    club: "Napoli",
-    eaId: 231678
-  },
-  "Dušan Vlahović": {
-    pos: "ST",
-    nation: "Serbien",
-    liga: "Italien 1",
-    club: "Juventus",
-    eaId: 248054
-  },
-  "Gleison Bremer": {
-    pos: "CB",
-    nation: "Brasilien",
-    liga: "Italien 1",
-    club: "Juventus",
-    eaId: 246804
-  },
-  "Paulo Dybala": {
-    pos: "CAM",
-    nation: "Argentinien",
-    liga: "Italien 1",
-    club: "Roma",
-    eaId: 190871
-  },
-  "Romelu Lukaku": {
-    pos: "ST",
-    nation: "Belgien",
-    liga: "Italien 1",
-    club: "Roma",
-    eaId: 192505
-  },
-  "Lorenzo Pellegrini": {
-    pos: "CAM",
-    nation: "Italien",
-    liga: "Italien 1",
-    club: "Roma",
-    eaId: 224334
-  },
-  "Mats Hummels": {
-    pos: "CB",
-    nation: "Deutschland",
-    liga: "Italien 1",
-    club: "Roma",
-    eaId: 182521
-  },
-  "André-Frank Anguissa": {
-    pos: "CM",
-    nation: "Kamerun",
-    liga: "Italien 1",
-    club: "Napoli",
-    eaId: 236496
-  },
-  "Piotr Zielinski": {
-    pos: "CM",
-    nation: "Polen",
-    liga: "Italien 1",
-    club: "Inter Milan",
-    eaId: 214826
-  },
-  "Ousmane Dembélé": {
-    pos: "RW",
-    nation: "Frankreich",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 231443
-  },
-  "Bradley Barcola": {
-    pos: "LW",
-    nation: "Frankreich",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 258923
-  },
-  "João Neves": {
-    pos: "CM",
-    nation: "Portugal",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 261778
-  },
-  "Marquinhos": {
-    pos: "CB",
-    nation: "Brasilien",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 202335
-  },
-  "Gianluigi Donnarumma": {
-    pos: "GK",
-    nation: "Italien",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 230672
-  },
-  "Achraf Hakimi": {
-    pos: "RB",
-    nation: "Marokko",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 231443
-  },
-  "Gonçalo Ramos": {
-    pos: "ST",
-    nation: "Portugal",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 254327
-  },
-  "Vitinha": {
-    pos: "CM",
-    nation: "Portugal",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 252596
-  },
-  "Fabian Ruiz": {
-    pos: "CM",
-    nation: "Spanien",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 241025
-  },
-  "Nuno Mendes": {
-    pos: "LB",
-    nation: "Portugal",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 254327
-  },
-  "Marco Asensio": {
-    pos: "CAM",
-    nation: "Spanien",
-    liga: "Frankreich 1",
-    club: "PSG",
-    eaId: 213345
-  },
-  "Jamal Musiala": {
-    pos: "CAM",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 241025
-  },
-  "Florian Wirtz": {
-    pos: "CAM",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "B. Leverkusen",
-    eaId: 258923
-  },
-  "Harry Kane": {
-    pos: "ST",
-    nation: "England",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 202126
-  },
-  "Thomas Müller": {
-    pos: "CAM",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 188545
-  },
-  "Manuel Neuer": {
-    pos: "GK",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 167664
-  },
-  "Joshua Kimmich": {
-    pos: "CDM",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 231866
-  },
-  "Leroy Sané": {
-    pos: "RW",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 213345
-  },
-  "Serge Gnabry": {
-    pos: "RW",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 224334
-  },
-  "Dayot Upamecano": {
-    pos: "CB",
-    nation: "Frankreich",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 246669
-  },
-  "Alphonso Davies": {
-    pos: "LB",
-    nation: "Kanada",
-    liga: "Rest der Welt",
-    club: "Bayern Munich",
-    eaId: 245369
-  },
-  "Granit Xhaka": {
-    pos: "CDM",
-    nation: "Schweiz",
-    liga: "Rest der Welt",
-    club: "B. Leverkusen",
-    eaId: 211110
-  },
-  "Jonathan Tah": {
-    pos: "CB",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "B. Leverkusen",
-    eaId: 236496
-  },
-  "Alejandro Grimaldo": {
-    pos: "LB",
-    nation: "Spanien",
-    liga: "Rest der Welt",
-    club: "B. Leverkusen",
-    eaId: 231443
-  },
-  "Victor Boniface": {
-    pos: "ST",
-    nation: "Nigeria",
-    liga: "Rest der Welt",
-    club: "B. Leverkusen",
-    eaId: 258923
-  },
-  "Serhou Guirassy": {
-    pos: "ST",
-    nation: "Guinea",
-    liga: "Rest der Welt",
-    club: "Dortmund",
-    eaId: 241637
-  },
-  "Julian Brandt": {
-    pos: "CAM",
-    nation: "Deutschland",
-    liga: "Rest der Welt",
-    club: "Dortmund",
-    eaId: 231678
-  },
-  "Lionel Messi": {
-    pos: "CAM",
-    nation: "Argentinien",
-    liga: "Rest der Welt",
-    club: "Inter Miami",
-    eaId: 158023
-  },
-  "Neymar Jr.": {
-    pos: "LW",
-    nation: "Brasilien",
-    liga: "Rest der Welt",
-    club: "Al-Hilal",
-    eaId: 190871
-  },
-  "Karim Benzema": {
-    pos: "ST",
-    nation: "Frankreich",
-    liga: "Rest der Welt",
-    club: "Al-Ittihad",
-    eaId: 165153
-  },
-  "Sadio Mané": {
-    pos: "LW",
-    nation: "Senegal",
-    liga: "Rest der Welt",
-    club: "Al-Nassr",
-    eaId: 202335
-  },
+  "Erling Haaland": { pos: "ST", nation: "Norwegen", liga: "England 1", club: "Man City", eaId: 239085, imgUrl: "" },
+  "Rodri": { pos: "CDM", nation: "Spanien", liga: "England 1", club: "Man City", eaId: 231866, imgUrl: "" },
+  "Mohamed Salah": { pos: "RW", nation: "Ägypten", liga: "England 1", club: "Liverpool", eaId: 209331, imgUrl: "" },
+  "Kevin De Bruyne": { pos: "CAM", nation: "Belgien", liga: "England 1", club: "Man City", eaId: 192985, imgUrl: "" },
+  "Phil Foden": { pos: "CAM", nation: "England", liga: "England 1", club: "Man City", eaId: 237692, imgUrl: "" },
+  "Bukayo Saka": { pos: "RW", nation: "England", liga: "England 1", club: "Arsenal", eaId: 246669, imgUrl: "" },
+  "Marcus Rashford": { pos: "LW", nation: "England", liga: "England 1", club: "Man Utd", eaId: 231678, imgUrl: "" },
+  "Thibaut Courtois": { pos: "GK", nation: "Belgien", liga: "Spanien 1", club: "Real Madrid", eaId: 192119, imgUrl: "" },
+  "Virgil van Dijk": { pos: "CB", nation: "Niederlande", liga: "England 1", club: "Liverpool", eaId: 203376, imgUrl: "" },
+  "Rúben Dias": { pos: "CB", nation: "Portugal", liga: "England 1", club: "Man City", eaId: 239354, imgUrl: "" },
+  "William Saliba": { pos: "CB", nation: "Frankreich", liga: "England 1", club: "Arsenal", eaId: 246669, imgUrl: "" },
+  "Trent Alexander-Arnold": { pos: "RB", nation: "England", liga: "England 1", club: "Liverpool", eaId: 209331, imgUrl: "" },
+  "Bernardo Silva": { pos: "CM", nation: "Portugal", liga: "England 1", club: "Man City", eaId: 214826, imgUrl: "" },
+  "Son Heung-min": { pos: "LW", nation: "Südkorea", liga: "England 1", club: "Tottenham", eaId: 245369, imgUrl: "" },
+  "Bruno Fernandes": { pos: "CAM", nation: "Portugal", liga: "England 1", club: "Man Utd", eaId: 212747, imgUrl: "" },
+  "Declan Rice": { pos: "CDM", nation: "England", liga: "England 1", club: "Arsenal", eaId: 236496, imgUrl: "" },
+  "Martin Ødegaard": { pos: "CAM", nation: "Norwegen", liga: "England 1", club: "Arsenal", eaId: 246804, imgUrl: "" },
+  "Alisson": { pos: "GK", nation: "Brasilien", liga: "England 1", club: "Liverpool", eaId: 212831, imgUrl: "" },
+  "Ederson": { pos: "GK", nation: "Brasilien", liga: "England 1", club: "Man City", eaId: 232592, imgUrl: "" },
+  "Cole Palmer": { pos: "CAM", nation: "England", liga: "England 1", club: "Chelsea", eaId: 256567, imgUrl: "" },
+  "Enzo Fernández": { pos: "CM", nation: "Argentinien", liga: "England 1", club: "Chelsea", eaId: 241452, imgUrl: "" },
+  "Moises Caicedo": { pos: "CDM", nation: "Ecuador", liga: "England 1", club: "Chelsea", eaId: 252596, imgUrl: "" },
+  "Reece James": { pos: "RB", nation: "England", liga: "England 1", club: "Chelsea", eaId: 240025, imgUrl: "" },
+  "Nicolás Jackson": { pos: "ST", nation: "Senegal", liga: "England 1", club: "Chelsea", eaId: 258923, imgUrl: "" },
+  "Gabriel Martinelli": { pos: "LW", nation: "Brasilien", liga: "England 1", club: "Arsenal", eaId: 252596, imgUrl: "" },
+  "Gabriel Magalhães": { pos: "CB", nation: "Brasilien", liga: "England 1", club: "Arsenal", eaId: 241025, imgUrl: "" },
+  "Kai Havertz": { pos: "CAM", nation: "Deutschland", liga: "England 1", club: "Arsenal", eaId: 230672, imgUrl: "" },
+  "David Raya": { pos: "GK", nation: "Spanien", liga: "England 1", club: "Arsenal", eaId: 212747, imgUrl: "" },
+  "Andrew Robertson": { pos: "LB", nation: "Schottland", liga: "England 1", club: "Liverpool", eaId: 209331, imgUrl: "" },
+  "Alexis Mac Allister": { pos: "CM", nation: "Argentinien", liga: "England 1", club: "Liverpool", eaId: 241637, imgUrl: "" },
+  "Dominik Szoboszlai": { pos: "CAM", nation: "Ungarn", liga: "England 1", club: "Liverpool", eaId: 248054, imgUrl: "" },
+  "Luis Díaz": { pos: "LW", nation: "Kolumbien", liga: "England 1", club: "Liverpool", eaId: 243817, imgUrl: "" },
+  "Darwin Núñez": { pos: "ST", nation: "Uruguay", liga: "England 1", club: "Liverpool", eaId: 252596, imgUrl: "" },
+  "Cody Gakpo": { pos: "LW", nation: "Niederlande", liga: "England 1", club: "Liverpool", eaId: 248054, imgUrl: "" },
+  "Casemiro": { pos: "CDM", nation: "Brasilien", liga: "England 1", club: "Man Utd", eaId: 188545, imgUrl: "" },
+  "Lisandro Martínez": { pos: "CB", nation: "Argentinien", liga: "England 1", club: "Man Utd", eaId: 248054, imgUrl: "" },
+  "Rasmus Højlund": { pos: "ST", nation: "Dänemark", liga: "England 1", club: "Man Utd", eaId: 258923, imgUrl: "" },
+  "Alejandro Garnacho": { pos: "LW", nation: "Argentinien", liga: "England 1", club: "Man Utd", eaId: 261778, imgUrl: "" },
+  "Kobbie Mainoo": { pos: "CM", nation: "England", liga: "England 1", club: "Man Utd", eaId: 261000, imgUrl: "" },
+  "Ollie Watkins": { pos: "ST", nation: "England", liga: "England 1", club: "Aston Villa", eaId: 231678, imgUrl: "" },
+  "Raheem Sterling": { pos: "LW", nation: "England", liga: "England 1", club: "Chelsea", eaId: 212107, imgUrl: "" },
+  "Mykhailo Mudryk": { pos: "LW", nation: "Ukraine", liga: "England 1", club: "Chelsea", eaId: 254327, imgUrl: "" },
+  "Ibrahima Konaté": { pos: "CB", nation: "Frankreich", liga: "England 1", club: "Liverpool", eaId: 246804, imgUrl: "" },
+  "Diogo Jota": { pos: "LW", nation: "Portugal", liga: "England 1", club: "Liverpool", eaId: 230672, imgUrl: "" },
+  "Richarlison": { pos: "ST", nation: "Brasilien", liga: "England 1", club: "Tottenham", eaId: 241452, imgUrl: "" },
+  "Amad Diallo": { pos: "RW", nation: "Elfenbeinküste", liga: "England 1", club: "Man Utd", eaId: 258923, imgUrl: "" },
+  "Ben White": { pos: "RB", nation: "England", liga: "England 1", club: "Arsenal", eaId: 244477, imgUrl: "" },
+  "Thomas Partey": { pos: "CDM", nation: "Ghana", liga: "England 1", club: "Arsenal", eaId: 214826, imgUrl: "" },
+  "Federico Chiesa": { pos: "RW", nation: "Italien", liga: "England 1", club: "Liverpool", eaId: 241637, imgUrl: "" },
+  "Dominic Solanke": { pos: "ST", nation: "England", liga: "England 1", club: "Tottenham", eaId: 231678, imgUrl: "" },
+  "Noussair Mazraoui": { pos: "RB", nation: "Marokko", liga: "England 1", club: "Man Utd", eaId: 241025, imgUrl: "" },
+  "Kylian Mbappé": { pos: "ST", nation: "Frankreich", liga: "Spanien 1", club: "Real Madrid", eaId: 231747, imgUrl: "" },
+  "Jude Bellingham": { pos: "CAM", nation: "England", liga: "Spanien 1", club: "Real Madrid", eaId: 237692, imgUrl: "" },
+  "Vinícius Jr.": { pos: "LW", nation: "Brasilien", liga: "Spanien 1", club: "Real Madrid", eaId: 238794, imgUrl: "" },
+  "Pedri": { pos: "CM", nation: "Spanien", liga: "Spanien 1", club: "Barcelona", eaId: 239829, imgUrl: "" },
+  "Lamine Yamal": { pos: "RW", nation: "Spanien", liga: "Spanien 1", club: "Barcelona", eaId: 261778, imgUrl: "" },
+  "Antoine Griezmann": { pos: "CAM", nation: "Frankreich", liga: "Spanien 1", club: "Atletico Madrid", eaId: 194765, imgUrl: "" },
+  "Robert Lewandowski": { pos: "ST", nation: "Polen", liga: "Spanien 1", club: "Barcelona", eaId: 188545, imgUrl: "" },
+  "Rodrygo": { pos: "RW", nation: "Brasilien", liga: "Spanien 1", club: "Real Madrid", eaId: 245369, imgUrl: "" },
+  "Eduardo Camavinga": { pos: "CM", nation: "Frankreich", liga: "Spanien 1", club: "Real Madrid", eaId: 254327, imgUrl: "" },
+  "Aurélien Tchouaméni": { pos: "CDM", nation: "Frankreich", liga: "Spanien 1", club: "Real Madrid", eaId: 252596, imgUrl: "" },
+  "Antonio Rüdiger": { pos: "CB", nation: "Deutschland", liga: "Spanien 1", club: "Real Madrid", eaId: 209331, imgUrl: "" },
+  "Dani Carvajal": { pos: "RB", nation: "Spanien", liga: "Spanien 1", club: "Real Madrid", eaId: 188545, imgUrl: "" },
+  "Luka Modrić": { pos: "CM", nation: "Kroatien", liga: "Spanien 1", club: "Real Madrid", eaId: 158023, imgUrl: "" },
+  "Federico Valverde": { pos: "CM", nation: "Uruguay", liga: "Spanien 1", club: "Real Madrid", eaId: 240025, imgUrl: "" },
+  "Eder Militão": { pos: "CB", nation: "Brasilien", liga: "Spanien 1", club: "Real Madrid", eaId: 241025, imgUrl: "" },
+  "Ferland Mendy": { pos: "LB", nation: "Frankreich", liga: "Spanien 1", club: "Real Madrid", eaId: 231443, imgUrl: "" },
+  "Raphinha": { pos: "RW", nation: "Brasilien", liga: "Spanien 1", club: "Barcelona", eaId: 243817, imgUrl: "" },
+  "Frenkie de Jong": { pos: "CM", nation: "Niederlande", liga: "Spanien 1", club: "Barcelona", eaId: 239354, imgUrl: "" },
+  "Gavi": { pos: "CM", nation: "Spanien", liga: "Spanien 1", club: "Barcelona", eaId: 258731, imgUrl: "" },
+  "Dani Olmo": { pos: "CAM", nation: "Spanien", liga: "Spanien 1", club: "Barcelona", eaId: 243817, imgUrl: "" },
+  "Jules Koundé": { pos: "RB", nation: "Frankreich", liga: "Spanien 1", club: "Barcelona", eaId: 246804, imgUrl: "" },
+  "Marc-André ter Stegen": { pos: "GK", nation: "Deutschland", liga: "Spanien 1", club: "Barcelona", eaId: 192985, imgUrl: "" },
+  "Jan Oblak": { pos: "GK", nation: "Slowenien", liga: "Spanien 1", club: "Atletico Madrid", eaId: 192119, imgUrl: "" },
+  "Álvaro Morata": { pos: "ST", nation: "Spanien", liga: "Spanien 1", club: "Atletico Madrid", eaId: 202126, imgUrl: "" },
+  "Marcos Llorente": { pos: "CM", nation: "Spanien", liga: "Spanien 1", club: "Atletico Madrid", eaId: 231678, imgUrl: "" },
+  "José Giménez": { pos: "CB", nation: "Uruguay", liga: "Spanien 1", club: "Atletico Madrid", eaId: 214826, imgUrl: "" },
+  "Nahuel Molina": { pos: "RB", nation: "Argentinien", liga: "Spanien 1", club: "Atletico Madrid", eaId: 245369, imgUrl: "" },
+  "Nico Williams": { pos: "LW", nation: "Spanien", liga: "Spanien 1", club: "Athletic Club", eaId: 261778, imgUrl: "" },
+  "Youssef En-Nesyri": { pos: "ST", nation: "Marokko", liga: "Spanien 1", club: "Sevilla", eaId: 243817, imgUrl: "" },
+  "Alessandro Bastoni": { pos: "CB", nation: "Italien", liga: "Italien 1", club: "Inter Milan", eaId: 244477, imgUrl: "" },
+  "Lautaro Martínez": { pos: "ST", nation: "Argentinien", liga: "Italien 1", club: "Inter Milan", eaId: 239403, imgUrl: "" },
+  "Rafael Leão": { pos: "LW", nation: "Portugal", liga: "Italien 1", club: "AC Milan", eaId: 241637, imgUrl: "" },
+  "Victor Osimhen": { pos: "ST", nation: "Nigeria", liga: "Italien 1", club: "Napoli", eaId: 238033, imgUrl: "" },
+  "Mike Maignan": { pos: "GK", nation: "Frankreich", liga: "Italien 1", club: "AC Milan", eaId: 230672, imgUrl: "" },
+  "Theo Hernández": { pos: "LB", nation: "Frankreich", liga: "Italien 1", club: "AC Milan", eaId: 241452, imgUrl: "" },
+  "Tijjani Reijnders": { pos: "CM", nation: "Niederlande", liga: "Italien 1", club: "AC Milan", eaId: 248054, imgUrl: "" },
+  "Christian Pulisic": { pos: "RW", nation: "USA", liga: "Italien 1", club: "AC Milan", eaId: 231443, imgUrl: "" },
+  "Yann Sommer": { pos: "GK", nation: "Schweiz", liga: "Italien 1", club: "Inter Milan", eaId: 190871, imgUrl: "" },
+  "Nicolò Barella": { pos: "CM", nation: "Italien", liga: "Italien 1", club: "Inter Milan", eaId: 236496, imgUrl: "" },
+  "Hakan Çalhanoğlu": { pos: "CDM", nation: "Türkei", liga: "Italien 1", club: "Inter Milan", eaId: 214826, imgUrl: "" },
+  "Marcus Thuram": { pos: "ST", nation: "Frankreich", liga: "Italien 1", club: "Inter Milan", eaId: 248054, imgUrl: "" },
+  "Benjamin Pavard": { pos: "CB", nation: "Frankreich", liga: "Italien 1", club: "Inter Milan", eaId: 231866, imgUrl: "" },
+  "Federico Dimarco": { pos: "LB", nation: "Italien", liga: "Italien 1", club: "Inter Milan", eaId: 241637, imgUrl: "" },
+  "Denzel Dumfries": { pos: "RB", nation: "Niederlande", liga: "Italien 1", club: "Inter Milan", eaId: 243817, imgUrl: "" },
+  "Stanislav Lobotka": { pos: "CDM", nation: "Slowakei", liga: "Italien 1", club: "Napoli", eaId: 231866, imgUrl: "" },
+  "Scott McTominay": { pos: "CM", nation: "Schottland", liga: "Italien 1", club: "Napoli", eaId: 231678, imgUrl: "" },
+  "Dušan Vlahović": { pos: "ST", nation: "Serbien", liga: "Italien 1", club: "Juventus", eaId: 248054, imgUrl: "" },
+  "Gleison Bremer": { pos: "CB", nation: "Brasilien", liga: "Italien 1", club: "Juventus", eaId: 246804, imgUrl: "" },
+  "Paulo Dybala": { pos: "CAM", nation: "Argentinien", liga: "Italien 1", club: "Roma", eaId: 190871, imgUrl: "" },
+  "Romelu Lukaku": { pos: "ST", nation: "Belgien", liga: "Italien 1", club: "Roma", eaId: 192505, imgUrl: "" },
+  "Lorenzo Pellegrini": { pos: "CAM", nation: "Italien", liga: "Italien 1", club: "Roma", eaId: 224334, imgUrl: "" },
+  "Mats Hummels": { pos: "CB", nation: "Deutschland", liga: "Italien 1", club: "Roma", eaId: 182521, imgUrl: "" },
+  "André-Frank Anguissa": { pos: "CM", nation: "Kamerun", liga: "Italien 1", club: "Napoli", eaId: 236496, imgUrl: "" },
+  "Piotr Zielinski": { pos: "CM", nation: "Polen", liga: "Italien 1", club: "Inter Milan", eaId: 214826, imgUrl: "" },
+  "Ousmane Dembélé": { pos: "RW", nation: "Frankreich", liga: "Frankreich 1", club: "PSG", eaId: 231443, imgUrl: "" },
+  "Bradley Barcola": { pos: "LW", nation: "Frankreich", liga: "Frankreich 1", club: "PSG", eaId: 258923, imgUrl: "" },
+  "João Neves": { pos: "CM", nation: "Portugal", liga: "Frankreich 1", club: "PSG", eaId: 261778, imgUrl: "" },
+  "Marquinhos": { pos: "CB", nation: "Brasilien", liga: "Frankreich 1", club: "PSG", eaId: 202335, imgUrl: "" },
+  "Gianluigi Donnarumma": { pos: "GK", nation: "Italien", liga: "Frankreich 1", club: "PSG", eaId: 230672, imgUrl: "" },
+  "Achraf Hakimi": { pos: "RB", nation: "Marokko", liga: "Frankreich 1", club: "PSG", eaId: 231443, imgUrl: "" },
+  "Gonçalo Ramos": { pos: "ST", nation: "Portugal", liga: "Frankreich 1", club: "PSG", eaId: 254327, imgUrl: "" },
+  "Vitinha": { pos: "CM", nation: "Portugal", liga: "Frankreich 1", club: "PSG", eaId: 252596, imgUrl: "" },
+  "Fabian Ruiz": { pos: "CM", nation: "Spanien", liga: "Frankreich 1", club: "PSG", eaId: 241025, imgUrl: "" },
+  "Nuno Mendes": { pos: "LB", nation: "Portugal", liga: "Frankreich 1", club: "PSG", eaId: 254327, imgUrl: "" },
+  "Marco Asensio": { pos: "CAM", nation: "Spanien", liga: "Frankreich 1", club: "PSG", eaId: 213345, imgUrl: "" },
+  "Jamal Musiala": { pos: "CAM", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 241025, imgUrl: "" },
+  "Florian Wirtz": { pos: "CAM", nation: "Deutschland", liga: "Rest der Welt", club: "B. Leverkusen", eaId: 258923, imgUrl: "" },
+  "Harry Kane": { pos: "ST", nation: "England", liga: "Rest der Welt", club: "Bayern Munich", eaId: 202126, imgUrl: "" },
+  "Thomas Müller": { pos: "CAM", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 188545, imgUrl: "" },
+  "Manuel Neuer": { pos: "GK", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 167664, imgUrl: "" },
+  "Joshua Kimmich": { pos: "CDM", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 231866, imgUrl: "" },
+  "Leroy Sané": { pos: "RW", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 213345, imgUrl: "" },
+  "Serge Gnabry": { pos: "RW", nation: "Deutschland", liga: "Rest der Welt", club: "Bayern Munich", eaId: 224334, imgUrl: "" },
+  "Dayot Upamecano": { pos: "CB", nation: "Frankreich", liga: "Rest der Welt", club: "Bayern Munich", eaId: 246669, imgUrl: "" },
+  "Alphonso Davies": { pos: "LB", nation: "Kanada", liga: "Rest der Welt", club: "Bayern Munich", eaId: 245369, imgUrl: "" },
+  "Granit Xhaka": { pos: "CDM", nation: "Schweiz", liga: "Rest der Welt", club: "B. Leverkusen", eaId: 211110, imgUrl: "" },
+  "Jonathan Tah": { pos: "CB", nation: "Deutschland", liga: "Rest der Welt", club: "B. Leverkusen", eaId: 236496, imgUrl: "" },
+  "Alejandro Grimaldo": { pos: "LB", nation: "Spanien", liga: "Rest der Welt", club: "B. Leverkusen", eaId: 231443, imgUrl: "" },
+  "Victor Boniface": { pos: "ST", nation: "Nigeria", liga: "Rest der Welt", club: "B. Leverkusen", eaId: 258923, imgUrl: "" },
+  "Serhou Guirassy": { pos: "ST", nation: "Guinea", liga: "Rest der Welt", club: "Dortmund", eaId: 241637, imgUrl: "" },
+  "Julian Brandt": { pos: "CAM", nation: "Deutschland", liga: "Rest der Welt", club: "Dortmund", eaId: 231678, imgUrl: "" },
+  "Lionel Messi": { pos: "CAM", nation: "Argentinien", liga: "Rest der Welt", club: "Inter Miami", eaId: 158023, imgUrl: "" },
+  "Neymar Jr.": { pos: "LW", nation: "Brasilien", liga: "Rest der Welt", club: "Al-Hilal", eaId: 190871, imgUrl: "" },
+  "Karim Benzema": { pos: "ST", nation: "Frankreich", liga: "Rest der Welt", club: "Al-Ittihad", eaId: 165153, imgUrl: "" },
+  "Sadio Mané": { pos: "LW", nation: "Senegal", liga: "Rest der Welt", club: "Al-Nassr", eaId: 202335, imgUrl: "" },
 };
 
-// Vollständiger Spieler-Pool (5039 Spieler)
 export const DEFAULT_PLAYERS = ["A. Ait Boudlal", "A. Barišić", "A. Bella-Kotchap", "A. Buongiorno", "A. Christensen", "A. Debenedetti", "A. Dellavalle", "A. Di Pardo", "A. Fontanarosa", "A. Gabrielloni", "A. García MacNulty", "A. Hanche-Olsen", "A. Jankewitz", "A. Kasperkiewicz", "A. Konstantopoulos", "A. Mac Allister", "A. Maitland-Niles", "A. Marcandalli", "A. Moran", "A. Nordin", "A. Ouattara", "A. Paleari", "A. Papadopoulos", "A. Riccio", "A. Saelemaekers", "A. Salama", "A. Sayyadmanesh", "A. Schjelderup", "A. Sersanti", "A. Sorrentino", "A. Stanković", "A. Tchouaméni", "A. Tripaldelli", "A. Van Hoorenbeeck", "A. van Axel Dongen", "Aaron Cresswell", "Aaron Hickey", "Aaron Ramsdale", "Aaron Ramsey", "Aaron Wan-Bissaka", "Aarón Anselmino", "Aarón Escandell", "Aarón Martin", "Aarón Martín", "Abakar Sylla", "Abdallah Sima", "Abde Ezzalzouli", "Abde Rebbach", "Abdel Abqar", "Abdelkahar Kadri", "Abdou Harroui", "Abdoul Ouattara", "Abdoul Tapsoba", "Abdoulaye Bamba", "Abdoulaye Diaby", "Abdoulaye Faye", "Abdoulaye Ndiaye", "Abdoulaye Sissako", "Abdoulaye Touré", "Abdu Conté", "Abdukodir Khusanov", "Abdul Mumin", "Abdón Prats", "Abel Bretones", "Abel Ruiz", "Ablie Jallow", "Abner", "Abraham Marcus", "Abu Francis", "Abubakr Barry", "Achraf Hakimi", "Adam Armstrong", "Adam Aznou", "Adam Buksa", "Adam Carlén", "Adam Daghim", "Adam Gnezda Cerin", "Adam Idah", "Adam Karabec", "Adam Marusic", "Adam Obert", "Adam Radwański", "Adam Randell", "Adam Smith", "Adam Stejskal", "Adam Webster", "Adam Wharton", "Adam Zrelak", "Adama Boiro", "Adama Traoré", "Adem Zorgane", "Aderllan Santos", "Adetunji Rasaq Adeshina", "Adil Lechkar", "Adilson", "Adilson Malanda", "Adnan Januzaj", "Adnane Abid", "Adrian Bajrami", "Adrian Blad", "Adrian Blake", "Adrian Chovan", "Adrian Durrer", "Adrian Grbic", "Adrian Przyborek", "Adrian Segecic", "Adrian Semper", "Adriano", "Adriano Bertaccini", "Adriel", "Adrien Rabiot", "Adrien Tamèze", "Adrien Thomasson", "Adrien Truffert", "Adrià Altimira", "Adrià Pedrosa", "Adrián", "Adrián Bernabé", "Adrián Dalmau", "Adrián Dela", "Adrián Diéguez", "Adrián Embarba", "Adrián Liso", "Adrián Palacios", "Adrián Pica", "Adu Ares", "Afimico Pululu", "Afonso Assis", "Afonso Moreira", "Agus Medina", "Agustín Álvarez", "Ahmetcan Kaplan", "Aidan Morris", "Aidomo Emakhu", "Aiham Ousou", "Aihen Muñoz", "Aimar Oroz", "Aitor Buñuel", "Aitor Fernández", "Aitor Paredes", "Aitor Ruibal", "Aiyegun Tosin", "Ajdin Hasic", "Ajdin Hrustic", "Akin Famewo", "Akor Adams", "Alaa Ghram", "Alan", "Alan Browne", "Alan Czerwinski", "Alan Varela", "Alan Virginius", "Alaric Jones", "Alassane Pléa", "Alassane Sidibe", "Alban Ajdini", "Albert Grønbæk", "Albert Gudmundsson", "Albert Vallci", "Alberto Cerri", "Alberto Costa", "Alberto Dadie", "Alberto Dossena", "Alberto Grassi", "Alberto Jiménez", "Alberto Marí", "Alberto Moleiro", "Alberto Moreno", "Alberto Reina", "Alberto del Moral", "Albian Ajeti", "Albian Hajdari", "Aleix Febas", "Aleix García", "Alejandro Balde", "Alejandro Catena", "Alejandro Francés", "Alejandro Garnacho", "Alejandro Grimaldo", "Alejandro Marqués", "Aleks Ławniczak", "Aleksa Terzic", "Aleksandar Cirkovic", "Aleksandar Dragovic", "Aleksander Paluszek", "Aleksandr Golovin", "Alem Pasic", "Alemão", "Alen Halilovic", "Alen Sherri", "Ales Mateju", "Alessandro Bastoni", "Alessandro Bellemo", "Alessandro Capelli", "Alessandro Circati", "Alessandro Confente", "Alessandro Deiola", "Alessandro Milani", "Alessandro Schöpf", "Alessandro Siano", "Alessandro Vogt", "Alessandro Zanoli", "Alessio Castellini", "Alessio Romagnoli", "Alessio Zerbin", "Alex Bangura", "Alex Cochrane", "Alex Douglas", "Alex Ferrari", "Alex Iwobi", "Alex Meret", "Alex Mowatt", "Alex Palmer", "Alex Paulsen", "Alex Plat", "Alex Scott", "Alex Tóth", "Alexander Aravena", "Alexander Bah", "Alexander Briedl", "Alexander Djiku", "Alexander Hack", "Alexander Hofleitner", "Alexander Isak", "Alexander Prass", "Alexander Schlager", "Alexander Sørloth", "Alexandre Penetra", "Alexis Beka Beka", "Alexis Blin", "Alexis Sánchez", "Alexis Vossah", "Alexsandro", "Alfie Devine", "Alfie Doughty", "Alfie Gilchrist", "Alfie Jones", "Alfons Sampsted", "Alfonso Herrero", "Alfonso Pedraza", "Alfonso Trezza", "Alfred Duncan", "Alfred Gomis", "Ali Abdi", "Ali Gholizadeh", "Ali Kabacalman", "Ali McCann", "Alidu Seidu", "Alieu Fadera", "Aliou Baldé", "Alioune Ndoye", "Alireza Jahanbakhsh", "Alisson", "Alisson", "Alisson Santos", "Aljosa Vasic", "Allan Arigoni", "Allan Saint-Maximin", "Ally Samatta", "Alonzo Engwanda", "Alpha Touré", "Alphadjo Cissè", "Alphonse Areola", "Altay Bayındır", "Alvis Jaunzems", "Alvyn Sanches", "Alwande Roaldsøy", "Alysson", "Amad Diallo", "Amadou Dante", "Amadou Haidara", "Amadou Mbengue", "Amadou Onana", "Amady Camara", "Amando Lapage", "Amankwah Forson", "Amar Dedić", "Amari'i Bell", "Amath Ndiaye", "Ameen Al-Dakhil", "Amin Sarr", "Amine Adli", "Amine Boukamir", "Amine El Ouazzani", "Amine Gouiri", "Amine Sbaï", "Amir Abedzadeh", "Amir Abrashi", "Amir Al-Ammari", "Amir Hadziahmetovic", "Amir Richardson", "Amir Rrahmani", "Amir Saipi", "Ammar Helac", "Anaitz Arbilla", "Anan Khalaili", "Anass Salah-Eddine", "Anastasios Bakasetas", "Anatoliy Trubin", "Ander Barrenetxea", "Ander Cantero", "Ander Guevara", "Ander Madariaga", "Anders Dreyer", "Anderson", "Andi Zeqiri", "Andoni Gorosabel", "Andraz Sporar", "Andre Brooks", "Andre Dozzell", "Andre Green", "Andrea Adorante", "Andrea Belotti", "Andrea Bozzolan", "Andrea Cambiaso", "Andrea Carboni", "Andrea Ciofi", "Andrea Cistana", "Andrea Colpani", "Andrea Favilli", "Andrea Franzoni", "Andrea Fulignati", "Andrea Ghion", "Andrea Giorgini", "Andrea Masiello", "Andrea Meroni", "Andrea Oliveri", "Andrea Papetti", "Andrea Petagna", "Andrea Pinamonti", "Andrea Tiritiello", "Andreas Jungdal", "Andreas Leitner", "Andreas Ntoi", "Andreas Skov Olsen", "Andreas Weimann", "Andreaw Gravillon", "Andrei Rațiu", "Andrej Bacanin", "Andrej Kramaric", "Andrejs Ciganiks", "Andrew Hughes", "Andrew Irving", "Andrew Omobamidele", "Andrew Robertson", "Andrey Santos", "Andri Gudjohnsen", "Andries Noppert", "Andrija Novakovich", "Andrija Vukcevic", "Andrin Hunziker", "Andriy Lunin", "Andriy Yarmolenko", "András Schäfer", "André", "André Almeida", "André Ayew", "André Ferreira", "André Geraldes", "André Gomes", "André Lacximicant", "Andrés Andrade", "Andrés Fernández", "Andrés García", "Andrés Martín", "Andrés Vombergar", "Andy Diouf", "Andy Fisher", "Andy Pelmard", "Anel Ahmedhodzic", "Ange-Yoan Bonny", "Angel Gomes", "Angeliño", "Angelo Gattermayer", "Angus Gunn", "Anis Hadj Moussa", "Anis Mehmeti", "Anis Slimane", "Anosike Ementa", "Anouar Ait El Hadj", "Anrie Chase", "Ansu Fati", "Ante Bajic", "Ante Budimir", "Ante Crnac", "Antef Tsoungui", "Anteo Fetahu", "Anthony Descotte", "Anthony Elanga", "Anthony Gordon", "Anthony Lopes", "Anthony Oyono", "Anthony Partipilo", "Anthony Patterson", "Anthony Racioppi", "Anthony Rouault", "Anthony Valencia", "Anto Grgic", "Antoine Baroan", "Antoine Bernede", "Antoine Bernier", "Antoine Colassin", "Antoine Griezmann", "Antoine Joujou", "Antoine Mendy", "Antoine Semenyo", "Anton Gaaei", "Anton Salétros", "Anton Stach", "Anton Tanghe", "Anton Tsarenko", "Antonee Robinson", "Antoni Kozubal", "Antoni Milambo", "Antonino Gallo", "Antonio Barreca", "Antonio Blanco", "Antonio Boccadamo", "Antonio Candela", "Antonio Caracciolo", "Antonio Casas", "Antonio Colak", "Antonio Di Nardo", "Antonio Espigares", "Antonio Fiori", "Antonio Milic", "Antonio Nusa", "Antonio Pacheco", "Antonio Palumbo", "Antonio Puertas", "Antonio Raimondo", "Antonio Raíllo", "Antonio Rüdiger", "Antonio Sanabria", "Antonio Sivera", "Antonio Sánchez", "Antonio Van Wyk", "Antonio Vergara", "Antony", "Antony Iannarilli", "Antonín Kinský", "Antoñín", "António Silva", "Anuar", "Ao Tanaka", "Arbnor Muja", "Archie Gray", "Arda Güler", "Ardian Ismajli", "Ardon Jashari", "Arijanet Murić", "Aritz Aldasoro", "Aritz Arambarri", "Aritz Elustondo", "Arjan Malic", "Arkadiusz Jędrych", "Arkadiusz Milik", "Arkadiusz Najemski", "Arkadiusz Reca", "Armand Laurienté", "Armando Broja", "Armando Izzo", "Armando Obispo", "Armin Gigovic", "Arnau Martínez", "Arnau Puigmal", "Arnaud Kalimuendo", "Arnaut Danjuma", "Arno Verschueren", "Aron Dønnum", "Arouna Sangante", "Arsen Zakharyan", "Arsène Kouassi", "Artem Bondarenko", "Artem Dovbyk", "Artem Putivtsev", "Artem Stepanov", "Arthur Atta", "Arthur Avom", "Arthur Masuaku", "Arthur Okonkwo", "Arthur Piedfort", "Arthur Theate", "Arthur Vermeeren", "Arthur Zagré", "Arturo Vidal", "Ashley Phillips", "Ashley Young", "Asier Villalibre", "Aske Adelgaard", "Asmir Begovic", "Assane Diao", "Assane Dioussé", "Aster Vranckx", "Atsuki Ito", "Attila Szalai", "Augusto Batalla", "Aune Heggebø", "Aurelio Oehlers", "Aurèle Amenda", "Aurélien Nguiamba", "Aurélien Scheidler", "Awer Mabil", "Axel Disasi", "Axel Henriksson", "Axel Kayombo", "Axel Witsel", "Ayase Ueda", "Ayden Heaven", "Aymeric Laporte", "Aynsley Pears", "Ayoub El Kaabi", "Ayoze Pérez", "Ayumu Seko", "Ayyoub Bouaddi", "Azor Matusiwa", "Azzedine Ounahi", "Aïssa Mandi", "B. De Cordova-Reid", "B. De Keersmaecker", "B. Mykhailichenko", "B. Norton-Cuffy", "B. Omeragić", "B. Osayi-Samuel", "B. Thomas-Asante", "B. Willumsson", "B. van den Boomen", "Bafodé Dansoko", "Bafodé Diakité", "Bailey Cadamarteri", "Bakary Haidara", "Baltazar", "Balázs Tóth", "Bamba Dieng", "Bamo Meïté", "Barnabás Varga", "Barry Bannan", "Bart Verbruggen", "Bart van Rooij", "Bartosz Kapustka", "Bartosz Kopacz", "Bartosz Mrozek", "Bartosz Nowak", "Bartosz Wolski", "Bartłomiej Drągowski", "Bartłomiej Kłudka", "Bartłomiej Smolarczyk", "Bartłomiej Wdowik", "Bas Kuipers", "Bashir Humphreys", "Basil Stillhart", "Bastien Meupiyou", "Başar Önal", "Bebeto", "Behar Neziri", "Ben Ahmun", "Ben Brereton Díaz", "Ben Cabango", "Ben Chilwell", "Ben Davies", "Ben Davies", "Ben Doak", "Ben Gibson", "Ben Johnson", "Ben Lhassine Kone", "Ben Mee", "Ben Pearson", "Ben Sheaf", "Ben White", "Ben Whiteman", "Ben Wilmot", "Bence Dárdai", "Bendegúz Bolla", "Benedikt Zech", "Beni", "Benito Raman", "Benja Domínguez", "Benjamin André", "Benjamin Böckle", "Benjamin Fredrick", "Benjamin Kimpioka", "Benjamin Kololli", "Benjamin Lecomte", "Benjamin Markus", "Benjamin Mendy", "Benjamin Nygren", "Benjamin Pauwels", "Benjamin Pavard", "Benjamin Sesko", "Benjamin Stambouli", "Benjamin Verbič", "Benoît Badiashile", "Benoît Nyssen", "Berat Djimsiti", "Beres Owusu", "Berke Özer", "Bernardo", "Bernardo Schappo", "Bernardo Silva", "Bernardo Vital", "Bernat Guiu", "Bernd Leno", "Bernt Klaverboer", "Bertrand Traoré", "Besfort Zeneli", "Betim Fazliji", "Beto", "Beyatt Lekoueiry", "Beñat Prados", "Beñat Turrientes", "Bilal Bafdili", "Bilal El Khannouss", "Bilal Nadir", "Bilal Ould-Chikh", "Bill Antonio", "Billy Gilmour", "Billy Mitchell", "Bingourou Kamara", "Birger Verstraete", "Bjarki Bjarkason", "Bjorn Meijer", "Blaz Kramer", "Bledian Krasniqi", "Bobby Clark", "Bobby Thomas", "Bogdan Mircetic", "Bogdan Racovițan", "Bogdan Viunnyk", "Bojan Kovacevic", "Boli Bolingoli", "Bono", "Boris Matic", "Boris Popović", "Boris Radunović", "Borislav Rupanov", "Borja Galán", "Borja Iglesias", "Borja Mayoral", "Borja Sainz", "Borna Sosa", "Bosko Sutalo", "Botond Balogh", "Boubacar Kamara", "Boubacar Traoré", "Bouke Boersma", "Boulaye Dia", "Boy Kemper", "Boyd Lucassen", "Brad Potts", "Bradley Barcola", "Bradley Locko", "Bradley Mazikou", "Bradly van Hoeven", "Brahim Díaz", "Brahim Ghalidi", "Brahim Traoré", "Brais Martínez", "Brais Méndez", "Brandley Kuwas", "Brandon Aguilera", "Brandon Dominguès", "Brandon Mechele", "Brandon Soppy", "Brayan Medina", "Brayann Pereira", "Breel Embolo", "Bremer", "Brendan Chardonnet", "Brenden Aaronson", "Brennan Johnson", "Brenner", "Brent Gabriël", "Brian Brobbey", "Brian Cipenga", "Brian Mansilla", "Brian Ocampo", "Brian Rodríguez", "Brice Samba", "Bright Arrey-Mbi", "Bright Ede", "Brighton Labeau", "Bruma", "Bruno Fernandes", "Bruno Guimarães", "Bruno Langa", "Bruno Martins Indi", "Bruny Nsimba", "Bryan Cristante", "Bryan Gil", "Bryan Goncalves", "Bryan Heynen", "Bryan Limbombe", "Bryan Linssen", "Bryan Mbeumo", "Bryan Okoh", "Bryan Reynolds", "Bryan Zaragoza", "Bryant Nieling", "Bujar Pllana", "Bukayo Saka", "Bung Meng Freimann", "Bénie Traoré", "C. Baumgartner", "C. Bonsu Baah", "C. Brym", "C. De Ketelaere", "C. Driouech", "C. Fassnacht", "C. Favasuli", "C. Ikwuemesi", "C. Kabasele", "C. Lichtenberger", "C. Summerville", "C. Wernitznig", "CJ Egan-Riley", "Caio Henrique", "Caio Secco", "Caleb Ekuban", "Caleb Okoli", "Caleb Taylor", "Caleb Wiley", "Calila", "Callum Brittain", "Callum Doyle", "Callum Elder", "Callum Hudson-Odoi", "Callum Lang", "Callum O'Hare", "Callum Styles", "Callum Wilson", "Calvin Bassey", "Calvin Raatsie", "Calvin Verdonk", "Cameron Archer", "Cameron Brannagan", "Cameron Burgess", "Cameron Pring", "Camiel Neghli", "Camilo Mena", "Camilo Vargas", "Can Bozdogan", "Caoimhín Kelleher", "Capita", "Carbone", "Carl Rushworth", "Carl Starfelt", "Carlens Arcus", "Carles Aleñá", "Carlo Boukhalfa", "Carlo Faedo", "Carlo Pinsoglio", "Carlos Albarrán", "Carlos Alcaraz", "Carlos Augusto", "Carlos Baleba", "Carlos Cuesta", "Carlos Domínguez", "Carlos Dotor", "Carlos Espí", "Carlos Fernández", "Carlos Forbs", "Carlos Isaac", "Carlos Martín", "Carlos Marín", "Carlos Neva", "Carlos Pomares", "Carlos Ponck", "Carlos Protesoni", "Carlos Puga", "Carlos Romero", "Carlos Vicente", "Carlos Álvarez", "Carlton Morris", "Casemiro", "Caspar Jander", "Casper De Norre", "Casper Nielsen", "Casper Tengstedt", "Casper Terho", "Casper Widell", "Cassiano", "Castello Lukeba", "Cedric Gondo", "Cedric Hatenboer", "Cedric Itten", "Cedric Teguia", "Cesare Casadei", "Cezary Miszta", "Chadi Riad", "Chancel Mbemba", "Charalampos Kostoulas", "Charalampos Lykogiannis", "Charles", "Charles Aránguiz", "Charles Herrmann", "Charles Vanhoutte", "Charlie Cresswell", "Charlie Hughes", "Charlie Kelman", "Charlie McNeill", "Charlie Patiño", "Charlie Taylor", "Charlys", "Check Keita", "Cheick Condé", "Cheick Diabaté", "Cheick Doucouré", "Cheikh Niasse", "Chemsdine Talbi", "Cher Ndour", "Cheveyo Tsawa", "Chico Gonçalves", "Chidera Ejuke", "Chidozie Awaziem", "Chiedozie Ogbene", "Chiheb Labidi", "Chima Okoroji", "Chimy Ávila", "Chiquinho", "Chissumba", "Chris Bedia", "Chris Mepham", "Chris Richards", "Chris Rigg", "Chris Wood", "Chris-Kévin Nadje", "Chrislain Matsima", "Christantus Uche", "Christiaan Ravych", "Christian Burgess", "Christian Eriksen", "Christian Früchtl", "Christian Gytkjær", "Christian Marietta", "Christian Marques", "Christian Mawissa", "Christian Nørgaard", "Christian Ordóñez", "Christian Pierobon", "Christian Pulisic", "Christian Walton", "Christian Witzig", "Christoph Klarer", "Christoph Lang", "Christoph Nicht", "Christopher Cvetko", "Christopher Ibayi", "Christopher Nkunku", "Christopher Scott", "Christos Donis", "Christos Mandas", "Christos Mouzakitis", "Christos Tzolis", "Christos Zafeiris", "Chuba Akpom", "Chumi", "Ché Adams", "Ciaron Brown", "Ciro Immobile", "Cisse Sandra", "Claudio Gomes", "Claudy Mbuyi", "Clement Bischoff", "Clint Leemans", "Clinton Mata", "Clinton Nsiala", "Cláudio Ramos", "Clément Akpa", "Clément Lenglet", "Clément Michelin", "Cody Drameh", "Cody Gakpo", "Colby Bishop", "Cole Palmer", "Colin Coosemans", "Colin Kleine-Bekel", "Collins Sichenje", "Connor Ogilvie", "Connor Roberts", "Conor Bradley", "Conor Chaplin", "Conor Coady", "Conor Coventry", "Conor Gallagher", "Conor Shaughnessy", "Conrad Harder", "Corentin Tolisso", "Corey Shephard", "Corsin Konietzke", "Craig Forsyth", "Cristhian Mosquera", "Cristhian Stuani", "Cristian Buonaiuto", "Cristian Carracedo", "Cristian Cásseres Jr.", "Cristian Devenish", "Cristian Gutiérrez", "Cristian Herrera", "Cristian Rivero", "Cristian Romero", "Cristian Shpendi", "Cristian Volpato", "Cristiano Biraghi", "Cristiano Ronaldo", "Cucho Hernández", "Curro Sánchez", "Curtis Jones", "Cyle Larin", "Cyrill May", "Cédric Bakambu", "Cédric Kipré", "Cédric Nuozzi", "Cédric Zesiger", "Célestin De Schrevel", "César Augusto", "César Azpilicueta", "César Falletti", "César Gelabert", "César Huerta", "César Tárrega", "D. Baumgartner", "D. Calvert-Lewin", "D. Degli Innocenti", "D. Eckert Ayensa", "D. Faraoni", "D. Hashioka", "D. Odoi", "D. Sanches Fernandes", "D. Sikan", "D. van der Haar", "D. van der Kust", "D. Črnigoj", "Daam Foulon", "Daan Dierckx", "Daan Heymans", "Daan Reiziger", "Daan Rots", "Dael Fry", "Daichi Kamada", "Daijiro Chirino", "Daizen Maeda", "Dakonam Djené", "Daley Blind", "Daley Sinkgraven", "Damian Dąbrowski", "Damian Hilbrycht", "Damian Kelvin", "Damian Michalski", "Damian Szymański", "Damian Węglarz", "Damienus Reverson", "Damir Redzic", "Damián Rodríguez", "Damjan Kovacevic", "Damon Mirani", "Dan Ballard", "Dan Burn", "Dan Ndoye", "Dan Neil", "Dango Ouattara", "Dani Barcia", "Dani Calvo", "Dani Ceballos", "Dani Cárdenas", "Dani Figueira", "Dani Gómez", "Dani Jiménez", "Dani Lorenzo", "Dani Ojeda", "Dani Olmo", "Dani Pacheco", "Dani Parejo", "Dani Queipo", "Dani Raba", "Dani Sánchez", "Dani Tasende", "Dani Vivian", "Dani de Wit", "Daniel Bentley", "Daniel Bielica", "Daniel Boloca", "Daniel Bragança", "Daniel Carvajal", "Daniel Dos Santos", "Daniel Fila", "Daniel González", "Daniel Hawkins", "Daniel Håkans", "Daniel Iversen", "Daniel James", "Daniel Jebbison", "Daniel Maderner", "Daniel Maldini", "Daniel Muñoz", "Daniel Svensson", "Daniel Tonoli", "Daniele Casiraghi", "Daniele Ghilardi", "Daniele Rugani", "Daniil Khudyakov", "Danijel Loncar", "Danilo", "Danilo Cataldi", "Danilo Veiga", "Danny Bakker", "Danny Ings", "Danny McNamara", "Danny Namaso", "Danny Ward", "Danny Welbeck", "Dante", "Dante Vanzeir", "Dany Mota", "Daouda Guindo", "Dara O'Shea", "Darian Males", "Dario Ulrich", "Dario Špikić", "Darko Brasanac", "Darko Gyabi", "Darlin Yongwa", "Darnell Furlong", "Darragh Lenihan", "Darryl Bakola", "Darwin Núñez", "Daryl Dike", "Darío Benavides", "Darío Osorio", "Dave Kwakman", "David Affengruber", "David Alaba", "David Atanga", "David Bates", "David Brekalo", "David Brooks", "David Bumberger", "David Cornell", "David Costas", "David Douline", "David Fofana", "David Gil", "David Gugganig", "David Hrncar", "David Jaunegg", "David Kubatta", "David Larrubia", "David López", "David Mella", "David Min", "David Møller Wolfe", "David Neres", "David Odogu", "David Raya", "David Skubl", "David Soria", "David Sousa", "David Strelec", "David Torres", "David Vujevic", "David Wieser", "David Zec", "David de Gea", "David van der Werff", "David von Ballmoos", "Davide Adorni", "Davide Bariti", "Davide Bartesaghi", "Davide Bettella", "Davide Bragantini", "Davide Buglio", "Davide Frattesi", "Davide Merola", "Davide Veroli", "Davide Zappacosta", "Davinson Sánchez", "Davis Keillor-Dunn", "Davy Klaassen", "Davy Roef", "Dawid Abramowicz", "Dawid Blanik", "Dawid Drachal", "Dawid Gojny", "Dawid Kocyła", "Dawid Kudła", "Dawid Kurminowski", "Dayann Methalie", "Dayot Upamecano", "Dean Henderson", "Dean James", "Declan Rice", "Deiver Machado", "Dejan Kulusevski", "Dejan Petrovic", "Dejan Radonjic", "Dejan Stojanovic", "Dejan Zukic", "Delano Burgzorg", "Demarai Gray", "Demba Thiam", "Demir Ege Tıknaz", "Deni Juric", "Denis Suárez", "Denis Zakaria", "Deniz Gül", "Dennis Johnsen", "Dennis Man", "Dennis Praet", "Denso Kasius", "Denys Tvardovskyi", "Denzel Dumfries", "Deron Payne", "Derrick Köhn", "Derry Murkin", "Destiny Udogie", "Devid Eugene Bouah", "Devon Koswal", "Devyne Rensch", "Di'Shon Bernard", "Diego Carlos", "Diego Collado", "Diego Conde", "Diego Coppola", "Diego García", "Diego González", "Diego Gómez", "Diego Llorente", "Diego López", "Diego Mariño", "Diego Mascardi", "Diego Moreira", "Diego Pampín", "Diego Rico", "Diego Rodrigues", "Diego Villares", "Dies Janse", "Dijon Kameri", "Dikeni Salifou", "Dilane Bakwa", "Dimitri Bisoli", "Dimitri Foulquier", "Dimitri Lavalée", "Dimitrios Giannoulis", "Dimitrios Keramitsis", "Dimitrios Limnios", "Dimitrios Nikolaou", "Dimitrios Sounas", "Dimitris Rallis", "Diogo Costa", "Diogo Dalot", "Diogo Pinto", "Diogo Spencer", "Diogo Travassos", "Dion De Neve", "Dion Gallapeni", "Dion Lopy", "Dion Malone", "Dion Sanderson", "Dirk Abels", "Dirk Asare", "Dirk Proper", "Divin Mubama", "Divine Mukasa", "Djaoui Cissé", "Djed Spence", "Djibril Lamego", "Djibril Sidibé", "Djibril Sow", "Djordje Petrovic", "Dmytro Kryskiv", "Dmytro Riznyk", "Dodi Lukébakio", "Dodô", "Domagoj Bradarić", "Domenico Berardi", "Domingos Duarte", "Dominic Hyam", "Dominic Iorfa", "Dominic Solanke", "Dominic Vincze", "Dominick Zator", "Dominik Franke", "Dominik Frieser", "Dominik Greif", "Dominik Hładun", "Dominik Kirnbauer", "Dominik Kotarski", "Dominik Kun", "Dominik Livakovic", "Dominik Pech", "Dominik Piła", "Dominik Sarapata", "Dominik Schmid", "Dominik Szoboszlai", "Donat Rrudhani", "Donis Avdijaj", "Donny van de Beek", "Donovan Léon", "Donovan Pines", "Donyell Malen", "Dorian Paloschi", "Douglas Aurélio", "Douglas Luiz", "Doğucan Haspolat", "Dro Fernández", "Duje Caleta-Car", "Dusan Stojinovic", "Duván Zapata", "Dušan Vlahović", "Dwight McNeil", "Dylan Bronn", "Dylan Mertens", "Dylan Ourega", "Dylan Rees", "Dylan Vente", "Dániel Gazdag", "Dário Essugo", "Dénes Dibusz", "Désiré Doué", "E. Masciangelo", "E. Torregrossa", "E. Wahi", "Ebenezer Akinsanmiro", "Eberechi Eze", "Ebou Adams", "Ebrima Colley", "Ebrima Darboe", "Edan Diop", "Eddie Nketiah", "Eddy Doué", "Edimilson Fernandes", "Edmund Baidoo", "Edo Kayembe", "Edoardo Bove", "Edoardo Goldaniga", "Edoardo Soleri", "Edoardo Vergani", "Edon Zhegrova", "Edouard Michut", "Edu Espiau", "Edu Expósito", "Eduardo Camavinga", "Eduardo Quaresma", "Egil Selvik", "Eguinaldo", "Einar Galilea", "Eiran Cashin", "Eivind Helland", "Ejike Opara", "El Hadji Malick Diouf", "Eli Dasa", "Eli Kroupi", "Elia Caprile", "Elias Bakatukanda", "Elias Havel", "Elias Jelert", "Elias Manoel", "Eliesse Ben Seghir", "Eliezer Mayenda", "Eliot Matazo", "Elisha Owusu", "Eljif Elmas", "Elliot Anderson", "Ellis Simms", "Elmin Rastoder", "Elseid Hysaj", "Elves Baldé", "Ema Twumasi", "Eman Markovic", "Emanuel Aiwu", "Emanuele Adamo", "Emanuele Pecorino", "Emanuele Torrasi", "Emanuele Valeri", "Emanuele Zuelli", "Emerson", "Emersonn", "Emil Audero", "Emil Bohinen", "Emil Forsberg", "Emil Hansson", "Emil Holm", "Emil Kornvig", "Emil Krafth", "Emil Riis", "Emile Smith Rowe", "Emiliano Buendía", "Emiliano Marcondes", "Emiliano Martínez", "Emiliano Martínez", "Emin Bayram", "Emir Karic", "Emirhan İlkhan", "Emmanuel Agyemang", "Emmanuel Biumla", "Emmanuel Emegha", "Emmanuel Gyasi", "Emmanuel Kakou", "Emmanuel Michael", "Emran Soglo", "Endrick", "Eneko Jauregi", "Enes Ünal", "Enis Destan", "Ennio van der Gouw", "Enric Franquesa", "Enric Llansana", "Enrico Delprato", "Enrique Clemente", "Enrique Lofolomo", "Enzo Barrenechea", "Enzo Boyomo", "Enzo Fernández", "Enzo Le Fée", "Enzo Loiodice", "Enzo Millot", "Ephron Mason-Clark", "Eray Cömert", "Ercan Kara", "Eric Bailly", "Eric Curbelo", "Eric Dier", "Eric García", "Eric-Junior Bocat", "Erick Nunes", "Erick Otieno", "Erik Janza", "Erik Jirka", "Erik Kojzek", "Erkin Yalcin", "Erling Haaland", "Ermal Krasniqi", "Ernest Nuamah", "Eser Gürbüz", "Esmir Bajraktarević", "Espen van Ee", "Estéban Lepaul", "Estêvão", "Ethan Ampadu", "Ethan Galbraith", "Ethan Laird", "Ethan Mbappé", "Ethan Nwaneri", "Ethan Pinnock", "Etienne Vaessen", "Ettore Gliozzi", "Evan Eghosa Aisowieren", "Evan Ferguson", "Evan Ndicka", "Evanilson", "Evann Guessand", "Evert Linthorst", "Ewoud Pletinckx", "Exequiel Palacios", "Ezgjan Alioski", "Ezri Konsa", "F. Baschirotto", "F. Di Francesco", "F. Di Mariano", "F. Sierralta", "F. Terracciano", "Fabian Rieder", "Fabian Rohner", "Fabian Rossdorfer", "Fabian Schär", "Fabian Tait", "Fabian Wilfinger", "Fabian Wohlmuth", "Fabian de Keijzer", "Fabiano", "Fabiano Parisi", "Fabien Centonze", "Fabio Abiuso", "Fabio Andrea Ruggeri", "Fabio Depaoli", "Fabio Fehr", "Fabio Ferraro", "Fabio Gerli", "Fabio Maistro", "Fabio Miretti", "Fabio Rispoli", "Fabio Varesi-Strauss", "Fabián Hormazábal", "Fabián Ruiz", "Fabrizio Caligara", "Facundo Buonanotte", "Facundo Cáseres", "Facundo Medina", "Facundo Pellistri", "Facundo Torres", "Fahem Benaïssa", "Fally Mayulu", "Faris Moumbagna", "Farès Ghedjemis", "Fedde Leysen", "Federico Artioli", "Federico Bernardeschi", "Federico Bonazzoli", "Federico Chiesa", "Federico Dimarco", "Federico Gatti", "Federico Ravaglia", "Federico Valverde", "Federico Viñas", "Federico Zuccon", "Felipe Loyola", "Felix Bacher", "Felix Horn Myhre", "Felix Mambimbi", "Felix Wimmer", "Fellipe Jack", "Femi Azeez", "Femi Seriki", "Fer Niño", "Ferdi Kadıoğlu", "Ferland Mendy", "Fermín López", "Fernando Calero", "Fernando Martínez", "Fernando Medrano", "Ferran Torres", "Ferro", "Fikayo Tomori", "Filip Bednarek", "Filip Borowski", "Filip Jagiełło", "Filip Jørgensen", "Filip Kocaba", "Filip Kostić", "Filip Luberecki", "Filip Majchrowicz", "Filip Milojevic", "Filip Rózga", "Filip Stanković", "Filip Stojilkovic", "Filip Wójcik", "Filipe Soares", "Filippo Bandinelli", "Filippo Distefano", "Filippo Melegoni", "Filippo Oliana", "Filippo Pellacani", "Filippo Pittarello", "Filippo Ranocchia", "Filippo Romagna", "Filippo Sgarbi", "Finn Azaz", "Finn Stokkers", "Finn van Breemen", "Fisayo Dele-Bashiru", "Flavio Russo", "Flavius Daniliuc", "Florent Hanin", "Florentino", "Florian Ayé", "Florian Bianchini", "Florian Flecker", "Florian Grillitsch", "Florian Lejeune", "Florian Miguel", "Florian Sotoca", "Florian Thauvin", "Florian Wirtz", "Flynn Downes", "Fodé Ballo-Touré", "Fodé Doucouré", "Folarin Balogun", "Fotis Ioannidis", "Fran Beltrán", "Fran García", "Fran Gámez", "Fran Navarro", "Fran Pérez", "Fran Tudor", "Fran Vieites", "Fran Álvarez", "Francesco Acerbi", "Francesco Bardi", "Francesco Camarda", "Francesco Cassata", "Francesco Gelli", "Francesco Mezzoni", "Francesco Ruocco", "Francesco Vicari", "Francesco Zampano", "Francho Serrano", "Francis Coquelin", "Francis Momoh", "Francisco Conceição", "Francisco Moura", "Francisco Petrasso", "Francisco Portillo", "Francisco Trincão", "Franck Surdez", "Franco Carboni", "Franco Cervi", "Franco Israel", "Franco Mastantuono", "Franjo Ivanović", "Frank Anguissa", "Frank Magri", "Frank Onyeka", "Frank Tsadjout", "Frans Krätzig", "Frantisek Plach", "Franz-Ethan Meichtry", "Freddie Potts", "Freddie Woodman", "Frederico Venâncio", "Fredrik Aursnes", "Fredrik Hammar", "Fredrik Oldrup Jensen", "Fredrik Oppegård", "Fredrik Ulvestad", "Frenkie de Jong", "Frédéric Guilbert", "Frédéric Veseli", "Fábio Carvalho", "Fábio Ronaldo", "Fábio Silva", "Félix Correia", "Félix Lemaréchal", "G. Castrovilli", "G. Charpentier", "G. Di Lorenzo", "G. Donnarumma", "G. Gudmundsson", "G. Kochorashvili", "G. Kyriakopoulos", "G. Magnani", "G. Mamardashvili", "G. Morachioli", "G. Perrin", "G. Prestianni", "G. de Arrascaeta", "Gabri Martínez", "Gabri Veiga", "Gabriel Batista", "Gabriel Isik", "Gabriel Jesus", "Gabriel Jesus David", "Gabriel Magalhães", "Gabriel Martinelli", "Gabriel Moscardo", "Gabriel Otegbayo", "Gabriel Sigua", "Gabriel Silva", "Gabriel Souza", "Gabriel Strefezza", "Gabriel Suazo", "Gabriel Veron", "Gabriele Artistico", "Gabriele Bracaglia", "Gabriele Corbo", "Gabriele Guarino", "Gabriele Moncini", "Gabriele Piccinini", "Gabriele Zappa", "Gady Beyuku", "Gaetano Letizia", "Gaetano Oristanio", "Gaizka Larrazabal", "Gaoussou Diakité", "Garcia", "Gary Magnée", "Gaspar Campos", "Gastón Brugman", "Gauthier Gallon", "Gauthier Hein", "Gautier Lloris", "Gavi", "Gavin Bazunu", "Gaël Ondoua", "Gaëtan Coucke", "Gennaro Borrelli", "Gennaro Tutino", "Geny Catamo", "Genís Montolio", "Geoffrey Kondogbia", "Geoffry Hairemans", "George Bello", "George Campbell", "George Dobson", "George Earthy", "George Hirst", "George Long", "George Tanner", "Georginio Rutter", "Georgios Koutsias", "Georgios Liavas", "Georgios Masouras", "Georgios Vagiannidis", "Georgiy Bushchan", "Georgiy Sudakov", "Geovany Quenda", "Gerald Alders", "Gerard Gumbau", "Gerard Martín", "Gerard Moreno", "Gerard Yepes", "German Barkovskiy", "Germán Parreño", "Germán Valera", "Gernot Trauner", "Gerrit Nauber", "Gerónimo Rulli", "Gessime Yassine", "Ghislain Konan", "Giacomo Calò", "Giacomo Olzer", "Giacomo Raspadori", "Giacomo Vrioni", "Gianluca Busio", "Gianluca Caprari", "Gianluca Frabotta", "Gianluca Gaetano", "Gianluca Lapadula", "Gianluca Mancini", "Gianluca Scamacca", "Giannis Konstantelias", "Giannis Niarchos", "Gibson Yah", "Gideon Mensah", "Gift Orban", "Gijs Smal", "Gil Dias", "Gilberto Batista", "Giorgi Abuashvili", "Giorgi Chakvetadze", "Giorgi Kvernadze", "Giorgi Kvilitaia", "Giorgi Tsitaishvili", "Giorgio Altare", "Giorgio Cittadini", "Giorgio Scalvini", "Giotto Morandi", "Giovane", "Giovani Lo Celso", "Giovanni Bonfanti", "Giovanni Daffara", "Giovanni Fabbian", "Giovanni Leoni", "Giovanni Simeone", "Giovanni Zaro", "Giuliano Simeone", "Giulio Maggiore", "Giuseppe Ambrosino", "Giuseppe Aurelio", "Giuseppe Caso", "Giuseppe Di Serio", "Giuseppe Leone", "Giuseppe Pezzella", "Givairo Read", "Gizo Mamageishvili", "Gjivai Zechiël", "Glen Kamara", "Godson Kyeremeh", "Goduine Koyalipou", "Gonzalo Crettaz", "Gonzalo Melero", "Gonzalo Montiel", "Gonçalo Borges", "Gonçalo Costa", "Gonçalo Esteves", "Gonçalo Franco", "Gonçalo Inácio", "Gonçalo Nogueira", "Gonçalo Paciência", "Gonçalo Ramos", "Gora Diouf", "Gorby", "Gorka Guruzeta", "Granit Xhaka", "Grant Hanley", "Greg Docherty", "Greg Leigh", "Greg Walters", "Gregor Kobel", "Gregory Wüthrich", "Grejohn Kyei", "Grzegorz Tomasiewicz", "Grégoire Coudert", "Grégoire Defrel", "Guglielmo Vicario", "Guilherme Montóia", "Guilherme Neiva", "Guillaume Dietsch", "Guillaume François", "Guillaume Restes", "Guille Rosas", "Guillermo Maripán", "Guillermo Varela", "Gustaf Lagerbielke", "Gustaf Nilsson", "Gustav Henriksson", "Gustav Isaksen", "Gustav Mortensen", "Gustavo Hamer", "Gustavo Mancha", "Gustavo Mendonça", "Gustavo Nunes", "Gustavo Puerta", "Gustavo Silva", "Gustavo Sá", "Gustavo Varela", "Guus Offerhaus", "Guus Til", "Guéla Doué", "Gvidas Gineitis", "Gyan de Regt", "Gyrano Kerk", "H. Delcroix", "H. Haraldsson", "H. Matthys", "H. Nicolussi Caviglia", "H. Van Crombrugge", "H. Van der Bruggen", "Habib Diallo", "Habib Diarra", "Haissem Hassan", "Haitam Abaida", "Haji Wright", "Hakan Çalhanoğlu", "Hakim Guenouche", "Hamari Traoré", "Hamed Traoré", "Hamidou Makalou", "Hamza Abdallah", "Hamza Choudhury", "Hamza El Kaouakibi", "Hamza Igamane", "Hannibal", "Hans Hateboer", "Hans Vanaken", "Haris Belkebla", "Harouna Djibirin", "Harrison Armstrong", "Harrison Burrows", "Harrison Reed", "Harry Amass", "Harry Clarke", "Harry Darling", "Harry Kane", "Harry Maguire", "Harry Pickering", "Harry Souttar", "Harry Wilson", "Harry Winks", "Harvey Barnes", "Harvey Elliott", "Harvey Knibbs", "Harvey Vale", "Hassane Kamara", "Hayden Carter", "Hayden Hackney", "Hayden Matthews", "Hee-chan Hwang", "Henk Veerman", "Henok Teklab", "Henrich Ravas", "Henrik Meister", "Henrikh Mkhitaryan", "Henrique Araújo", "Henry Lawrence", "Herba Guirassy", "Heriberto Jurado", "Hernani", "Hervé Koffi", "Hevertton", "Hicham Boudaoui", "Hicham Mahou", "Hidde Jurjus", "Hidde ter Avest", "Hidemasa Morita", "Higinio Marín", "Himad Abdelli", "Hiroki Ito", "Hiroki Sekine", "Hjalmar Ekdal", "Honest Ahanor", "Houboulang Mendes", "Hristiyan Petrov", "Hubert Zwozny", "Hugo Bueno", "Hugo Duro", "Hugo Ekitiké", "Hugo Félix", "Hugo Larsson", "Hugo Magnetti", "Hugo Rincón", "Hugo Siquet", "Hugo Sotelo", "Hugo Vallejo", "Hugo Vandermersch", "Hugo Vetlesen", "Hugo Álvarez", "Hyllarion Goore", "Hyun-ju Lee", "Hyun-seok Hong", "Hákon Valdimarsson", "Héctor Bellerín", "Héctor Fort", "Héctor Hernández", "Hélder Tavares", "I. Bangoura", "I. Van der Brempt", "Iago Aspas", "Ian Maatsen", "Ian Struyf", "Ianis Stoica", "Iban Salvador", "Ibe Hautekiet", "Ibrahim Diakité", "Ibrahim Mbaye", "Ibrahim Sadiq", "Ibrahim Salah", "Ibrahim Sangaré", "Ibrahim Sulemana", "Ibrahima Camará", "Ibrahima Konaté", "Ibrahima Sissoko", "Iddrisu Baba", "Idrissa Gueye", "Idrissa Gueye", "Idrissa Touré", "Ifan Knott", "Ignasi Miquel", "Ignasi Vilarrasa", "Igor Drapiński", "Igor Jesus", "Igor Julio", "Igor Matanovic", "Igor Orlikowski", "Igor Paixão", "Igor Silva", "Igor Strzałek", "Igor Thiago", "Igor Zubeldia", "Iker Losada", "Iker Muñoz", "Iké Ugbo", "Ilaix Moriba", "Ilan Kebbal", "Ilan Sauter", "Ilario Monterisi", "Ilay Camara", "Ilia Gruev", "Ilias Akhomach", "Ilias Bronkhorst", "Ilias Chair", "Ilias Koutsoupias", "Ilias Sebaoui", "Iliman Ndiaye", "Illan Meslier", "Ilya Shkurin", "Ilya Zabarnyi", "Ilyas Chaira", "Ilyas Chouaref", "Imourane Hassane", "Imrân Louza", "In-beom Hwang", "Indrit Mavraj", "Iori Humphreys", "Irakli Azarovi", "Irakli Yegoian", "Isa Sakamoto", "Isaac Babadi", "Isaac Hayden", "Isaac Mbenza", "Isaac Price", "Isaac Romero", "Isaac Schmidt", "Isaak Touré", "Isak Dahlqvist", "Isak Hansen-Aarøen", "Isak Hien", "Isak Jansson", "Isak Jensen", "Isaque", "Isaías Delpupo", "Isco", "Ishé Samuels-Smith", "Isi Palazón", "Isma Ruiz", "Ismael Saibari", "Ismaila Coulibaly", "Ismaël Doukouré", "Ismaël Koné", "Ismaëlo Ganiou", "Ismaïla Sarr", "Israel Suero", "Issa Diop", "Issa Doumbia", "Issa Kaboré", "Issa Soumaré", "Issahaku Fatawu", "Issiar Dramé", "Ivan Brkic", "Ivan Cavaleiro", "Ivan Durdov", "Ivan Ilić", "Ivan Kalyuzhnyi", "Ivan Lima", "Ivan Mandić", "Ivan Marconi", "Ivan Mesik", "Ivan Perišić", "Ivan Provedel", "Ivan Smolcic", "Ivan Toney", "Ivan Zhelizko", "Ivan Zlobin", "Ivanildo Fernandes", "Ivo Pinto", "Ivo Rodrigues", "Ivor Pandur", "Iván Azón", "Iván Balliu", "Iván Barbero", "Iván Calero", "Iván Fresneda", "Iván Martín", "Iván Morante", "Iván Márquez", "Iván Romero", "Iván Villar", "Iyad Mohamed", "Iza Carcelén", "Iñaki Peña", "Iñaki Williams", "Iñigo Córdoba", "Iñigo Vicente", "J. Akpa Akpro", "J. Bellegarde", "J. Braut Brunes", "J. Duranville", "J. Gazibegović", "J. Gbamin", "J. Karlsson", "J. Krasso", "J. Makengo", "J. Mateta", "J. Naschberger", "J. Pupe", "J. Quintero", "J. Rankin-Costello", "J. Romsaas", "J. St. Juste", "J. Widell Zetterström", "J. Wilson-Esbrand", "J. van de Kamp", "Jacen Russell-Rowe", "Jack Clarke", "Jack Grealish", "Jack Harrison", "Jack Hinshelwood", "Jack Robinson", "Jack Rudoni", "Jack Stacey", "Jack Stephens", "Jack Taylor", "Jackson Tchatchoua", "Jacob Bruun Larsen", "Jacob Greaves", "Jacob Italiano", "Jacob Murphy", "Jacob Ondrejka", "Jacob Peter Hödl", "Jacob Ramsey", "Jacob Trenskow", "Jacobo González", "Jacobo Ramón", "Jacopo Bacci", "Jacopo Fazzini", "Jacopo Martini", "Jacopo Petriccione", "Jacopo Segre", "Jacques Ekomié", "Jaden Heskey", "Jaden Philogene", "Jadon Sancho", "Jaidon Anthony", "Jair Amador", "Jair Cunha", "Jaka Bijol", "Jake Clarke-Salter", "Jake Cooper", "Jake O'Brien", "Jakob Breum", "Jakob Kiilerich", "Jakob Meierhofer", "Jakob Schöller", "Jakov Medic", "Jakub Brabec", "Jakub Czerwiński", "Jakub Kiwior", "Jakub Kolan", "Jakub Lewicki", "Jakub Moder", "Jakub Piotrowski", "Jakub Stolarczyk", "Jakub Sypek", "Jakub Łabojko", "Jalen Blesa", "Jamaal Lascelles", "Jamal Lowe", "Jamaldeen Jimoh-Aloba", "James Abankwah", "James Beadle", "James Bree", "James Garner", "James Hill", "James Justin", "James Maddison", "James McAtee", "James Milner", "James Rodríguez", "James Tarkowski", "James Trafford", "James Ward-Prowse", "Jamie Allen", "Jamie Cumming", "Jamie Gittens", "Jamie Lawrence", "Jamie McDonnell", "Jamie Roche", "Jamie Vardy", "Jamil Siebert", "Jamiro Monteiro", "Jan Bamert", "Jan Bednarek", "Jan Grzesik", "Jan Kronig", "Jan Mlakar", "Jan Oblak", "Jan Paul van Hecke", "Jan Zamburek", "Jan Ziółkowski", "Jandro Orellana", "Janis Antiste", "Jannes Horn", "Jannes Wieckhoff", "Jannik Vestergaard", "Jaouen Hadjam", "Japhet Tanganga", "Jarell Quansah", "Jari De Busser", "Jari Vandeputte", "Jarne Steuckers", "Jaroslaw Kubicki", "Jarrad Branthwaite", "Jarrod Bowen", "Jarvis Thornton", "Jasmin Buric", "Jason Knight", "Jason Lokilo", "Jason Steele", "Jasper Cillessen", "Jasper Dahlhaus", "Jasper Schendelaar", "Javi Castro", "Javi Galán", "Javi Guerra", "Javi Hernández", "Javi López", "Javi Mier", "Javi Montero", "Javi Muñoz", "Javi Ontiveros", "Javi Puado", "Javi Rueda", "Javi Sánchez", "Javi Villar", "Javier Altamirano", "Jawad El Yamiq", "Jay Dasilva", "Jay Fulton", "Jay Idzes", "Jay Robinson", "Jay Stansfield", "Jaydee Canvot", "Jayden Addai", "Jayden Bogle", "Jayson Molumby", "Jean Butez", "Jean Carlos Silva", "Jean Onana", "Jean-Clair Todibo", "Jean-Kévin Duverne", "Jean-Mattéo Bahoya", "Jean-Pierre Nsame", "Jeanuël Belocian", "Jed Drew", "Jed Wallace", "Jeff Ekhator", "Jeff Hardeveld", "Jeff Reine-Adélaïde", "Jefferson Encada", "Jefferson Lerma", "Jeffrey de Lange", "Jelle Vossen", "Jens Cajuste", "Jens Odgaard", "Jens Petter Hauge", "Jens Toornstra", "Jeppe Erenbjerg", "Jerdy Schouten", "Jeremie Frimpong", "Jeremy Monga", "Jeremy Ngakia", "Jeremy Sarmiento", "Jeroen Zoet", "Jerolldino Bergraaf", "Jerome Opoku", "Jerry Afriyie", "Jesper Karlström", "Jesper Lindstrøm", "Jesse Bosch", "Jesse Joronen", "Jessy Deminguet", "Jesús Areso", "Jesús Bernal", "Jesús Díaz", "Jesús Imaz", "Jesús Owono", "Jesús Ramírez", "Jesús Rodríguez", "Jesús Ruiz", "Jesús Vallejo", "Jesús Vázquez", "Jeyland Mitchell", "Jhon Arias", "Jhon Córdoba", "Jhon Durán", "Jhon Lucumí", "Ji-sung Eom", "Jimi Gower", "Jimmy Dunne", "Jizz Hornkamp", "Jo Coppens", "Joachim Andersen", "Joachim Imbrechts", "Joakim Mæhle", "Joan García", "Joan Jordán", "Joane Gadou", "Joaquin Seys", "Joaquín Muñoz", "Joaquín Panichelli", "Joaquín Piquerez", "Jobe Bellingham", "Joe Aribo", "Joe Bryan", "Joe Gelhardt", "Joe Gomez", "Joe Hodge", "Joe Rodon", "Joe Ward", "Joe Wildsmith", "Joe Williams", "Joe Willock", "Joel Asoro", "Joel Chima Fujita", "Joel Ideho", "Joel Latibeaudiere", "Joel Ordóñez", "Joel Pereira", "Joel Pohjanpalo", "Joel Robles", "Joel Roca", "Joel Silva", "Joelinton", "Joelson Fernandes", "Joey Veerman", "Jofre Carreras", "Johan Manzambi", "Johan Mojica", "Johan Vásquez", "Johann Lepenant", "Johannes Eggestein", "Johannes Handl", "John Donald", "John Egan", "John Lundstram", "John McGinn", "John Souttar", "John Stones", "John Swift", "John Victor", "John Yeboah", "Johnny Cardoso", "Jokin Ezkieta", "Jokin Gabilondo", "Jon Ander Olasagasti", "Jon Aramburu", "Jon Bautista", "Jon Gorenc Stankovic", "Jon Gorrotxategi", "Jon Guridi", "Jon Guruzeta", "Jon Karrikaburu", "Jon Magunazelaia", "Jon Moncayola", "Jon Morcillo", "Jon Pacheco", "Jonah Kusi-Asare", "Jonas Adjetey", "Jonas Auer", "Jonas Harder", "Jonas Mayer", "Jonas Rouhi", "Jonas Wind", "Jonathan Buatu", "Jonathan Clauss", "Jonathan David", "Jonathan Dubasin", "Jonathan Fischer", "Jonathan Gradit", "Jonathan Ikoné", "Jonathan Klinsmann", "Jonathan Mutombo", "Jonathan Panzo", "Jonathan Rowe", "Jonathan Scherzer", "Jonathan Varane", "Jonathan de Guzmán", "Jonmi Magunagoitia", "Jordan", "Jordan Archer", "Jordan Ayew", "Jordan Beyer", "Jordan Bos", "Jordan Ferri", "Jordan Henderson", "Jordan Holsgrove", "Jordan James", "Jordan Kadiri", "Jordan Lefort", "Jordan Lotomba", "Jordan Pickford", "Jordan Storey", "Jordan Teze", "Jordan Thompson", "Jordan Williams", "Jordan Zemura", "Jordi Liongola", "Jordi Martín", "Jordi Quintillà", "Jordy Clasie", "Jorg Schreuders", "Jorge Cabello", "Jorge Carrascal", "Jorge Cuenca", "Jorge Félix", "Jorge Herrando", "Jorge Meireles", "Jorge Moreno", "Jorge Pascual", "Jorge Pulido", "Jorge Sáenz", "Jorge de Frutos", "Joris Chotard", "Joris Kayembe", "Joris Kramer", "Joris van Overeem", "Jorne Spileers", "Jorrel Hato", "Jorthy Mokio", "Josan", "Josema", "Josep Martínez", "Joseph Aidoo", "Joseph Ceesay", "Joseph Opoku", "Joseph Paintsil", "Josh Acheampong", "Josh Coburn", "Josh Cullen", "Josh Doig", "Josh Eccles", "Josh Edwards", "Josh Griffiths", "Josh Key", "Josh King", "Josh Knight", "Josh Maja", "Josh Murphy", "Josh Sargent", "Josh Tymon", "Josh Vickers", "Josh Windass", "Joshua Kitolano", "Joshua Quarshie", "Joshua Zirkzee", "Josias Lukembila", "Josimar Alcócer", "Josip Corluka", "Josip Stanisic", "Josip Sutalo", "Josko Gvardiol", "Josué Casimir", "Josué Dorrio", "Josué Kongolo", "José Antonio Caro", "José Carlos Lazo", "José Copete", "José Corpas", "José Córdoba", "José Fonte", "José Fontán", "José Gayà", "José Gomes", "José Gragera", "José Luis Morales", "José Manuel Arnáiz", "José Marsà", "José María Giménez", "José Matos", "José Pozo", "José Salinas", "José Sá", "José Ángel Carmona", "José Ángel Jurado", "Jovane Cabral", "Jovon Makama", "Jozo Stanic", "João Afonso", "João Aurélio", "João Cancelo", "João Carvalho", "João Costa", "João Félix", "João Gomes", "João Goulart", "João Graça", "João Marques", "João Mendes", "João Moutinho", "João Mário", "João Neves", "João Oliveira", "João Palhinha", "João Pedro", "João Pedro", "João Rego", "João Silva", "João Simões", "João Tomé", "João Tornich", "João Valido", "João Virgínia", "Joël Drommel", "Joël Ito", "Joël Mall", "Joël Monteiro", "Joël Piroe", "Joël Schingtienne", "Joël Veltman", "Juan Cabal", "Juan Castillo", "Juan Cruz", "Juan Cruz", "Juan Cuadrado", "Juan Foyth", "Juan Gutiérrez", "Juan Iglesias", "Juan Jesus", "Juan José Perea", "Juan María Alcedo", "Juan Miranda", "Juan Musso", "Juan Otero", "Juan Rodríguez", "Juan Soriano", "Juande Rivas", "Juanlu Sánchez", "Juanmi", "Juanmi Latasa", "Juanpe", "Jude Bellingham", "Juergen Elitim", "Juho Talvitie", "Julen Agirrezabala", "Julen Lobete", "Jules Koundé", "Julian Baas", "Julian Gölles", "Julian Ryerson", "Julian Von Moos", "Julio Alonso", "Julio Enciso", "Julio Soler", "Julius Dirksen", "Julián Alvarez", "Julián Illanes", "Julián Martínez", "Juljan Shehu", "Juma Bah", "Jun-ho Bae", "Junior Diaz", "Junior Dina Ebimbe", "Junior Ligue", "Junior Messias", "Junior Mwanga", "Junior Tchamadeu", "Junya Ito", "Jure Balkovec", "Jurgen Ekkelenkamp", "Jurriën Timber", "Jusef Erabi", "Justin Bijlow", "Justin Devenny", "Justin Hammel", "Justin Kluivert", "Justin Omoregie", "Justin Roth", "Justin de Haas", "Jérémie Boga", "Jérémy Blasco", "Jérémy Doku", "Jérémy Frick", "Jérémy Guillemenot", "Jérémy Jacquet", "Jérémy Le Douaron", "Jérémy Livolant", "Jérémy Mellot", "Jérémy Petris", "Jørgen Strand Larsen", "Jürgen Heil", "K. Dewsbury-Hall", "K. Karetsas", "K. Kesler-Hayden", "K. Koulierakis", "K. Kvaratskhelia", "K. Mavropanos", "K. Nakamura", "K. Nordfeldt", "K. Peterson", "K. Thorstvedt", "K. Tsimikas", "K. Van Den Kerkhof", "K. Zahiroleslam", "Kacper Chodyna", "Kacper Sezonienko", "Kacper Tobiasz", "Kacper Trelowski", "Kacper Urbański", "Kacper Łukasiak", "Kai Havertz", "Kai Wagner", "Kaique Pereira", "Kaique Rocha", "Kaishu Sano", "Kaito Matsuzawa", "Kaj Sierhuis", "Kaj de Rooij", "Kajetan Szmyt", "Kalvin Phillips", "Kaly Sène", "Kamal Sowah", "Kamaldeen Sulemana", "Kamiel Van De Perre", "Kamil Glik", "Kamil Grosicki", "Kamil Jakubczyk", "Kamil Jozwiak", "Kamil Lukoszek", "Kamil Piątkowski", "Kamil Zapolnik", "Kamory Doumbia", "Kang-hee Lee", "Kang-in Lee", "Kanya Fujimoto", "Kaoru Mitoma", "Karamoko Dembélé", "Karem Zoabi", "Karim Konaté", "Karim Sow", "Karim Zedadka", "Karl Darlow", "Karlan Grant", "Karlo Letica", "Karol Angielski", "Karol Czubak", "Karol Struski", "Kasey McAteer", "Kasper Dolberg", "Kasper Jørgensen", "Kasper Schmeichel", "Kassoum Ouattara", "Kastriot Imeri", "Kauã Elias", "Kay Tejan", "Kaye Furo", "Kayne van Oevelen", "Keane Lewis-Potter", "Keano Vanrafelghem", "Kees Smit", "Keidi Bare", "Keigo Tsunemoto", "Keinan Davis", "Keisuke Goto", "Keita Baldé", "Kellen Fisher", "Kellyn Acosta", "Kelvin Amian", "Ken Nkuba", "Ken Sema", "Kenan Yıldız", "Kenneth Taylor", "Kenny Lala", "Kenny McLean", "Kenny Tete", "Kenzo Goudmijn", "Kepa Arrizabalaga", "Kerim Alajbegovic", "Kerim Mrabti", "Kevin", "Kevin Behrens", "Kevin Carlos", "Kevin Castaño", "Kevin Chamorro", "Kevin Custovic", "Kevin Danso", "Kevin De Bruyne", "Kevin Lasagna", "Kevin Mac Allister", "Kevin Medina", "Kevin Piscopo", "Kevin Rodríguez", "Kevin Rüegg", "Kevin Schade", "Kevin Spadanuda", "Kevin Stöger", "Kevin Trapp", "Kevin Varas", "Kevin Vázquez", "Kevin Zeroli", "Khalis Merah", "Khéphren Thuram", "Ki-Jana Hoever", "Kialonda Gaspar", "Kian Fitz-Jim", "Kieffer Moore", "Kieran Morgan", "Kieran Tierney", "Kieran Trippier", "Kieron Bowie", "Kike Barja", "Kike García", "Kike Hermoso", "Kike Pérez", "Kike Salas", "Kiki", "Kiki Kouyaté", "Kiko", "Kiko Bondoso", "Kiko Femenía", "Kiliann Sildillia", "Killian Sardella", "Kingsley Coman", "Kingsley Ehizibue", "Kingstone Mutandwa", "Kirian Rodríguez", "Kiril Fesyun", "Kjell Scherpen", "Kjetil Haug", "Kleis Bozhanaj", "Klismahn", "Ko Itakura", "Koba Koindredi", "Kobbie Mainoo", "Kobe Cools", "Kobe Corbanie", "Kodai Sano", "Koen Kostons", "Koen Van Langendonck", "Koffi Kouao", "Kojo Peprah Oppong", "Koke", "Koki Machida", "Koki Ogawa", "Koki Saito", "Konan N’Dri", "Koni De Winter", "Konrad Laimer", "Konrad Matuszewski", "Konstantinos Sotiriou", "Konstantinos Tzolakis", "Kostas Lamprou", "Kota Takai", "Kreshnik Hajrizi", "Kristian Hlynsson", "Kristijan Jakic", "Kristoffer Ajer", "Kryspin Szczesniak", "Krystian Bielik", "Krystof Danek", "Krzysztof Kamiński", "Krzysztof Koton", "Krzysztof Kubica", "Krépin Diatta", "Kwadwo Baah", "Kwame Poku", "Kwasi Sibo", "Kyan Vaesen", "Kyle Kenniford", "Kyle McCarthy", "Kyle Walker", "Kyle Walker-Peters", "Kylian Mbappé", "Kyogo Furuhashi", "Kyriakos Savvidis", "Kyriani Sabbe", "Kévin Appin", "Kévin Boma", "Kévin Danois", "Kévin Keben", "Kévin Mouanga", "L. Augustinsson", "L. Candellone", "L. Geertruida", "L. Gourna-Douath", "L. Jaquez", "L. Mazzitelli", "L. Mbe Soh", "L. Oyen", "L. Shankland", "L. Spinazzola", "L. Stassin", "L. Vennegoor of Hess.", "Ladislav Krejci", "Lalo Aguilar", "Lamare Bogarde", "Lameck Banda", "Lamine Camara", "Lamine Diaby-Fadiga", "Lamine Diack", "Lamine Fomba", "Lamine Sy", "Lamine Yamal", "Lance Duijvestijn", "Lander Olaetxea", "Landerson", "Lars Unnerstall", "Lars Villiger", "Lars-Jørgen Salvesen", "Lassana Coulibaly", "Lassina Traoré", "Lassine Sinayoko", "Lasso Coulibaly", "Laurent Abergel", "Laurent Lemoine", "Lautaro Martínez", "Lautaro Valenti", "Lawrence Agyekum", "Lawrence Ati Zigi", "Lawrence Ofori", "Lawrence Vigouroux", "Lazar Carević", "Lazar Samardžić", "Lazaros Rota", "Leandro Barreiro", "Leandro Cabrera", "Leandro Chichizola", "Leandro Paredes", "Leandro Sanca", "Leandro Santos", "Leandro Trossard", "Leif Davis", "Lennon Miller", "Lenny Vallier", "Leny Yoro", "Leo Bengtsson", "Leo Greiml", "Leo Kokubo", "Leo Román", "Leo Sauer", "Leo Scienza", "Leo Walta", "Leo Østigård", "Leon Bailey", "Leon Flach", "Leon Grgic", "Leonardo Balerdi", "Leonardo Benedetti", "Leonardo Bertone", "Leonardo Koutris", "Leonardo Lelo", "Leonardo Lopes", "Leonardo Mancuso", "Leonardo Mendicino", "Leonardo Pavoletti", "Leonardo Rocha", "Leopold Querfeld", "Lequincio Zeefuik", "Lesley Ugochukwu", "Levente Szabó", "Levi Colwill", "Levi Smans", "Levin Winkler", "Lewie Coyle", "Lewin Blum", "Lewis Baker", "Lewis Cook", "Lewis Dobbin", "Lewis Dunk", "Lewis Ferguson", "Lewis Gibson", "Lewis Hall", "Lewis Holtby", "Lewis Koumas", "Lewis Miley", "Lewis O'Brien", "Lewis Schouten", "Lewis Travis", "Liam Chipperfield", "Liam Cooper", "Liam Cullen", "Liam Delap", "Liam Gibbs", "Liam Henderson", "Liam Kitching", "Liam Lindsay", "Liam Millar", "Liam Palmer", "Liam Thompson", "Liberato Cacace", "Lilian Brassier", "Lilian Njoh", "Lilian Raolisoa", "Lincoln", "Lindon Selahi", "Lindrit Kamberi", "Linus Wahlqvist", "Lion Lauberbach", "Lionel Messi", "Lionel Mpasi-Nzau", "Lisandro Martínez", "Livano Comenencia", "Liziero", "Lloyd Jones", "Lloyd Kelly", "Logan Costa", "Lorenco Simic", "Lorenzo Bernasconi", "Lorenzo Carissoni", "Lorenzo Colombo", "Lorenzo Crisetig", "Lorenzo De Silvestri", "Lorenzo Dickmann", "Lorenzo Ignacchiti", "Lorenzo Insigne", "Lorenzo Libutti", "Lorenzo Lucca", "Lorenzo Lucchesi", "Lorenzo Montipò", "Lorenzo Palmisani", "Lorenzo Pellegrini", "Lorenzo Sgarbi", "Lorenzo Venuti", "Loris Benito", "Lorran", "Louis Leroux", "Louis Mouton", "Louis Patris", "Louis Schaub", "Loum Tchaouna", "Loun Srdanovic", "Lovro Majer", "Lovro Zvonarek", "Loïc Badé", "Loïc Lüthi", "Loïc Nego", "Loïc Williams", "Loïs Openda", "Luan Patrick", "Luc De Fougerolles", "Luc Marijnissen", "Luc Rees", "Luca Belardinelli", "Luca D'Andrea", "Luca Di Maggio", "Luca Kjerrumgaard", "Luca Koleosho", "Luca Kronberger", "Luca Lezzerini", "Luca Lipani", "Luca Magnino", "Luca Marianucci", "Luca Meirelles", "Luca Moro", "Luca Netz", "Luca Palmiero", "Luca Pandolfi", "Luca Parodi", "Luca Pazourek", "Luca Pellegrini", "Luca Plogmann", "Luca Ranieri", "Luca Ravanelli", "Luca Valzania", "Luca Vignali", "Luca Zanimacchia", "Luca Zidane", "Luca Zuffi", "Lucas Ahijado", "Lucas Assadi", "Lucas Beraldo", "Lucas Bergvall", "Lucas Boyé", "Lucas Cañizares", "Lucas Cepeda", "Lucas Chevalier", "Lucas Da Cunha", "Lucas Digne", "Lucas Ferreira", "Lucas França", "Lucas Hernández", "Lucas Hey", "Lucas Høgsberg", "Lucas Masoero", "Lucas Michal", "Lucas Perri", "Lucas Pirard", "Lucas Pires", "Lucas Rosa", "Lucas Silva", "Lucas Soares", "Lucas Torreira", "Lucas Torró", "Lucas Tousart", "Luciano Valente", "Lucien Agoumé", "Lucien Dähler", "Luck Zogbé", "Ludovic Ajorque", "Ludovic Blas", "Ludovit Reis", "Ludwig Vraa", "Luigi Cherubini", "Luigi Cuppone", "Luis Díaz", "Luis Guilherme", "Luis Hasa", "Luis Henrique", "Luis López", "Luis Milla", "Luis Palma", "Luis Perea", "Luis Rioja", "Luis Suárez", "Luismi Cruz", "Luismi Sánchez", "Luiz Júnior", "Luka Kulenovic", "Luka Lucic", "Luka Maric", "Luka Modrić", "Luka Sucic", "Luka Vuskovic", "Lukas Ambros", "Lukas Daschner", "Lukas Fridrikas", "Lukas Graf", "Lukas Grgic", "Lukas Gugganig", "Lukas Görtler", "Lukas Gütlbauer", "Lukas Hinterseer", "Lukas Hornicek", "Lukas Hradecky", "Lukas Jensen", "Lukas Jungwirth", "Lukas Jäger", "Lukas Kacavenda", "Lukas Klemenz", "Lukas Lerager", "Lukas Mai", "Lukas Mühl", "Lukas Nmecha", "Lukas Podolski", "Lukas Sadilek", "Lukas Spendlhofer", "Lukas Sulzbacher", "Lukas Watkowiak", "Lukas Willen", "Luke Ayling", "Luke Berry", "Luke Cundle", "Luke Le Roux", "Luke McNally", "Luke O'Nien", "Luke Plange", "Luke Shaw", "Luke Thomas", "Luke Woolfenden", "Luquinhas", "Luuk Brouwers", "Luuk Koopmans", "Luuk de Jong", "Luís Esteves", "Luís Semedo", "Lyle Foster", "Lyndon Dykes", "Léandre Kuavita", "Léo Baptistão", "Léo Borges", "Léo Chú", "Léo Leroy", "Léo Realpe", "Léo Santos", "M'Bala Nzola", "M. Branderhorst", "M. Brunori", "M. Castagnetti", "M. De Luca", "M. Di Gregorio", "M. Dupé", "M. El Hankouri", "M. Ellertsson", "M. Fernandez-Pardo", "M. Fillafer", "M. Gillesphey", "M. Gregoritsch", "M. Mahmoud", "M. Mangraviti", "M. Nakamba", "M. Sala", "M. Solomon", "M. Sonko", "M. Stevanović", "M. Svanberg", "M. Ullmann", "M. Valoti", "M. ter Stegen", "M. van Bergen", "M. van Brederode", "MT", "Maarten Paes", "Maarten Vandevoordt", "Maas Willemsen", "Macaulay Langstaff", "Maciej Ambrosiewicz", "Maciej Wolski", "Mads Agger", "Mads Bidstrup", "Mads Hermansen", "Mads Roerslev", "Maduka Okoye", "Maga", "Maghnes Akliouche", "Maguette Gueye", "Mahamadou Diawara", "Mahamadou Nagida", "Mahdi Camara", "Maher Carrizo", "Majeed Ashimeru", "Makan Aïko", "Maksim Paskotsi", "Maksym Dyachuk", "Maksym Khlan", "Maksym Taloverov", "Malamine Efekele", "Malang Sarr", "Malcolm Viltard", "Malick Fofana", "Malick Thiaw", "Malick Yalcouyé", "Malo Gusto", "Mama Baldé", "Mamadou Coulibaly", "Mamadou Coulibaly", "Mamadou Diakhon", "Mamadou Fofana", "Mamadou Sangaré", "Mamadou Sarr", "Mamady Diambou", "Mandela Keita", "Manfred Fischer", "Manolis Siopis", "Manolo Portanova", "Manprit Sarkaria", "Manu Bueno", "Manu Fuster", "Manu Hernando", "Manu Koné", "Manu Morlanes", "Manu Silva", "Manu Sánchez", "Manu Sánchez", "Manu Trigueros", "Manuel Akanji", "Manuel Cicconi", "Manuel Lazzari", "Manuel Locatelli", "Manuel Maranda", "Manuel Ugarte", "Maracás", "Maranhão", "Marash Kumbulla", "Marc Aguado", "Marc Bartra", "Marc Bernal", "Marc Bola", "Marc Cardona", "Marc Casadó", "Marc Cucurella", "Marc Giger", "Marc Gual", "Marc Guiu", "Marc Guéhi", "Marc Navarro", "Marc Oliver Kempf", "Marc Pubill", "Marc Roca", "Marcel Krajewski", "Marcel Pięczek", "Marcel Reguła", "Marcel Sabitzer", "Marcel Wędrychowski", "Marcel Łubik", "Marcelino Núñez", "Marcin Kamiński", "Marcin Wasielewski", "Marco Armellino", "Marco Bellich", "Marco Bizot", "Marco Bleve", "Marco Boras", "Marco Brescianini", "Marco Burch", "Marco Bürki", "Marco Carnesecchi", "Marco Curto", "Marco D'Alessandro", "Marco Dalla Vecchia", "Marco Festa", "Marco Friedl", "Marco Frigerio", "Marco Grüll", "Marco Hoffmann", "Marco Ilaimaharitra", "Marco Imperiale", "Marco Kana", "Marco Nasti", "Marco Nichetti", "Marco Olivieri", "Marco Palestra", "Marco Perrotta", "Marco Pissardo", "Marco Pompetti", "Marco Rente", "Marco Ruggero", "Marco Sportiello", "Marco Sulzner", "Marco Varnier", "Marcos Alonso", "Marcos André", "Marcos Llorente", "Marcos Peano", "Marcos Peña", "Marcos Senesi", "Marcus Bettinelli", "Marcus Edwards", "Marcus Haglind-Sangré", "Marcus Linday", "Marcus Pedersen", "Marcus Rashford", "Marcus Tavernier", "Marcus Thuram", "Marcão", "Mardochée Nzita", "Marek Bartos", "Mariano Troilo", "Marin Pongracic", "Marin Soticek", "Marin Šverko", "Mario Dorgeles", "Mario Engels", "Mario García", "Mario Gila", "Mario Hermoso", "Mario Martín", "Mario Pasalić", "Mario Sampirisi", "Mario Sauer", "Mario Soberón", "Mario Soriano", "Mario Stroeykens", "Marios Vrousai", "Marius Adamonis", "Marius Broholm", "Marius Courcoul", "Marius Marin", "Mariusz Fornalczyk", "Mariusz Stępiński", "Mark Grosse", "Mark Harris", "Mark McGuinness", "Mark McKenzie", "Mark Sykes", "Mark Travers", "Marko Arnautovic", "Marko Bulat", "Marko Dmitrovic", "Marko Farji", "Marko Milovanović", "Marko Pjaca", "Marko Raguz", "Marko Stamenic", "Markus Pink", "Marley Aké", "Marlon", "Marlon Fossey", "Marlon Gomes", "Marlon Mustapha", "Marlon Pack", "Maroan Sannadi", "Marquinhos", "Marquinhos Cipriano", "Marshall Munetsi", "Marsoni Sambu", "Marten de Roon", "Martial Godo", "Martim Fernandes", "Martim Marques", "Martin Baturina", "Martin Delavallée", "Martin Dúbravka", "Martin Erlić", "Martin Frese", "Martin Kreuzriegler", "Martin Minchev", "Martin Moormann", "Martin Palumbo", "Martin Rasner", "Martin Remacle", "Martin Turk", "Martin Valjent", "Martin Vitík", "Martin Ødegaard", "Martín Aguirregabiria", "Martín Payero", "Martín Zubimendi", "Marvin Cuni", "Marvin Ducksch", "Marvin Elimbi", "Marvin Keller", "Marvin Park", "Marvin Peersman", "Marvin Senaya", "Marvin Young", "Marwan Al-Sahafi", "Marwin Hitz", "Maryan Faryna", "Maryan Shved", "Mason Greenwood", "Mason Mount", "Massimo Bertagnoli", "Massimo Coda", "Massimo Luongo", "Massimo Zilli", "Matchoi Djaló", "Matej Jurasek", "Matej Kovar", "Matej Rodin", "Matej Sin", "Mateja Stjepanović", "Mateo Chávez", "Mateo Flores", "Mateo Kovacic", "Mateo Pellegrino", "Mateo Retegui", "Mateus Fernandes", "Mateus Mané", "Mateusz Grzybek", "Mateusz Klich", "Mateusz Kowalczyk", "Mateusz Praszelik", "Mateusz Skrzypczak", "Mateusz Wdowiak", "Mateusz Żyro", "Matheus Cunha", "Matheus Dias", "Matheus Mendes", "Matheus Nunes", "Mathias Delorge", "Mathias Dyngeland", "Mathias Jensen", "Mathias Jørgensen", "Mathias Kjølø", "Mathias Kvistgaarden", "Mathias Olesen", "Mathias de Amorim", "Mathieu Maertens", "Mathieu Scalet", "Mathijs Tielemans", "Mathis Amougou", "Mathis Lachuer", "Mathis Lambourde", "Mathis Servais", "Mathis Suray", "Mathys Tel", "Mathías Olivera", "Matias Antonini", "Matija Frigan", "Matija Mitrović", "Matisse Samoise", "Mats Deijl", "Mats Rots", "Mats Seuntjens", "Mats Wieffer", "Matt Clarke", "Matt Doherty", "Matt Grimes", "Matt Ingram", "Matt Lendfers", "Matt O'Riley", "Matt Targett", "Matte Smets", "Matteo Bianchetti", "Matteo Cancellieri", "Matteo Cichella", "Matteo Cotali", "Matteo Dagasso", "Matteo Darmian", "Matteo Di Giusto", "Matteo Francesconi", "Matteo Gabbia", "Matteo Lovato", "Matteo Pessina", "Matteo Pisseri", "Matteo Politano", "Matteo Prati", "Matteo Rover", "Matteo Ruggeri", "Matteo Schablas", "Matteo Tramoni", "Matthias Braunöder", "Matthias Phaëton", "Matthias Seidl", "Matthias Verreth", "Matthieu Epolo", "Matthieu Udol", "Matthijs de Ligt", "Matthis Abline", "Matthis Riou", "Matthäus Taferner", "Mattia Alborghetti", "Mattia Bani", "Mattia Bortolussi", "Mattia Bottani", "Mattia Compagnon", "Mattia Felici", "Mattia Finotto", "Mattia Fortin", "Mattia Liberali", "Mattia Perin", "Mattia Viti", "Mattia Zaccagni", "Mattia Zanotti", "Mattias Käit", "Mattie Pollock", "Matties Volckaert", "Matty Cash", "Matty Godden", "Matty James", "Mattéo Guendouzi", "Matus Vojtko", "Matvey Safonov", "Matz Sels", "Matías Rocha", "Matías Soulé", "Matías Viña", "Maurice Malone", "Mauricio Benítez", "Maurides", "Maurits Kjærgaard", "Mauro Arambarri", "Mauro Júnior", "Mauro Perkovic", "Mauro Vigorito", "Mawouna Amevor", "Max Alleyne", "Max Balard", "Max Bird", "Max Bruns", "Max Cleworth", "Max Dean", "Max Dowman", "Max Johnston", "Max Lowe", "Max O'Leary", "Max Scholze", "Maxence Caqueret", "Maxence Lacroix", "Maxence Maisonneuve", "Maxence Prévot", "Maxence Rivera", "Maxi Araújo", "Maxim De Cuyper", "Maxim Kireev", "Maxime Colin", "Maxime Delanghe", "Maxime Dominguez", "Maxime Estève", "Maxime Lopez", "Maximilian Entrup", "Maximilian Hennig", "Maximilian Ibrahimović", "Maximilian Kilman", "Maximilian Wöber", "Maxwel Cornet", "Mbaye Ndiaye", "Medon Berisha", "Mees Hilgers", "Mees de Wit", "Mehdi Boukamir", "Mehdi Dorval", "Mehdi Léris", "Melayro Bogarde", "Melker Widell", "Melle Meulensteen", "Melvin Bard", "Melvin Zinga", "Merlin Röhl", "Metinho", "Mexx Meerdink", "Michael Ameyaw", "Michael Brouwer", "Michael Cooper", "Michael Folorunsho", "Michael Frey", "Michael Heule", "Michael Kayode", "Michael Keane", "Michael Olise", "Michael Smith", "Michael Sollbauer", "Michael Svoboda", "Michael Verrips", "Michal Sacek", "Michalis Kosidis", "Michał Chrapek", "Michał Gurgul", "Michał Helik", "Michał Kaput", "Michał Król", "Michał Marcjanik", "Michał Nalepa", "Michał Skóraś", "Michel Adopo", "Michel Aebischer", "Michel Mboula", "Michele Besaggio", "Michele Cerofolini", "Michele Collocolo", "Michy Batshuayi", "Micky van de Ven", "Miguel Atienza", "Miguel Baeza", "Miguel Gutiérrez", "Miguel Loureiro", "Miguel Nogueira", "Miguel Nóbrega", "Miguel Puche", "Miguel Reichmuth", "Miguel Rodríguez", "Miguel Rubio", "Miguel de la Fuente", "Mihailo Ivanovic", "Mihailo Ristic", "Mihailo Stevanovic", "Mihajlo Cvetkovic", "Mika", "Mika Biereth", "Mika Godts", "Mika Mármol", "Mikael Ishak", "Mikayil Faye", "Mike Eerdhuijzen", "Mike Kleijn", "Mike Maignan", "Mike Penders", "Mike Tresor", "Mike van Duinen", "Mike van der Hoorn", "Mike-Steven Bähre", "Mikel Jauregizar", "Mikel Merino", "Mikel Oyarzabal", "Mikel Vesga", "Mikey Johnston", "Mikkel Damsgaard", "Milan Aleksic", "Milan Djuric", "Milan Smit", "Milan Zonneveld", "Milan van Ewijk", "Mile Svilar", "Miles Leaburn", "Mileta Rajović", "Million Manhoef", "Milos Kerkez", "Milos Lukovic", "Milutin Osmajic", "Mimeirhel Benita", "Mirko Kos", "Mirko Pigliacelli", "Mirko Salvi", "Mirko Topić", "Miro Muheim", "Mitchel Bakker", "Miłosz Kałahur", "Miłosz Matysik", "Miłosz Mleczko", "Moatasem Al-Musrati", "Mohamed Bamba", "Mohamed Bamba", "Mohamed Bangoura", "Mohamed Belloumi", "Mohamed Berte", "Mohamed Bouldini", "Mohamed Ihattaren", "Mohamed Kaba", "Mohamed Koné", "Mohamed Nassoh", "Mohamed Ouédraogo", "Mohamed Salah", "Mohamed-Ali Cho", "Mohammed Fuseini", "Mohammed Kudus", "Mohammed Salisu", "Moi Gómez", "Moise Kean", "Moisés Caicedo", "Moncef Zekri", "Montassar Talbi", "Mor Ndiaye", "Morato", "Morgan Faßbender", "Morgan Gibbs-White", "Morgan Poaty", "Morgan Rogers", "Morgan Sanson", "Morgan Whittaker", "Moritz Broschinski", "Moritz Oswald", "Moritz Wels", "Morten Frendrup", "Morten Hjulmand", "Morten Thorsby", "Mory Diaw", "Mory Konaté", "Moses Simon", "Moses Usor", "Mostafa Mohamed", "Mouctar Diakhaby", "Mouhamadou Sarr", "Mouhamed Belkheir", "Mousa Tamari", "Moussa Diarra", "Moussa Niakhaté", "Moussa Soumano", "Moussa Yeo", "Moustapha Mbow", "Moïse Bombito", "Mujaid Sadick", "Munir El Kajoui", "Murat Satin", "Murillo", "Murilo", "Murphy Cooper", "Musa Juwara", "Mykola Matvienko", "Mykola Shaparenko", "Myles Lewis-Skelly", "Myles Peart-Harris", "Myron Boadu", "Márton Dárdai", "Máximo Perrone", "Märten Kuusk", "Mërgim Vojvoda", "N'Golo Kanté", "N. Adedeji-Sternberg", "N. Sattlberger", "N. Veratschnig", "Nabil Bentaleb", "Nabil Touaizi", "Nacho Ferri", "Nacho Martín", "Nacho Miras", "Nacho Vidal", "Naci Ünüvar", "Nadir Zortea", "Nahitan Nández", "Nahuel Estévez", "Nahuel Molina", "Nahuel Tenaglia", "Nampalys Mendy", "Naouirou Ahamada", "Nat Phillips", "Natan", "Natan Girma", "Nathan Aké", "Nathan Baxter", "Nathan Broadhead", "Nathan Butler-Oyedeji", "Nathan Collins", "Nathan De Cat", "Nathan Ngoy", "Nathan Patterson", "Nathan Rôdes", "Nathan Wood", "Nathan-Dylan Saliba", "Nathaniel Adjei", "Nathaniel Chalobah", "Nathaniel Clyne", "Naves", "Nayef Aguerd", "Nayel Mehssatou", "Nazar Voloshyn", "Nazariy Rusyn", "Nazinho", "Naïs Djouahra", "Neco Williams", "Nehuén Pérez", "Neil El Aynaoui", "Neil Volken", "Nelson Abbey", "Nelson Palacio", "Nemanja Gudelj", "Nemanja Matic", "Nemanja Mijuskovic", "Nenad Cvetkovic", "Neneca", "Nenê", "Neraysho Kasanwirjo", "Nermin Karić", "Nestory Irankunda", "Neto Borges", "Neville Ogidi Nwankwo", "Newerton", "Ngal'ayel Mukau", "Nhoa Sangui", "Nias Hefti", "Niccolò Belloni", "Niccolò Corrado", "Niccolò Fortini", "Niccolò Pierozzi", "Niccolò Pisilli", "Niccolò Squizzato", "Nicholas Bonfanti", "Nicholas Pierini", "Nick Fichtinger", "Nick Olij", "Nick Pope", "Nick Verschuren", "Nick Viergever", "Nick Woltemade", "Nicky Beloko", "Niclas Eliasson", "Niclas Füllkrug", "Nico Elvedi", "Nico González", "Nico González", "Nico Mantl", "Nico Melamed", "Nico O'Reilly", "Nico Paz", "Nico Serrano", "Nico Williams", "Nicola Leali", "Nicola Mosti", "Nicola Pietrangeli", "Nicola Zalewski", "Nicolas Bajlicz", "Nicolas Cozza", "Nicolas Galazzi", "Nicolas Glaus", "Nicolas Haas", "Nicolas Kühn", "Nicolas Madsen", "Nicolas Pépé", "Nicolas Schmid", "Nicolas Seiwald", "Nicolas Thierry Raskin", "Nicolas Vouilloz", "Nicolas Wimmer", "Nicolás Domínguez", "Nicolás Otamendi", "Nicolás Schiavi", "Nicolás Tagliafico", "Nicolás Valentini", "Nicolás de la Cruz", "Nicolò Barella", "Nicolò Bertola", "Nicolò Brighenti", "Nicolò Buso", "Nicolò Cambiaghi", "Nicolò Casale", "Nicolò Cavuoti", "Nicolò Fagioli", "Nicolò Radaelli", "Nicolò Rovella", "Nicolò Savona", "Nicolò Tresoldi", "Nicolò Zaniolo", "Niels Nkounkou", "Nik Prelec", "Nikki Havenaar", "Niklas Geyrhofer", "Niklas Hedl", "Niklas Pyyhtiä", "Niklas Steffen", "Nikola Krstović", "Nikola Maras", "Nikola Milenković", "Nikola Moro", "Nikola Sekulov", "Nikola Stulic", "Nikola Vlašić", "Nikolai Baden Frederiksen", "Nikolai Hopland", "Nikolas Muci", "Nikolas Polster", "Nikolaus Wurmbrand", "Nikolay Obolskiy", "Nile John", "Nils De Wilde", "Nils Reichmuth", "Nils Rossen", "Nils Zätterström", "Nilson Angulo", "Nino Ziswiler", "Nishan Burkart", "Noah Botic", "Noah Cadiou", "Noah Edjouma", "Noah Eile", "Noah Naujoks", "Noah Okafor", "Noah Sadiki", "Noah Saviolo", "Nodar Lominadze", "Nolan Gillot", "Noni Madueke", "Nono", "Norbert Wojtuszek", "Nordi Mukiele", "Nordin Bakker", "Nordin Bukala", "Nordin Jackers", "Nosa Edward Obaretin", "Noussair Mazraoui", "Noé Lebreton", "Noé Sow", "Noë Dussenne", "Numa Lavanchy", "Nuno Mendes", "Nuno Santos", "Nuno Tavares", "Nélson Monte", "Nélson Oliveira", "Nélson Semedo", "O. Targhalline", "O. Vlachodimos", "O. Zinchenko", "Obed Nkambadio", "Odilon Kossounou", "Odsonne Édouard", "Odysseus Velanas", "Oier Zarraga", "Oihan Sancet", "Ola Aina", "Oladapo Afolayan", "Olaf Kobacki", "Ole Pohlmann", "Ole Romeny", "Oleg Ocheretko", "Oleksandr Nazarenko", "Oleksandr Svatok", "Oleksandr Tymchyk", "Oleksandr Zubkov", "Oli McBurnie", "Oliver Abildgaard", "Oliver Braude", "Oliver Christensen", "Oliver Dovin", "Oliver Edvardsen", "Oliver Provstgaard", "Oliver Scarles", "Oliver Skipp", "Oliver Steurer", "Oliver Sørensen", "Olivier Boscagli", "Olivier Custodio", "Olivier Giroud", "Oliwier Zych", "Ollie Watkins", "Oluwaseun Adewumi", "Omar Alderete", "Omar Correia", "Omar El Hilali", "Omar Fayed", "Omar Marmoush", "Omar Mascarell", "Omar Richards", "Omari Hutchinson", "Omri Gandelman", "Orel Mangala", "Oriol Rey", "Oriol Romeu", "Orji Okwonkwo", "Orri Óskarsson", "Ortwin De Wolf", "Osame Sahraoui", "Oscar Bobb", "Oscar Fraulo", "Oscar Gloukh", "Oscar Højlund", "Oscar Kabwit", "Oscar Schwartau", "Oskar Leśniak", "Oskar Pietuszewski", "Oskar Repka", "Oskar Wójcik", "Oskar Zawada", "Osman Bukari", "Otar Kakabadze", "Otar Kiteishvili", "Otar Mamageishvili", "Othmane Maamma", "Otto Hindrich", "Otávio", "Otávio", "Oumar Camara", "Oumar Diakité", "Oumar Solet", "Ousmane Camara", "Ousmane Camara", "Ousmane Dembélé", "Ousmane Diakité", "Ousmane Diawara", "Ousmane Diomande", "Oussama El Azzouzi", "Ousseynou Niang", "Owain Jones", "Owen Maës", "Owen Wijndal", "Ozan Kökcü", "P. Aubameyang", "P. Bamford", "P. Dawidowicz", "P. Frankowski", "P. Hatzidiakos", "P. Højbjerg", "P. McNair", "P. Płacheta", "P. Wiśniewski", "Pablo", "Pablo Barrios", "Pablo Campos", "Pablo Durán", "Pablo Fornals", "Pablo Gozálbez", "Pablo Ibáñez", "Pablo Insua", "Pablo Maffeo", "Pablo Martínez", "Pablo Pagis", "Pablo Rodríguez", "Pablo Rosario", "Pablo Sáenz", "Pablo Tomeo", "Pablo Torre", "Pablo Vázquez", "Panagiotis Retsos", "Panashe Makwiramiti", "Paolo Ghiglione", "Paolo Rozzio", "Papa Amadou Diallo", "Pape Demba Diop", "Pape Gueye", "Pape Matar Sarr", "Pape Moussa Fall", "Pape Sy", "Papu Gómez", "Parfait Guiagon", "Pascal Groß", "Pascal Loretz", "Pascal Struijk", "Pasquale Mazzocchi", "Pathé Ciss", "Pathé Mboup", "Patric", "Patrick Agyemang", "Patrick Berg", "Patrick Brouwer", "Patrick Ciurria", "Patrick Cutrone", "Patrick Dorgu", "Patrick Greil", "Patrick Pentz", "Patrick Pflücke", "Patrick Roberts", "Patrick Sequeira", "Patrick Soko", "Patrick Wimmer", "Patrick van Aanholt", "Patrik Carlgren", "Patrik Hellebrand", "Patrik Wålemark", "Patrizio Masini", "Patryk Dziczek", "Patryk Szysz", "Patson Daka", "Pau Cubarsí", "Pau Resta", "Pau Sans", "Pau Torres", "Pau Víctor", "Paul Gartler", "Paul Gladon", "Paul Koller", "Paul Komposch", "Paul Mensah", "Paul Mukairu", "Paul Nardi", "Paul Piffer", "Paul Pogba", "Paul Schermer", "Paul Smyth", "Paul Wanner", "Paulinho Bóia", "Paulino de la Fuente", "Paulo Azzi", "Paulo Dybala", "Paulo Díaz", "Paulo Gazzaniga", "Paulo Moreira", "Paulo Oliveira", "Paulo Victor", "Paulo Vitor", "Pavel Sulc", "Pawel Bochniewicz", "Pawel Stolarski", "Paweł Olkowski", "Paweł Wszołek", "Pedri", "Pedrinho", "Pedro", "Pedro Amaral", "Pedro Bigas", "Pedro Bondo", "Pedro Carvalho", "Pedro Ferreira", "Pedro Gonçalves", "Pedro Henrique", "Pedro Lima", "Pedro Mendes", "Pedro Neto", "Pedro Obiang", "Pedro Ortiz", "Pedro Pacheco", "Pedro Porro", "Pedro Santos", "Peer Koopmeiners", "Pejiño", "Pelle Clement", "Pep Chavarría", "Pepelu", "Pepê", "Peque Fernández", "Pere Milla", "Peru Nolaskoain", "Pervis Estupiñán", "Petar Musa", "Petar Ratkov", "Petar Stojanović", "Petar Sučić", "Peter Federico", "Peter Kiedl", "Petko Hristov", "Petros Mantalos", "Petter Nosa Dahl", "Phil Foden", "Phil Neumann", "Philip Brittijn", "Philipp Köhn", "Philipp Lienhart", "Philipp Maybach", "Philipp Pomer", "Philipp Wiesinger", "Philippe Keny", "Philippe Sandler", "Phillipp Mwene", "Pierce Charles", "Pierluigi Gollini", "Piero Hincapié", "Pierre Dwomoh", "Pierre Kalulu", "Pierre Lees-Melou", "Pierrick Capelle", "Pieter Gerkens", "Pietro Beruatto", "Pietro Boer", "Pietro Ceccaroni", "Pietro Comuzzo", "Pietro Fusi", "Pietro Iemmello", "Pietro Pellegri", "Pietro Terracciano", "Pim Saathof", "Pio Esposito", "Piotr Zieliński", "Pius Dorn", "Pizzi", "Piña", "Pol Lirola", "Pol Lozano", "Pol Valentín", "Pontus Almqvist", "Portu", "Precious Ugwu", "Promise David", "Prosper Peter", "Przemysław Tytoń", "Péter Szappanos", "Q. Hartman", "Quentin Boisgard", "Quentin Lecoeuche", "Quentin Merlin", "Quentin Ndjantou", "Quincy Butler", "Quinten Timber", "R. Borré", "R. Cabella", "R. Dantas Fernandes", "R. Del Castillo", "R. Edwards", "R. Faivre", "R. Floriani Mussolini", "R. Gagliardini", "R. Mundle", "R. Norrington-Davies", "R. Owusu-Oduro", "R. Vanwesemael", "Rachid Ghezzal", "Rachid Kouda", "Radek Vítek", "Radosław Majecki", "Radovan Pankov", "Radu Boboc", "Radu Drăgușin", "Rafa Mir", "Rafa Silva", "Rafa Soares", "Rafael Brito", "Rafael Leão", "Rafał Augustyniak", "Rafał Janicki", "Rafał Kurzawa", "Rafał Leszczyński", "Rafał Mamla", "Rafał Strączek", "Rafał Wolski", "Raffaele Di Gennaro", "Raffaele Pucino", "Rafik Belghali", "Rafik Guitane", "Rafik Messali", "Rafiu Durosinmi", "Ragnar Oratmangoen", "Raheem Sterling", "Rajmund Molnár", "Ramiz Harakaté", "Ramiz Zerrouki", "Ramón Enríquez", "Ramón Terrats", "Randal Kolo Muani", "Randy Nteka", "Randy Schneider", "Raoul Bellanova", "Raphael Kofler", "Raphael Odogwu", "Raphael Onyedika", "Raphinha", "Rareș Burnete", "Rareș Ilie", "Rasmus Højlund", "Rasmus Kristensen", "Rasmus Nicolaisen", "Rassa Rahmani", "Rassoul Ndiaye", "Raul Florucz", "Raul Paula", "Rayan", "Rayan Aït-Nouri", "Rayan Cherki", "Rayan Fofana", "Rayan Kolli", "Rayan Raveloson", "Rayane Bounida", "Raúl Albiol", "Raúl Asencio", "Raúl Fernández", "Raúl García", "Raúl Guti", "Raúl Jiménez", "Raúl Lizoain", "Reda Belahyane", "Reda Khadra", "Redouane Halhal", "Reece Burke", "Reece James", "Regan Poole", "Regan Slater", "Rein Van Helden", "Reinhold Ranftl", "Reinildo Mandava", "Reiss Nelson", "Remi Matthews", "Remko Pasveer", "Remo Arnold", "Remo Freuler", "Renan Ribeiro", "Renat Dadashov", "Renato Steffen", "Renato Veiga", "Rene Renner", "Reo Hatate", "Rhaldney", "Rhian Brewster", "Rhys Abbruzzese", "Ricard Sánchez", "Ricardo Batista", "Ricardo Horta", "Ricardo Mangas", "Ricardo Pepi", "Ricardo Pereira", "Ricardo Rodríguez", "Ricardo Visus", "Riccardo Calafiori", "Riccardo Capellini", "Riccardo Ciervo", "Riccardo Marchizza", "Riccardo Orsolini", "Riccardo Pagano", "Riccardo Sottil", "Riccardo Turicchia", "Richard Kone", "Richard Ríos", "Richarlison", "Richie Sagrado", "Richonell Margaret", "Rick Meissen", "Ricky Watts", "Ricky van Wolfswinkel", "Rico Henry", "Rico Lewis", "Ridgeciano Haps", "Rifet Kapic", "Rihito Yamamoto", "Riki Rodríguez", "Riley McGree", "Rilind Nivokazi", "Ringo Meerveld", "Rio Hillen", "Rio Ngumoha", "Rio Shipston", "Ritsu Doan", "Riyad Idrissi", "Ro-Zangelo Daal", "Rob Atkinson", "Rob Dickie", "Rob Schoofs", "Robert Gumny", "Robert Lewandowski", "Robert Navarro", "Robert Sánchez", "Roberto Alves", "Roberto Insigne", "Roberto López", "Roberto Massimo", "Roberto Piccoli", "Robin Gosens", "Robin Le Normand", "Robin Mirisola", "Robin Pröpper", "Robin Risser", "Robin Roefs", "Robin van Cruijsen", "Robinio Vaz", "Rocco Vata", "Rochinha", "Rodri", "Rodrigo Abascal", "Rodrigo Bentancur", "Rodrigo Conceição", "Rodrigo De Paul", "Rodrigo Echeverría", "Rodrigo Gomes", "Rodrigo Mendoza", "Rodrigo Mora", "Rodrigo Muniz", "Rodrigo Pinheiro", "Rodrigo Pinho", "Rodrigo Riquelme", "Rodrigo Zalazar", "Rodrygo", "Roger Brugué", "Roger Fernandes", "Roger Martí", "Roland Sallai", "Rolando Mandragora", "Romain Esse", "Romain Perraud", "Roman Buess", "Roman Kvet", "Roman Neustädter", "Roman Yakuba", "Roman Yaremchuk", "Romano Schmid", "Romelle Donovan", "Romelu Lukaku", "Romeo Amane", "Romeo Vermant", "Romeo Vucic", "Romário Baró", "Roméo Lavia", "Ronald", "Ronald Araujo", "Ronald Koeman Jr.", "Roni", "Ronivaldo", "Rony Lopes", "Roony Bardghji", "Rosen Bozhinov", "Ross Barkley", "Ross McCrorie", "Ross Sykes", "Roy Steur", "Ruben Aguilar", "Ruben Kluivert", "Ruben Loftus-Cheek", "Ruben van Bommel", "Rubén Alcaraz", "Rubén García", "Rubén Peña", "Rubén Pulido", "Rubén Sobrino", "Rubén Sánchez", "Rubén Vargas", "Rubén Yáñez", "Rudy Matondo", "Rui Mendes", "Rui Modesto", "Rui Silva", "Ruiz de Galarreta", "Rumarn Burrell", "Ruslan Malinovskyi", "Ryan Alebiosu", "Ryan Allsop", "Ryan Andrews", "Ryan Barnett", "Ryan Christie", "Ryan Flamingo", "Ryan Fosso", "Ryan Giles", "Ryan Gravenberch", "Ryan Hedges", "Ryan Kessler", "Ryan Leonard", "Ryan Longman", "Ryan Manning", "Ryan Merlen", "Ryan Porteous", "Ryan Sessegnon", "Ryan Thomas", "Ryan Yates", "Ryotaro Ito", "Ryoya Morishita", "Régis Gurtner", "Rémi Oudin", "Rémy Descamps", "Rémy Labeau Lascary", "Rémy Vita", "Róbert Boženík", "Rúben Dias", "Rúben Neves", "Rúben Semedo", "Rúben Vinagre", "Răzvan Sava", "S. Colombatto", "S. Desplanches", "S. El Karouani", "S. El Shaarawy", "S. Iling-Junior", "S. Raux-Yao", "S. Van der Heyden", "S. Verdi", "S. Walukiewicz", "S. van Hooijdonk", "S. Şahin-Radlinger", "Saba Goglichidze", "Sabit Abdulai", "Sadibou Sané", "Sadik Fofana", "Saidy Janko", "Salim Diakité", "Saliou Sané", "Salis Abdul Samed", "Salko Hamzic", "Salva Ruiz", "Salvatore Elia", "Salvatore Esposito", "Salvatore Molina", "Sam Beukema", "Sam Field", "Sam Gallagher", "Sam Greenwood", "Sam Johnstone", "Sam Kersten", "Sam Lammers", "Sam McCallum", "Sam Morsy", "Sam Silvera", "Sam Smith", "Sambou Soumano", "Samed Bazdar", "Sami Lahssaini", "Sami Ouaissa", "Samir Chergui", "Samir El Mourabet", "Samir Lagsir", "Sammie Szmodics", "Samson Baidoo", "Samu", "Samu Aghehowa", "Samuel Adeniran", "Samuel Amo-Ameyaw", "Samuel Bastien", "Samuel Chukwueze", "Samuel Dahl", "Samuel Edozie", "Samuel Essende", "Samuel Giovane", "Samuel Gueulette", "Samuel Kozlovský", "Samuel Krasniqi", "Samuel Marques", "Samuel Mbangula", "Samuel Mráz", "Samuel Soares", "Samuele Angori", "Samuele Birindelli", "Samuele Ricci", "Samú Costa", "Sander Berge", "Sandi Lovrić", "Sandro Ingolitsch", "Sandro Kulenović", "Sandro Lauper", "Sandro Lima", "Sandro Ramírez", "Sandro Tonali", "Sanel Saljic", "Santi Cazorla", "Santi Comesaña", "Santi García", "Santiago Arias", "Santiago Bueno", "Santiago Castro", "Santiago Gimenez", "Santiago Hidalgo", "Santiago Mele", "Santiago Mouriño", "Santiago Pierotti", "Sasa Kalajdzic", "Sascha Britschgi", "Sascha Horvath", "Saud Abdulhamid", "Saulo Decarli", "Savinho", "Saúl Coco", "Saša Lukić", "Scott McKenna", "Scott McTominay", "Scott Twine", "Scott Wharton", "Sead Kolasinac", "Sean Fusire", "Sean Longstaff", "Sean McLoughlin", "Sean Steur", "Seba Pérez", "Sebas Moyano", "Sebastiaan Bornauw", "Sebastian Bergier", "Sebastian Kerk", "Sebastian Kowalczyk", "Sebastian Madejski", "Sebastian Nanasi", "Sebastian Sebulonsen", "Sebastian Szymański", "Sebastiano Esposito", "Sebastiano Luperto", "Sebastián Cáceres", "Seedy Jatta", "Seid Korac", "Seiji Kimura", "Seiya Maikuma", "Seko Fofana", "Sem Scheperman", "Sem Steijn", "Sem van Duijn", "Semi Ajayi", "Semih Kılıçsoy", "Semm Renders", "Semuel Pizzignacco", "Senne Lammens", "Senny Mayulu", "Sepp van den Berg", "Serafin Szota", "Sergi Altimira", "Sergi Canós", "Sergi Cardona", "Sergi Darder", "Sergi Enrich", "Sergi Gómez", "Sergi Roberto", "Sergi Samper", "Serginho", "Sergio Arribas", "Sergio Bermejo", "Sergio Camello", "Sergio Carreira", "Sergio Cubero", "Sergio Escudero", "Sergio González", "Sergio Guerrero", "Sergio Gómez", "Sergio Herrera", "Sergio Lozano", "Sergio Ortuño", "Sergio Postigo", "Sergio Rochet", "Sergio Ruiz", "Sergio Álvarez", "Sergiy Sydorchuk", "Sergiño Dest", "Serxho Ujka", "Seung-ho Paik", "Severin Ottiger", "Seydou Traoré", "Seydouba Cissé", "Shaqueel van Persie", "Shawn Adewoye", "Shea Charles", "Sherel Floranus", "Sheriff Kassama", "Shogo Taniguchi", "Shola Shoretire", "Shon Weissman", "Shunsuke Mito", "Shunsuke Saito", "Shurandy Sambo", "Shuto Machino", "Sidnei Tavares", "Sidney Lima", "Sidny Cabral", "Siebe Horemans", "Siebe Schrijvers", "Sikou Niakaté", "Silas Huber", "Silvan Sidler", "Silvan Widmer", "Silvio Merkaj", "Simen Juklerød", "Simon Adingra", "Simon Ebonog", "Simon Elisor", "Simon Graves", "Simon Gustafson", "Simon Janssen", "Simon Mignolet", "Simon Piesinger", "Simon Pirkl", "Simon Seidl", "Simon Sohm", "Simone Bastoni", "Simone Canestrelli", "Simone Colombi", "Simone Davi", "Simone Ghidotti", "Simone Giordano", "Simone Pafundi", "Simone Perilli", "Simone Pontisso", "Simone Santoro", "Simone Scuffet", "Simone Stroscio", "Simone Trimboli", "Simone Tronchin", "Simone Zanon", "Simão", "Sinaly Diomandé", "Sinan Karweina", "Sinclair Armstrong", "Sindre Walle Egeli", "Siriki Dembélé", "Slobodan Rubezic", "Sofiane Boufal", "Sofiane Diop", "Sofyan Amrabat", "Sol Brynn", "Solly March", "Sondre Langås", "Sondre Liseth", "Sondre Tronstad", "Sondre Ørjasæter", "Sonny Carey", "Sontje Hansen", "Sorba Thomas", "Sorriso", "Sory Kaba", "Sota Kitano", "Soufiane Hetli", "Souleyman Doumbia", "Souleymane Diaby", "Souleymane Faye", "Souleymane N'Diaye", "Soumaïla Coulibaly", "Soumaïla Diabaté", "Soungoutou Magassa", "Souza", "Srdjan Hrstic", "Stan Henderikx", "Stanis Idumbo", "Stanislav Lobotka", "Stanko Juric", "Stav Lemkin", "Stavros Gavriel", "Stefan Bajcetic", "Stefan Bajic", "Stefan Hierländer", "Stefan Knezevic", "Stefan Lainer", "Stefan Lekovic", "Stefan Ortega", "Stefan Posch", "Stefan de Vrij", "Stefano Cella", "Stefano Di Mario", "Stefano Moreo", "Stefano Sabelli", "Stefano Turati", "Stefanos Kapino", "Stefanos Tzimas", "Stefán Ingi Sigurdarson", "Stelios Andreou", "Stephan Zagadou", "Stephy Mavididi", "Steve Cook", "Steve Kapuadi", "Steve Kingue", "Steve Ngoura", "Steve Rouiller", "Steven Berghuis", "Steven Nador", "Steven Nzonzi", "Stije Resink", "Stijn van Gassel", "Stiven Shpendi", "Stjepan Davidovic", "Stoichkov", "Stole Dimitrievski", "Strahinja Pavlović", "Stratos Svarnas", "Stéphane Cueni", "Stéphane Diarra", "Suat Serdar", "Suso", "Svante Ingelsson", "Sven Botman", "Sven Köhler", "Sven Mijnans", "Sverre Nypan", "Svit Seslar", "Syb van Ottele", "Sydie Peck", "Szymon Czyż", "Szymon Weirauch", "Szymon Włodarczyk", "Szymon Żurkowski", "Séamus Coleman", "Sébastien Haller", "Sékou Fofana", "Sékou Mara", "Søren Tengstedt", "Sławomir Abramowicz", "T. Alexander-Arnold", "T. Douvikas", "T. Gaprindashvili", "T. Gardner-Hickman", "T. Harwood-Bellis", "T. Schützenauer", "T. Tomiyasu", "T. Wellenreuther", "T. van den Belt", "Tachi", "Tahith Chong", "Taichi Fukui", "Taiga Hata", "Taisei Abe", "Taiwo Awoniyi", "Tajon Buchanan", "Takahiro Akimoto", "Takefusa Kubo", "Takuma Asano", "Takuma Ominami", "Takumi Minamino", "Tamar Svetlin", "Tamble", "Tammer Bany", "Tammy Abraham", "Tamás Nikitscher", "Tanguy Ndombélé", "Tanguy Nianzou", "Tanguy Zoukrou", "Tanner Tessmann", "Taofeek Ismaheel", "Taras Mykhavko", "Taras Romanczuk", "Tarik Muharemović", "Tariq Lamptey", "Tatsuhiro Sakamoto", "Tatsuki Seko", "Taty Castellanos", "Taylor Booth", "Tayo Adaramola", "Tchamba", "Telmo Arcanjo", "Teo Quintero", "Terem Moffi", "Terry Devlin", "Terry Yegbe", "Teun Koopmeiners", "Theo Bair", "Theo Bergvall", "Theo Hernández", "Thiago Almada", "Thiago Silva", "Thibaud Verlinden", "Thibault De Smet", "Thibault Vlietinck", "Thibaut Courtois", "Thibo Somers", "Thierno Ballo", "Thierno Barry", "Thierry Correia", "Thierry Lutonda", "Thijmen Blokzijl", "Thijs Dallinga", "Thijs Oosting", "Thilo Kehrer", "Thom van Bergen", "Thomas Battistella", "Thomas Beelen", "Thomas Bruns", "Thomas Buitink", "Thomas Castella", "Thomas Claes", "Thomas Foket", "Thomas Geris", "Thomas Gillier", "Thomas Goiginger", "Thomas Henry", "Thomas Kaminski", "Thomas Kristensen", "Thomas Lemar", "Thomas Meunier", "Thomas Ouwejan", "Thomas Partey", "Thomas Sabitzer", "Thomas Santos", "Thomas Schiestl", "Thomas Turner", "Thomas Van den Keybus", "Thorgan Hazard", "Thorsten Schriebl", "Théo Berdayes", "Théo De Percin", "Théo Defourny", "Théo Golliard", "Théo Le Bris", "Théo Zidane", "Tiago Araújo", "Tiago Esgaio", "Tiago Gabriel", "Tiago Gouveia", "Tiago Manso", "Tiago Morais", "Tiago Santos", "Tiago Tomás", "Tibe De Vlieger", "Tidjany Touré", "Tiemoko Ouattara", "Tijjani Noslin", "Tijjani Reijnders", "Tijs Velthuis", "Tika de Jonge", "Tim Drexler", "Tim Iroegbunam", "Tim Meyer", "Timi Max Elsnik", "Timothy Castagne", "Timothy Ouma", "Timothy Weah", "Timothé Cognat", "Tin Plavotic", "Tino Anjorin", "Tino Livramento", "Tjaronn Chery", "Tobe Leysen", "Tobias Anselm", "Tobias Børkeeiet", "Tobias Gruber", "Tobias Gulliksen", "Tobias Hedl", "Tobias Kainz", "Tobias Koch", "Tobias Lauritsen", "Tobias Lawal", "Tobias Mohr", "Toby Collyer", "Tobías Reinhart", "Tochi Chukwuani", "Tochukwu Nnadi", "Todd Cantwell", "Tolu Arokodare", "Tom Cairney", "Tom Cannon", "Tom Davies", "Tom Fellows", "Tom Gaal", "Tom Heaton", "Tom Ince", "Tom Louchet", "Tom Moustier", "Tom Ritzy Hülsmann", "Tom Vandenberghe", "Tom de Graaff", "Tom van de Looi", "Toma Bašić", "Tomané", "Tomas Bobcek", "Tomas Rigo", "Tomas Suslov", "Tomasz Mokwa", "Tomasz Neugebauer", "Tomasz Pieńko", "Tomi Horvat", "Tommaso Arrigoni", "Tommaso Augello", "Tommaso Baldanzi", "Tommaso Berti", "Tommaso Biasci", "Tommaso Cancellotti", "Tommaso Cassandro", "Tommaso Corazza", "Tommaso Del Lungo", "Tommaso Fumagalli", "Tommaso Guercio", "Tommaso Maggioni", "Tommaso Pobega", "Tommy Conway", "Tommy Doyle", "Tommy St. Jago", "Tomoki Iwata", "Tomás Araújo", "Tomás Mendes", "Tomás Tavares", "Tomáš Souček", "Toni Abad", "Toni Lato", "Toni Martínez", "Toni Moya", "Toni Villa", "Tony Strata", "Torbjørn Heggem", "Tosin Adarabioyo", "Toti", "Trai Hume", "Travis Hernes", "Trevoh Chalobah", "Trigueira", "Tristan Degreef", "Tristan Gooijer", "Tristan van Gilst", "Troy Parrott", "Tsuyoshi Watanabe", "Tunde Akinsola", "Tygo Land", "Tylel Tati", "Tyler Adams", "Tyler Dibling", "Tyler Goodrham", "Tyler Morton", "Tyreece Campbell", "Tyrell Malacia", "Tyrese Campbell", "Tyrese Noslin", "Tyrick Mitchell", "Tyrique George", "Tyrique Mercera", "Tyron Owusu", "Tyrone Mings", "Tyrone Owusu", "Tyronne Ebuehi", "Ulisses", "Ulisses Garcia", "Umeh Emmanuel", "Unai Elgezabal", "Unai Gómez", "Unai López", "Unai Simón", "Unai Vencedor", "Uran Bislimi", "Urko Izeta", "V. Atangana", "V. Kochergin", "V. Milinković-Savić", "Vahan Bichakhchyan", "Vakoun Bayo", "Valentin Antov", "Valentin Cojocaru", "Valentin Rongier", "Valentin Rosier", "Valentino Lazaro", "Valentino Müller", "Valentín Barco", "Valerio Mantovani", "Valeriy Bondar", "Valery Fernández", "Valmir Matoshi", "Valon Berisha", "Vanderson", "Vangelis Pavlidis", "Vanja Drkusic", "Vasco Lopes", "Vasco Moreira", "Vasco Sousa", "Vasilije Adžić", "Vasilije Janjicic", "Vasilios Barkas", "Vasilios Zagaritis", "Vaso Vasic", "Vedat Muriqi", "Veljko Ilic", "Veljko Milosavljevic", "Vesel Demaku", "Vic Chambaere", "Vicente Pizarro", "Vicente Reyes", "Victor Edvardsen", "Victor Froholdt", "Victor Jensen", "Victor Kristiansen", "Victor Lindelöf", "Victor Nelsson", "Victor Parada", "Victor Torp", "Viktor Damjanic", "Viktor Gyökeres", "Viktor Johansson", "Viktor Popov", "Viktor Tsukanov", "Viktor Tsygankov", "Vincent Janssen", "Vincent Marchetti", "Vincent Sierro", "Vincenzo Fiorillo", "Vinicius Junior", "Vinícius Lopes", "Vinícius Tobias", "Virgil Misidjan", "Virgil van Dijk", "Visar Musliu", "Vitaliy Buyalskyi", "Vitaliy Mykolenko", "Vitaly Janelt", "Vitezslav Jaros", "Viti Rozada", "Vitinha", "Vitinha", "Vitinho", "Vito van Crooij", "Vittorio Magni", "Vladan Kovačević", "Vladimir Nikolov", "Vladislavs Gutkovskis", "Vladyslav Vanat", "Volodymyr Brazhko", "Víctor Chust", "Víctor García", "Víctor García", "Víctor Gómez", "Víctor Meseguer", "Vítor Carvalho", "W. Willumsson", "Wagane Faye", "Walid Cheddira", "Walter Benítez", "Warleson", "Warren Bondo", "Warren Kamanzi", "Warren Zaïre-Emery", "Wataru Endo", "Wesley", "Wesley Fofana", "Wesley Saïd", "Weslley Patati", "Weston McKennie", "Weverson", "Wiktor Dlugosz", "Wiktor Nowak", "Wilfried Gnonto", "Wilfried Kanga", "Wilguens Paugain", "Will Hughes", "Will Lankshear", "Will Smallbone", "Will Vaulks", "Willem Geubbels", "Willi Orbán", "William Balikwisha", "William Gomes", "William Osula", "William Saliba", "Willian Pacho", "Williot Swedberg", "Willy Kambwala", "Wilson Isidor", "Wilson Odobert", "Winsley Boteli", "Wladimiro Falcone", "Wojciech Jakubik", "Wojciech Mońka", "Wojciech Szczęsny", "Wojciech Urbański", "Wolke Janssens", "Wout Faes", "Wout Weghorst", "Wouter Goes", "Wouter Prins", "Woyo Coulibaly", "Xabi Huarte", "Xander Severina", "Xaver Schlager", "Xavi Simons", "Xavi Sintes", "Xavier Dziekoński", "Xavier Mbuyamba", "Xeber Alkain", "Xeka", "Xherdan Shaqiri", "Ximo Navarro", "Y. Borges Sanches", "Y. Ndayishimiye", "Yahya Kalley", "Yaimar Medina", "Yan Maranhão", "Yan Valery", "Yangel Herrera", "Yanick Brecher", "Yanis Begraoui", "Yanis Cimignani", "Yanis Massolin", "Yanis Zouaoui", "Yankuba Minteh", "Yann Bisseck", "Yann Bodiger", "Yann Gboho", "Yann Massombo", "Yann Sommer", "Yannick Agnero", "Yannick Cappelle", "Yannick Leliendal", "Yannick Thoelen", "Yannick Vötter", "Yarek Gasiorowski", "Yari Verschaeren", "Yasin Ayari", "Yassin Belkhdim", "Yassin Oukili", "Yassine Kechta", "Yassine Khalifi", "Yassine Titraoui", "Yassir Salah Rahmouni", "Yassir Zabiri", "Yegor Nazaryna", "Yegor Yarmolyuk", "Yehvann Diouf", "Yeray Álvarez", "Yeremay Hernández", "Yerry Mina", "Yerson Mosquera", "Yevgen Cheberko", "Yira Sor", "Ylber Ramadani", "Yllan Okou", "Yoan Severin", "Yoane Wissa", "Yoann Cathline", "Yorbe Vertessen", "Youba Diarra", "Younes Namli", "Younes Taha", "Young-joon Lee", "Youri Baas", "Youri Regeer", "Youri Tielemans", "Youssef Chermiti", "Youssef El Arabi", "Youssef El Kachati", "Youssef En-Nesyri", "Youssef Maleh", "Youssef Maziz", "Youssouf Fofana", "Youssuf Sylla", "Yu Hirakawa", "Yuito Suzuki", "Yukhym Konoplya", "Yuki Ohashi", "Yukinari Sugawara", "Yunus Musah", "Yuri Berchiche", "Yuri Ribeiro", "Yussi Diarra", "Yusuf Demir", "Yusuf Maart", "Yuto Tsunashima", "Yvan Ikia Dimi", "Yves Bissouma", "Yvon Mvogo", "Yáser Asprilla", "Yéremy Pino", "Zachary Athekame", "Zaidu", "Zak Swanson", "Zak Vyner", "Zakaria Aboukhlal", "Zakaria El Ouahdi", "Zan Karnicnik", "Zan Rogelj", "Zan Vipotnik", "Zeidane Inoussa", "Zeki Amdouni", "Zeki Çelik", "Zeno Debast", "Zeno Van Den Bosch", "Zeteny Jano", "Zian Flemming", "Zico Buurmeester", "Zidane Iqbal", "Zion Suzuki", "Zié Ouattara", "Zoran Arsenic", "Zsolt Nagy", "Zé Carlos", "Zé Carlos", "Zé Pedro", "Zé Vítor", "Ádám Nagy", "Álex Baena", "Álex Berenguer", "Álex Calatrava", "Álex Calvo", "Álex Centelles", "Álex Domínguez", "Álex Fernández", "Álex Jiménez", "Álex Millán", "Álex Muñoz", "Álex Pastor", "Álex Petxarroman", "Álex Pozo", "Álex Remiro", "Álex Sancris", "Álex Sola", "Álex Suárez", "Álex Valle", "Álvaro Aceves", "Álvaro Carrillo", "Álvaro Fernández", "Álvaro García", "Álvaro Montoro", "Álvaro Morata", "Álvaro Núñez", "Álvaro Odriozola", "Álvaro Rodríguez", "Álvaro Rodríguez", "Ángel Alarcón", "Ángel Algobia", "Ángel Baena", "Ángel Correa", "Éder Militão", "Éderson", "Étienne Camara", "Étienne Youté Kinkoué", "Íñigo Sainz-Maza", "Óscar Aranda", "Óscar Clemente", "Óscar Gil", "Óscar Mingueza", "Óscar Perea", "Óscar Plano", "Óscar Rivas", "Óscar Sielva", "Óscar Trejo", "Óscar Valentín", "Ørjan Nyland", "Þ. Helgason", "Łukasz Fabiański", "Łukasz Sekulski", "Łukasz Skorupski", "Łukasz Łakomy", "Alessandro Del Piero", "Cafu", "Franz Beckenbauer", "Garrincha", "Jay-Jay Okocha", "Michael Owen", "Oliver Kahn", "Roberto Carlos", "Ruud van Nistelrooy", "Steven Gerrard"];

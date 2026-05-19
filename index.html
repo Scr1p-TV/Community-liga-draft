@@ -85,6 +85,21 @@
         </div>
 
         <hr/>
+        <h3>🃏 Spielerbilder verwalten</h3>
+        <p style="color:var(--muted);font-size:12px;margin-bottom:10px;">
+          Füge für jeden Spieler eine Bild-URL ein. Empfehlung: Bilder auf
+          <a href="https://imgur.com" target="_blank" style="color:var(--accent)">imgur.com</a>
+          hochladen und den direkten Link (.png/.jpg) hier eintragen.
+        </p>
+        <div class="form-group">
+          <label>Spieler suchen</label>
+          <input type="text" id="imgPlayerSearch" placeholder="Spieler suchen..."
+            oninput="filterImgPlayers()" style="margin-bottom:8px"/>
+        </div>
+        <div id="imgPlayerList" style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+        <button class="btn-primary" onclick="saveImgUrls()" style="margin-top:10px;width:100%">💾 Bilder speichern</button>
+
+        <hr/>
         <h3>Phasen manuell steuern</h3>
         <div class="comm-actions">
           <button class="btn-phase" onclick="revealSecurePicks()">👁️ Secure Picks aufdecken</button>
@@ -277,7 +292,7 @@
           alt="UFL Community Liga"/>
 
         <img class="player-image" id="cardPlayerImg" src="" alt="Spieler"
-          onerror="this.src='https://cdn.sofifa.net/players/notfound_0_120.png'"/>
+          onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg=='"/>
 
         <div class="bottom-panel">
           <h2 id="cardPlayerName">NAME</h2>
