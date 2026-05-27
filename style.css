@@ -439,40 +439,47 @@ td:last-child { font-weight:600; }
 
 .league-logo {
   position: absolute;
-  top: 20px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 150px;
-  z-index: 5;
-  filter: drop-shadow(0 0 12px rgba(0,180,255,.5));
+  width: 120px;
+  height: 44px;
+  object-fit: contain;
+  z-index: 10;
+  filter: drop-shadow(0 0 10px rgba(0,180,255,.6)) brightness(1.15);
 }
+/* UFL card image fills the card center — no extra positioning needed */
 .player-image {
   position: absolute;
-  bottom: 170px;
+  top: 52px;        /* just below logo */
   left: 50%;
   transform: translateX(-50%);
-  width: 360px;
+  width: 100%;      /* fill full width */
+  max-width: 420px;
   z-index: 4;
-  object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(0,180,255,.35));
+  object-fit: cover;
+  object-position: top center;
+  /* height fills from below logo to above bottom panel */
+  height: calc(100% - 52px - 200px);
 }
 .bottom-panel {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 24px;
+  padding: 20px 20px 24px;
   z-index: 6;
-  background: linear-gradient(to top, rgba(0,0,0,.92), rgba(0,0,0,.1));
-  backdrop-filter: blur(10px);
+  background: linear-gradient(to top, rgba(0,0,0,.97) 70%, rgba(0,0,0,.1));
+  backdrop-filter: blur(12px);
 }
 .bottom-panel h2 {
-  margin: 0 0 24px;
+  margin: 0 0 18px;
   text-align: center;
   color: #fff;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 52px;
+  font-size: 46px;
   font-weight: 900;
   letter-spacing: 4px;
+  line-height: 1;
 }
 .meta {
   display: flex;
@@ -573,10 +580,10 @@ td:last-child { font-weight:600; }
 
   /* UFL Card modal — smaller on tablet */
   .ufl-card { width: 340px; height: 580px; border-radius: 28px; }
-  .league-logo { width: 110px; }
-  .player-image { width: 280px; bottom: 140px; }
-  .bottom-panel { padding: 18px; }
-  .bottom-panel h2 { font-size: 40px; margin-bottom: 16px; }
+  .league-logo { width: 100px; height: 36px; top: 12px; }
+  .player-image { top: 46px; height: calc(100% - 46px - 180px); }
+  .bottom-panel { padding: 16px; }
+  .bottom-panel h2 { font-size: 38px; margin-bottom: 14px; }
   .meta-item img { width: 44px; height: 44px; }
   .pos-badge { width: 44px; height: 44px; font-size: 22px; }
   .meta-item span { font-size: 12px; }
@@ -682,10 +689,10 @@ td:last-child { font-weight:600; }
     height: min(520px, calc(100vh - 120px));
     border-radius: 24px;
   }
-  .league-logo { width: 90px; top: 14px; }
-  .player-image { width: 220px; bottom: 120px; }
-  .bottom-panel { padding: 14px; }
-  .bottom-panel h2 { font-size: 32px; margin-bottom: 12px; }
+  .league-logo { width: 80px; height: 30px; top: 10px; }
+  .player-image { top: 40px; height: calc(100% - 40px - 160px); }
+  .bottom-panel { padding: 12px; }
+  .bottom-panel h2 { font-size: 30px; margin-bottom: 10px; }
   .meta { gap: 8px; }
   .meta-item { padding: 10px 6px; border-radius: 12px; }
   .meta-item img { width: 36px; height: 36px; margin-bottom: 6px; }
