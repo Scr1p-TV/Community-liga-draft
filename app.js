@@ -542,13 +542,16 @@ window.securePickPlayer = async function(player) {
   document.getElementById("secureMyPickName").textContent = player;
   renderSecurePlayers([]);
 
-  // Auto-reveal when all teams picked
-  var configSnap  = await get(ref(db, "draftConfig"));
-  var config      = configSnap.val();
-  var newSnap     = await get(ref(db, "securePicks"));
-  var newData     = newSnap.val() || {};
-  if (config && Object.keys(newData).length >= config.teams.length) {
-    await window.revealSecurePicks();
+  // Do NOT auto-reveal — picks stay hidden until ALL bans are done
+  // Commissioner will reveal automatically after ban phase completes
+  var configSnap = await get(ref(db, "draftConfig"));
+  var config     = configSnap.val();
+  var newSnap    = await get(ref(db, "securePicks"));
+  var newData    = newSnap.val() || {};
+  // Just update status count for commissioner visibility
+  var el = document.getElementById("secureStatus");
+  if (el && config) {
+    el.textContent = Object.keys(newData).length + " / " + config.teams.length + " Teams haben gewählt";
   }
 };
 
@@ -755,7 +758,15 @@ async function advanceBan() {
   var nextBan  = state.currentBan + 1;
   var nextTeam = state.banOrder[nextBan - 1] || null;
   timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-  if (!nextTeam) { await window.commForcePhase("draft"); return; }
+
+  if (!nextTeam) {
+    // All bans done — NOW reveal secure picks before starting draft
+    await window.revealSecurePicks();
+    // Small delay so players can see the reveal before draft starts
+    await new Promise(function(r) { setTimeout(r, 4000); });
+    await window.commForcePhase("draft");
+    return;
+  }
   await update(ref(db, "draftState"), { currentBan: nextBan, onTheClock: nextTeam, timerValue: timerValue });
 }
 
