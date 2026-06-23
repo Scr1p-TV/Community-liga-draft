@@ -9,6 +9,8 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
 const COMMISSIONER_PASSWORD = "admin1234";
+const FIXED_TEAMS  = 6;   // Anzahl Teams ist fix
+const FIXED_ROUNDS = 25;  // Picks pro Team ist fix
 
 let currentUser     = null;
 let draftConfig     = null;
@@ -141,7 +143,7 @@ window.addTeamRow = function(name, pw) {
 };
 
 window.saveDraftConfig = async function() {
-  var numRounds    = parseInt(document.getElementById("numRounds").value)    || 1;
+  var numRounds    = FIXED_ROUNDS;  // fix: 25 Picks pro Team
   var timerSeconds = parseInt(document.getElementById("timerSeconds").value) || 90;
   var snake        = document.getElementById("snakeToggle").checked;
   var playerPool   = document.getElementById("playerPool").value.split("\n").map(function(s) { return s.trim(); }).filter(Boolean);
@@ -152,7 +154,10 @@ window.saveDraftConfig = async function() {
     var p = row.querySelector(".team-pw-input").value.trim();
     if (n) teams.push({ name: n, password: p });
   });
-  if (teams.length < 2) { alert("Mindestens 2 Teams erforderlich."); return; }
+  if (teams.length !== FIXED_TEAMS) {
+    alert("Genau " + FIXED_TEAMS + " Teams erforderlich! Aktuell: " + teams.length);
+    return;
+  }
 
   await set(ref(db, "draftConfig"), { numTeams: teams.length, numRounds: numRounds, timerSeconds: timerSeconds, snake: snake, playerPool: playerPool, teams: teams });
   await set(ref(db, "draftState"), {
@@ -221,18 +226,15 @@ window.commForcePhase = async function(phase) {
 };
 
 window.revealSecurePicks = async function() {
-  var snap   = await get(ref(db, "securePicks"));
-  var data   = snap.val() || {};
-  var picks  = Object.values(data);
-  var count  = {};
+  var snap      = await get(ref(db, "securePicks"));
+  var data      = snap.val() || {};
+  var picks     = Object.values(data);
+  var count     = {};
   picks.forEach(function(p) { count[p.player] = (count[p.player] || 0) + 1; });
   var conflicts = Object.keys(count).filter(function(pl) { return count[pl] > 1; });
+  // Update Firebase — all clients listening to secureRevealed will show results automatically
   await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: conflicts });
-  if (conflicts.length === 0) {
-    alert("Keine Konflikte! Starte jetzt die Ban Phase.");
-  } else {
-    alert("Konflikte: " + conflicts.join(", ") + " — betroffene Teams wählen neu.");
-  }
+  // No alert — flow continues automatically
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -300,6 +302,22 @@ function subscribeAllSecurePicks() {
   onValue(ref(db, "securePicks"), function(snap) {
     var data = snap.val() || {};
     allSecurePicks = Object.values(data);
+  });
+  // Also subscribe to reveal — so all clients see results regardless of current screen
+  onValue(ref(db, "draftState/secureRevealed"), function(snap) {
+    if (!snap.val()) return;
+    get(ref(db, "draftState")).then(function(snap2) {
+      var state     = snap2.val() || {};
+      var conflicts = state.secureConflicts || [];
+      // Show results on secure pick screen if visible, otherwise show as overlay
+      var secureScreen = document.getElementById("securePickScreen");
+      if (secureScreen && secureScreen.classList.contains("active")) {
+        showSecureResults(conflicts);
+      } else {
+        // Show a brief notification overlay for teams on other screens
+        showSecureRevealOverlay(state);
+      }
+    });
   });
 }
 
@@ -449,6 +467,7 @@ function initSecurePick() {
     startTimer("secureTimer", handleSecureTimerExpired);
     subscribeSecureStatus();
     subscribeSecureReveal();
+    // Note: subscribeSecureReveal also called globally in subscribeAllSecurePicks
   });
 }
 
@@ -760,11 +779,12 @@ async function advanceBan() {
   timerValue = draftConfig ? draftConfig.timerSeconds : 90;
 
   if (!nextTeam) {
-    // All bans done — NOW reveal secure picks before starting draft
+    // All bans done — reveal secure picks, then start draft after delay
     await window.revealSecurePicks();
-    // Small delay so players can see the reveal before draft starts
-    await new Promise(function(r) { setTimeout(r, 4000); });
-    await window.commForcePhase("draft");
+    // Wait 5 seconds so all clients can see the reveal overlay before draft starts
+    setTimeout(async function() {
+      await window.commForcePhase("draft");
+    }, 5000);
     return;
   }
   await update(ref(db, "draftState"), { currentBan: nextBan, onTheClock: nextTeam, timerValue: timerValue });
@@ -982,31 +1002,51 @@ async function advancePick() {
   var state = snap.val();
   if (!state) return;
   var nextPick = state.currentPick + 1;
-  var nextTeam = state.order[nextPick - 1] || null;
+  // Safety: never exceed order array — prevents extra picks
+  var nextTeam = (state.order && nextPick - 1 < state.order.length)
+    ? state.order[nextPick - 1]
+    : null;
   timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-  await update(ref(db, "draftState"), { currentPick: nextPick, onTheClock: nextTeam, timerValue: timerValue });
+  await update(ref(db, "draftState"), {
+    currentPick:  nextPick,
+    onTheClock:   nextTeam,
+    timerValue:   timerValue,
+    draftComplete: !nextTeam
+  });
 }
 
 async function handleDraftTimerExpired() {
   var snap  = await get(ref(db, "draftState"));
   var state = snap.val();
-  if (!state || state.onTheClock !== currentUser.team) return;
+  if (!state) return;
+
+  // Only act if it's this team's turn OR commissioner
+  var isMyTurn = state.onTheClock === currentUser.team;
+  var isComm   = currentUser.isCommissioner;
+  if (!isMyTurn && !isComm) return;
+
+  // Try auto-pick from queue
   if (pickQueue.length > 0) {
     var dSnap   = await get(ref(db, "draftPicks"));
     var drafted = Object.values(dSnap.val() || {}).map(function(p) { return p.player; });
     var secured = allSecurePicks.map(function(s) { return s.player; });
     var banned  = allBans.map(function(b) { return b.player; });
     for (var i = 0; i < pickQueue.length; i++) {
-      if (!drafted.includes(pickQueue[i]) && !secured.includes(pickQueue[i]) && !banned.includes(pickQueue[i])) {
-        var next = pickQueue[i];
-        await executePick(next);
-        pickQueue = pickQueue.filter(function(p) { return p !== next; });
+      var candidate = pickQueue[i];
+      if (!drafted.includes(candidate) && !secured.includes(candidate) && !banned.includes(candidate)) {
+        pickQueue = pickQueue.filter(function(p) { return p !== candidate; });
         renderPickQueue();
+        await executePick(candidate);
         return;
       }
     }
   }
-  if (currentUser.isCommissioner) await advancePick();
+
+  // No queue or queue empty — skip pick (advance without picking)
+  // Any client whose turn it is can trigger this, not just commissioner
+  if (isMyTurn || isComm) {
+    await advancePick();
+  }
 }
 
 // ── DRAFT ORDER ──
@@ -1048,14 +1088,89 @@ function renderPickQueue() {
   pickQueue   = pickQueue.filter(function(p) { return !drafted.includes(p) && !secured.includes(p) && !banned.includes(p); });
   if (pickQueue.length === 0) { if (emptyEl) emptyEl.style.display = "block"; return; }
   if (emptyEl) emptyEl.style.display = "none";
+
   pickQueue.forEach(function(player, i) {
-    var item = document.createElement("div"); item.className = "queue-item";
+    var item = document.createElement("div");
+    item.className = "queue-item";
+    item.draggable = true;
+    item.dataset.index = i;
+    item.dataset.player = player;
+
+    // Drag handle
+    var handle = document.createElement("div");
+    handle.className = "queue-drag-handle";
+    handle.innerHTML = "⠿";
+    handle.title = "Ziehen zum Sortieren";
+
     var pos  = document.createElement("div"); pos.className = "queue-pos"; pos.textContent = i + 1;
     var name = document.createElement("div"); name.className = "queue-name"; name.textContent = player;
     var rm   = document.createElement("button"); rm.className = "queue-remove"; rm.textContent = "×";
     rm.onclick = (function(p) { return function() { window.removeFromQueue(p); }; })(player);
-    item.appendChild(pos); item.appendChild(name); item.appendChild(rm);
+
+    // Move up/down buttons
+    var upBtn = document.createElement("button");
+    upBtn.className = "queue-move-btn";
+    upBtn.textContent = "↑";
+    upBtn.disabled = i === 0;
+    upBtn.onclick = (function(idx) { return function() {
+      if (idx === 0) return;
+      var tmp = pickQueue[idx - 1];
+      pickQueue[idx - 1] = pickQueue[idx];
+      pickQueue[idx] = tmp;
+      renderPickQueue();
+    }; })(i);
+
+    var downBtn = document.createElement("button");
+    downBtn.className = "queue-move-btn";
+    downBtn.textContent = "↓";
+    downBtn.disabled = i === pickQueue.length - 1;
+    downBtn.onclick = (function(idx) { return function() {
+      if (idx === pickQueue.length - 1) return;
+      var tmp = pickQueue[idx + 1];
+      pickQueue[idx + 1] = pickQueue[idx];
+      pickQueue[idx] = tmp;
+      renderPickQueue();
+    }; })(i);
+
+    item.appendChild(handle);
+    item.appendChild(pos);
+    item.appendChild(name);
+    item.appendChild(upBtn);
+    item.appendChild(downBtn);
+    item.appendChild(rm);
     el.appendChild(item);
+
+    // ── Drag & Drop events ──
+    item.addEventListener("dragstart", function(e) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", i.toString());
+      item.classList.add("dragging");
+    });
+    item.addEventListener("dragend", function() {
+      item.classList.remove("dragging");
+      document.querySelectorAll(".queue-item").forEach(function(el) {
+        el.classList.remove("drag-over");
+      });
+    });
+    item.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      item.classList.add("drag-over");
+    });
+    item.addEventListener("dragleave", function() {
+      item.classList.remove("drag-over");
+    });
+    item.addEventListener("drop", function(e) {
+      e.preventDefault();
+      item.classList.remove("drag-over");
+      var fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+      var toIdx   = parseInt(item.dataset.index);
+      if (fromIdx === toIdx) return;
+      // Reorder pickQueue
+      var moved = pickQueue.splice(fromIdx, 1)[0];
+      pickQueue.splice(toIdx, 0, moved);
+      renderPickQueue();
+    });
   });
 }
 
@@ -1193,6 +1308,62 @@ loadCommissionerPanel = function() {
   setTimeout(function() { renderImgPlayerList(""); }, 500);
   return result;
 };
+
+// ─────────────────────────────────────────────────────────────
+// SECURE REVEAL OVERLAY (for clients not on securePickScreen)
+// ─────────────────────────────────────────────────────────────
+function showSecureRevealOverlay(state) {
+  get(ref(db, "securePicks")).then(function(snap) {
+    var data  = snap.val() || {};
+    var picks = Object.values(data);
+    if (picks.length === 0) return;
+
+    // Build overlay HTML
+    var overlay = document.getElementById("secureRevealOverlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "secureRevealOverlay";
+      overlay.style.cssText = [
+        "position:fixed","inset:0","z-index:900",
+        "background:rgba(0,0,0,.85)","backdrop-filter:blur(6px)",
+        "display:flex","align-items:center","justify-content:center",
+        "animation:fadeUp .4s ease"
+      ].join(";");
+      document.body.appendChild(overlay);
+    }
+
+    var conflicts = state.secureConflicts || [];
+    var rows = picks.map(function(p) {
+      var isConflict = conflicts.includes(p.player);
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;'
+        + 'border-radius:10px;margin-bottom:8px;'
+        + 'background:' + (isConflict ? 'rgba(239,68,68,.08)' : 'rgba(34,197,94,.06)') + ';'
+        + 'border:1px solid ' + (isConflict ? 'rgba(239,68,68,.3)' : 'rgba(34,197,94,.25)') + '">'
+        + '<span style="font-weight:700;flex:1;color:#e2e8f0">' + p.team + '</span>'
+        + '<span style="color:#64748b">→</span>'
+        + '<span style="font-weight:700;flex:2;color:#e2e8f0">' + p.player + '</span>'
+        + '<span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;'
+        + 'background:' + (isConflict ? 'rgba(239,68,68,.15)' : 'rgba(34,197,94,.15)') + ';'
+        + 'color:' + (isConflict ? '#ef4444' : '#22c55e') + '">'
+        + (isConflict ? '⚠️ KONFLIKT' : '✅ SICHER') + '</span>'
+        + '</div>';
+    }).join('');
+
+    overlay.innerHTML = '<div style="background:#0f1929;border:1px solid #1e2d45;border-radius:20px;'
+      + 'padding:36px 40px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto">'
+      + '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;letter-spacing:3px;'
+      + 'color:#facc15;margin-bottom:6px">🔒 SECURE PICKS AUFGEDECKT</div>'
+      + '<p style="color:#64748b;font-size:13px;margin-bottom:20px">'
+      + (conflicts.length > 0 ? 'Konflikte gefunden — betroffene Teams wählen neu.' : 'Alle Picks sind einzigartig!')
+      + '</p>'
+      + rows
+      + '<button onclick="document.getElementById('secureRevealOverlay').remove()" '
+      + 'style="margin-top:20px;width:100%;padding:12px;background:#facc15;color:#000;'
+      + 'border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">'
+      + 'Verstanden ✓</button>'
+      + '</div>';
+  });
+}
 
 // ─────────────────────────────────────────────────────────────
 // PLAYER CARD

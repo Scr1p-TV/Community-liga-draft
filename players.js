@@ -30,7 +30,7 @@ export const PLAYER_DATA = {
   "Andrew Robertson": { pos: "LB", nation: "Schottland", liga: "England 1", club: "Liverpool", eaId: 209331, imgUrl: "" },
   "Alexis Mac Allister": { pos: "CM", nation: "Argentinien", liga: "England 1", club: "Liverpool", eaId: 241637, imgUrl: "" },
   "Dominik Szoboszlai": { pos: "CAM", nation: "Ungarn", liga: "England 1", club: "Liverpool", eaId: 248054, imgUrl: "cards/ufls-asset-szoboszlai-base-92.png" },
-  "Luis Díaz": { pos: "LW", nation: "Kolumbien", liga: "Rest der Welt", club: "Bayern Munich", eaId: 243817, imgUrl: "" },
+  "Luis Díaz": { pos: "LW", nation: "Kolumbien", liga: "England 1", club: "Liverpool", eaId: 243817, imgUrl: "" },
   "Darwin Núñez": { pos: "ST", nation: "Uruguay", liga: "England 1", club: "Liverpool", eaId: 252596, imgUrl: "" },
   "Cody Gakpo": { pos: "LW", nation: "Niederlande", liga: "England 1", club: "Liverpool", eaId: 248054, imgUrl: "" },
   "Casemiro": { pos: "CDM", nation: "Brasilien", liga: "England 1", club: "Man Utd", eaId: 188545, imgUrl: "" },

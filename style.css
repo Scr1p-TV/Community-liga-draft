@@ -714,3 +714,45 @@ td:last-child { font-weight:600; }
   }
   .bottom-panel h2 { font-size: 26px; }
 }
+
+/* ── PICK QUEUE DRAG & DROP ── */
+.queue-drag-handle {
+  color: var(--muted);
+  cursor: grab;
+  font-size: 16px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  user-select: none;
+  letter-spacing: -2px;
+}
+.queue-drag-handle:active { cursor: grabbing; }
+
+.queue-item.dragging {
+  opacity: 0.4;
+  border-style: dashed;
+}
+.queue-item.drag-over {
+  border-color: var(--accent);
+  background: rgba(250,204,21,.12);
+  transform: scale(1.02);
+}
+.queue-move-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 5px;
+  flex-shrink: 0;
+  transition: all .15s;
+  font-family: inherit;
+}
+.queue-move-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.queue-move-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
