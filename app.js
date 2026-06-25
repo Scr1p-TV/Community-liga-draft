@@ -298,23 +298,35 @@ function subscribeToPhaseChanges() {
 }
 
 // Keep allSecurePicks always up to date (needed by draft phase)
+var secureRevealUnsub = null;
 function subscribeAllSecurePicks() {
   onValue(ref(db, "securePicks"), function(snap) {
     var data = snap.val() || {};
     allSecurePicks = Object.values(data);
   });
-  // Also subscribe to reveal — so all clients see results regardless of current screen
-  onValue(ref(db, "draftState/secureRevealed"), function(snap) {
-    if (!snap.val()) return;
+
+  // SINGLE global reveal listener — handles both screen types
+  if (secureRevealUnsub) return; // only subscribe once per session
+  secureRevealUnsub = onValue(ref(db, "draftState/secureRevealed"), function(snap) {
+    var revealed = snap.val();
+
+    if (!revealed) {
+      // Reveal was reset (e.g. for re-pick round) — hide overlay, allow re-render
+      var overlay = document.getElementById("secureRevealOverlay");
+      if (overlay) overlay.remove();
+      var resultsPanel = document.getElementById("secureResultsPanel");
+      if (resultsPanel) resultsPanel.style.display = "none";
+      return;
+    }
+
     get(ref(db, "draftState")).then(function(snap2) {
       var state     = snap2.val() || {};
       var conflicts = state.secureConflicts || [];
-      // Show results on secure pick screen if visible, otherwise show as overlay
       var secureScreen = document.getElementById("securePickScreen");
+
       if (secureScreen && secureScreen.classList.contains("active")) {
         showSecureResults(conflicts);
       } else {
-        // Show a brief notification overlay for teams on other screens
         showSecureRevealOverlay(state);
       }
     });
@@ -466,7 +478,7 @@ function initSecurePick() {
     renderSecurePlayers([]);
     startTimer("secureTimer", handleSecureTimerExpired);
     subscribeSecureStatus();
-    subscribeSecureReveal();
+    // Reveal handling is now global via subscribeAllSecurePicks()
     // Note: subscribeSecureReveal also called globally in subscribeAllSecurePicks
   });
 }
@@ -502,17 +514,6 @@ function subscribeSecureStatus() {
       if (newest) showPickAnimation({ pickNumber: picks.length, team: newest.team, player: newest.player, round: "" }, "SECURE");
     }
     lastSecureCount = picks.length;
-  });
-}
-
-function subscribeSecureReveal() {
-  onValue(ref(db, "draftState/secureRevealed"), function(snap) {
-    if (!snap.val()) return;
-    get(ref(db, "draftState")).then(function(snap2) {
-      var state     = snap2.val() || {};
-      var conflicts = state.secureConflicts || [];
-      showSecureResults(conflicts);
-    });
   });
 }
 
@@ -561,70 +562,131 @@ window.securePickPlayer = async function(player) {
   document.getElementById("secureMyPickName").textContent = player;
   renderSecurePlayers([]);
 
-  // Do NOT auto-reveal — picks stay hidden until ALL bans are done
-  // Commissioner will reveal automatically after ban phase completes
   var configSnap = await get(ref(db, "draftConfig"));
   var config     = configSnap.val();
   var newSnap    = await get(ref(db, "securePicks"));
   var newData    = newSnap.val() || {};
-  // Just update status count for commissioner visibility
   var el = document.getElementById("secureStatus");
   if (el && config) {
     el.textContent = Object.keys(newData).length + " / " + config.teams.length + " Teams haben gewählt";
+  }
+
+  // If everyone has now picked AND no conflicts remain, auto re-reveal
+  // (this handles the re-pick-after-conflict case so the draft doesn't get stuck)
+  if (config && Object.keys(newData).length >= config.teams.length) {
+    var resolved = await window.checkAllSecureResolved();
+    if (resolved) {
+      // All unique now — reveal so everyone sees final results
+      await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: [] });
+    } else {
+      // Still conflicts — reveal again so newly-conflicted teams can see and re-pick
+      var picksArr = Object.values(newData);
+      var count2 = {};
+      picksArr.forEach(function(p) { count2[p.player] = (count2[p.player] || 0) + 1; });
+      var stillConflicted = Object.keys(count2).filter(function(pl) { return count2[pl] > 1; });
+      await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: stillConflicted });
+    }
   }
 };
 
 function showSecureResults(conflicts) {
   stopTimer();
-  document.getElementById("secureResultsPanel").style.display = "block";
+  var resultsPanel = document.getElementById("secureResultsPanel");
+  if (resultsPanel) resultsPanel.style.display = "block";
+
   get(ref(db, "securePicks")).then(function(snap) {
     var data  = snap.val() || {};
     var picks = Object.values(data);
     var el    = document.getElementById("secureResults");
-    el.innerHTML = "";
-    picks.forEach(function(p) {
-      var isConflict = conflicts.includes(p.player);
-      var row = document.createElement("div");
-      row.className = "secure-result-row " + (isConflict ? "conflict" : "safe");
-      var teamSpan   = document.createElement("span"); teamSpan.className = "sr-team"; teamSpan.textContent = p.team;
-      var arrow      = document.createElement("span"); arrow.className = "sr-arrow"; arrow.textContent = "→";
-      var playerSpan = document.createElement("span"); playerSpan.className = "sr-player"; playerSpan.textContent = p.player;
-      var badge      = document.createElement("span"); badge.className = "sr-badge " + (isConflict ? "conflict-badge" : "safe-badge");
-      badge.textContent = isConflict ? "⚠️ KONFLIKT" : "✅ SICHER";
-      row.appendChild(teamSpan); row.appendChild(arrow); row.appendChild(playerSpan); row.appendChild(badge);
-      el.appendChild(row);
-    });
+    if (el) {
+      el.innerHTML = "";
+      picks.forEach(function(p) {
+        var isConflict = conflicts.includes(p.player);
+        var row = document.createElement("div");
+        row.className = "secure-result-row " + (isConflict ? "conflict" : "safe");
+        var teamSpan   = document.createElement("span"); teamSpan.className = "sr-team"; teamSpan.textContent = p.team;
+        var arrow      = document.createElement("span"); arrow.className = "sr-arrow"; arrow.textContent = "→";
+        var playerSpan = document.createElement("span"); playerSpan.className = "sr-player"; playerSpan.textContent = p.player;
+        var badge      = document.createElement("span"); badge.className = "sr-badge " + (isConflict ? "conflict-badge" : "safe-badge");
+        badge.textContent = isConflict ? "⚠️ KONFLIKT" : "✅ SICHER";
+        row.appendChild(teamSpan); row.appendChild(arrow); row.appendChild(playerSpan); row.appendChild(badge);
+        el.appendChild(row);
+      });
+    }
 
     var conflictEl = document.getElementById("secureConflict");
-    if (conflicts.length > 0) {
+
+    if (conflicts.length === 0) {
+      // No conflicts — everyone is done, nothing more to do here.
+      // Commissioner will manually start Ban phase.
+      if (conflictEl) conflictEl.style.display = "none";
+      return;
+    }
+
+    if (conflictEl) {
       conflictEl.style.display = "block";
       document.getElementById("conflictMsg").textContent = "Konflikte bei: " + conflicts.join(", ");
-      // Let conflicted teams re-pick
-      if (!currentUser.isCommissioner) {
-        var myEntry = picks.find(function(p) { return p.team === currentUser.team && conflicts.includes(p.player); });
-        if (myEntry) {
-          // Remove old pick
-          get(ref(db, "securePicks")).then(function(s) {
-            var d = s.val() || {};
-            Object.entries(d).forEach(function(pair) {
-              if (pair[1].team === currentUser.team) remove(ref(db, "securePicks/" + pair[0]));
-            });
+    }
+
+    if (currentUser.isCommissioner) return; // commissioner just observes
+
+    var myEntry = picks.find(function(p) { return p.team === currentUser.team; });
+    var amInConflict = myEntry && conflicts.includes(myEntry.player);
+
+    if (amInConflict) {
+      // I am affected — remove MY pick only, then let me choose again
+      var myKeyToRemove = null;
+      get(ref(db, "securePicks")).then(function(s) {
+        var d = s.val() || {};
+        Object.entries(d).forEach(function(pair) {
+          if (pair[1].team === currentUser.team) myKeyToRemove = pair[0];
+        });
+        if (myKeyToRemove) {
+          remove(ref(db, "securePicks/" + myKeyToRemove)).then(function() {
+            mySecurePick = null;
+            var myPickEl = document.getElementById("secureMyPick");
+            if (myPickEl) myPickEl.style.display = "none";
+            if (resultsPanel) resultsPanel.style.display = "none";
+
+            timerValue = draftConfig ? draftConfig.timerSeconds : 90;
+            startTimer("secureTimer", handleSecureTimerExpired);
+
+            var nonConflict = picks
+              .filter(function(p) { return !conflicts.includes(p.player); })
+              .map(function(p) { return p.player; });
+            renderSecurePlayers(nonConflict);
           });
-          mySecurePick = null;
-          document.getElementById("secureMyPick").style.display = "none";
-          // Reset reveal for re-pick round
-          update(ref(db, "draftState"), { secureRevealed: false, secureConflicts: [] });
-          timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-          startTimer("secureTimer", handleSecureTimerExpired);
-          var nonConflict = picks.filter(function(p) { return !conflicts.includes(p.player); }).map(function(p) { return p.player; });
-          renderSecurePlayers(nonConflict);
         }
-      }
+      });
     } else {
-      conflictEl.style.display = "none";
+      // I am NOT affected — I already have a safe pick.
+      // Hide results panel and wait quietly for affected teams to re-pick.
+      if (resultsPanel) resultsPanel.style.display = "none";
+      var statusEl = document.getElementById("secureStatus");
+      if (statusEl) {
+        statusEl.textContent = "Dein Pick ist sicher ✅ — warte auf betroffene Teams...";
+      }
     }
   });
 }
+
+// Commissioner triggers this once all conflicts are resolved (everyone has unique pick)
+window.checkAllSecureResolved = async function() {
+  var configSnap = await get(ref(db, "draftConfig"));
+  var config     = configSnap.val();
+  if (!config) return false;
+
+  var picksSnap = await get(ref(db, "securePicks"));
+  var picks     = Object.values(picksSnap.val() || {});
+
+  if (picks.length < config.teams.length) return false;
+
+  var count = {};
+  picks.forEach(function(p) { count[p.player] = (count[p.player] || 0) + 1; });
+  var stillConflicted = Object.keys(count).filter(function(pl) { return count[pl] > 1; });
+
+  return stillConflicted.length === 0;
+};
 
 async function handleSecureTimerExpired() {
   if (currentUser.isCommissioner || mySecurePick) return;
