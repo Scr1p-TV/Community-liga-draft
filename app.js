@@ -9,6 +9,8 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
 const COMMISSIONER_PASSWORD = "admin1234";
+const FIXED_TEAMS  = 6;   // Anzahl Teams ist fix
+const FIXED_ROUNDS = 25;  // Picks pro Team ist fix
 
 let currentUser     = null;
 let draftConfig     = null;
@@ -96,16 +98,17 @@ window.commLogin = function() {
   if (pw !== COMMISSIONER_PASSWORD) { err.textContent = "Falsches Passwort."; return; }
   document.getElementById("commPanel").style.display = "block";
   currentUser = { team: "Commissioner", isCommissioner: true };
-  loadCommissionerPanel();
-  // Start ready listener immediately so commissioner sees team status in panel
-  initLobby();
+  // loadCommissionerPanel loads draftConfig, then we start lobby listener
+  loadCommissionerPanel().then(function() {
+    initLobby();
+  });
 };
 
 // ─────────────────────────────────────────────────────────────
 // COMMISSIONER PANEL
 // ─────────────────────────────────────────────────────────────
 function loadCommissionerPanel() {
-  get(ref(db, "draftConfig")).then(function(snap) {
+  return get(ref(db, "draftConfig")).then(function(snap) {
     var c = snap.val();
     if (!c) {
       addTeamRow(); addTeamRow(); addTeamRow(); addTeamRow();
@@ -140,7 +143,7 @@ window.addTeamRow = function(name, pw) {
 };
 
 window.saveDraftConfig = async function() {
-  var numRounds    = parseInt(document.getElementById("numRounds").value)    || 1;
+  var numRounds    = FIXED_ROUNDS;  // fix: 25 Picks pro Team
   var timerSeconds = parseInt(document.getElementById("timerSeconds").value) || 90;
   var snake        = document.getElementById("snakeToggle").checked;
   var playerPool   = document.getElementById("playerPool").value.split("\n").map(function(s) { return s.trim(); }).filter(Boolean);
@@ -151,7 +154,10 @@ window.saveDraftConfig = async function() {
     var p = row.querySelector(".team-pw-input").value.trim();
     if (n) teams.push({ name: n, password: p });
   });
-  if (teams.length < 2) { alert("Mindestens 2 Teams erforderlich."); return; }
+  if (teams.length !== FIXED_TEAMS) {
+    alert("Genau " + FIXED_TEAMS + " Teams erforderlich! Aktuell: " + teams.length);
+    return;
+  }
 
   await set(ref(db, "draftConfig"), { numTeams: teams.length, numRounds: numRounds, timerSeconds: timerSeconds, snake: snake, playerPool: playerPool, teams: teams });
   await set(ref(db, "draftState"), {
@@ -220,18 +226,15 @@ window.commForcePhase = async function(phase) {
 };
 
 window.revealSecurePicks = async function() {
-  var snap   = await get(ref(db, "securePicks"));
-  var data   = snap.val() || {};
-  var picks  = Object.values(data);
-  var count  = {};
+  var snap      = await get(ref(db, "securePicks"));
+  var data      = snap.val() || {};
+  var picks     = Object.values(data);
+  var count     = {};
   picks.forEach(function(p) { count[p.player] = (count[p.player] || 0) + 1; });
   var conflicts = Object.keys(count).filter(function(pl) { return count[pl] > 1; });
+  // Update Firebase — all clients listening to secureRevealed will show results automatically
   await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: conflicts });
-  if (conflicts.length === 0) {
-    alert("Keine Konflikte! Starte jetzt die Ban Phase.");
-  } else {
-    alert("Konflikte: " + conflicts.join(", ") + " — betroffene Teams wählen neu.");
-  }
+  // No alert — flow continues automatically
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -295,10 +298,38 @@ function subscribeToPhaseChanges() {
 }
 
 // Keep allSecurePicks always up to date (needed by draft phase)
+var secureRevealUnsub = null;
 function subscribeAllSecurePicks() {
   onValue(ref(db, "securePicks"), function(snap) {
     var data = snap.val() || {};
     allSecurePicks = Object.values(data);
+  });
+
+  // SINGLE global reveal listener — handles both screen types
+  if (secureRevealUnsub) return; // only subscribe once per session
+  secureRevealUnsub = onValue(ref(db, "draftState/secureRevealed"), function(snap) {
+    var revealed = snap.val();
+
+    if (!revealed) {
+      // Reveal was reset (e.g. for re-pick round) — hide overlay, allow re-render
+      var overlay = document.getElementById("secureRevealOverlay");
+      if (overlay) overlay.remove();
+      var resultsPanel = document.getElementById("secureResultsPanel");
+      if (resultsPanel) resultsPanel.style.display = "none";
+      return;
+    }
+
+    get(ref(db, "draftState")).then(function(snap2) {
+      var state     = snap2.val() || {};
+      var conflicts = state.secureConflicts || [];
+      var secureScreen = document.getElementById("securePickScreen");
+
+      if (secureScreen && secureScreen.classList.contains("active")) {
+        showSecureResults(conflicts);
+      } else {
+        showSecureRevealOverlay(state);
+      }
+    });
   });
 }
 
@@ -447,7 +478,8 @@ function initSecurePick() {
     renderSecurePlayers([]);
     startTimer("secureTimer", handleSecureTimerExpired);
     subscribeSecureStatus();
-    subscribeSecureReveal();
+    // Reveal handling is now global via subscribeAllSecurePicks()
+    // Note: subscribeSecureReveal also called globally in subscribeAllSecurePicks
   });
 }
 
@@ -482,17 +514,6 @@ function subscribeSecureStatus() {
       if (newest) showPickAnimation({ pickNumber: picks.length, team: newest.team, player: newest.player, round: "" }, "SECURE");
     }
     lastSecureCount = picks.length;
-  });
-}
-
-function subscribeSecureReveal() {
-  onValue(ref(db, "draftState/secureRevealed"), function(snap) {
-    if (!snap.val()) return;
-    get(ref(db, "draftState")).then(function(snap2) {
-      var state     = snap2.val() || {};
-      var conflicts = state.secureConflicts || [];
-      showSecureResults(conflicts);
-    });
   });
 }
 
@@ -541,67 +562,131 @@ window.securePickPlayer = async function(player) {
   document.getElementById("secureMyPickName").textContent = player;
   renderSecurePlayers([]);
 
-  // Auto-reveal when all teams picked
-  var configSnap  = await get(ref(db, "draftConfig"));
-  var config      = configSnap.val();
-  var newSnap     = await get(ref(db, "securePicks"));
-  var newData     = newSnap.val() || {};
+  var configSnap = await get(ref(db, "draftConfig"));
+  var config     = configSnap.val();
+  var newSnap    = await get(ref(db, "securePicks"));
+  var newData    = newSnap.val() || {};
+  var el = document.getElementById("secureStatus");
+  if (el && config) {
+    el.textContent = Object.keys(newData).length + " / " + config.teams.length + " Teams haben gewählt";
+  }
+
+  // If everyone has now picked AND no conflicts remain, auto re-reveal
+  // (this handles the re-pick-after-conflict case so the draft doesn't get stuck)
   if (config && Object.keys(newData).length >= config.teams.length) {
-    await window.revealSecurePicks();
+    var resolved = await window.checkAllSecureResolved();
+    if (resolved) {
+      // All unique now — reveal so everyone sees final results
+      await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: [] });
+    } else {
+      // Still conflicts — reveal again so newly-conflicted teams can see and re-pick
+      var picksArr = Object.values(newData);
+      var count2 = {};
+      picksArr.forEach(function(p) { count2[p.player] = (count2[p.player] || 0) + 1; });
+      var stillConflicted = Object.keys(count2).filter(function(pl) { return count2[pl] > 1; });
+      await update(ref(db, "draftState"), { secureRevealed: true, secureConflicts: stillConflicted });
+    }
   }
 };
 
 function showSecureResults(conflicts) {
   stopTimer();
-  document.getElementById("secureResultsPanel").style.display = "block";
+  var resultsPanel = document.getElementById("secureResultsPanel");
+  if (resultsPanel) resultsPanel.style.display = "block";
+
   get(ref(db, "securePicks")).then(function(snap) {
     var data  = snap.val() || {};
     var picks = Object.values(data);
     var el    = document.getElementById("secureResults");
-    el.innerHTML = "";
-    picks.forEach(function(p) {
-      var isConflict = conflicts.includes(p.player);
-      var row = document.createElement("div");
-      row.className = "secure-result-row " + (isConflict ? "conflict" : "safe");
-      var teamSpan   = document.createElement("span"); teamSpan.className = "sr-team"; teamSpan.textContent = p.team;
-      var arrow      = document.createElement("span"); arrow.className = "sr-arrow"; arrow.textContent = "→";
-      var playerSpan = document.createElement("span"); playerSpan.className = "sr-player"; playerSpan.textContent = p.player;
-      var badge      = document.createElement("span"); badge.className = "sr-badge " + (isConflict ? "conflict-badge" : "safe-badge");
-      badge.textContent = isConflict ? "⚠️ KONFLIKT" : "✅ SICHER";
-      row.appendChild(teamSpan); row.appendChild(arrow); row.appendChild(playerSpan); row.appendChild(badge);
-      el.appendChild(row);
-    });
+    if (el) {
+      el.innerHTML = "";
+      picks.forEach(function(p) {
+        var isConflict = conflicts.includes(p.player);
+        var row = document.createElement("div");
+        row.className = "secure-result-row " + (isConflict ? "conflict" : "safe");
+        var teamSpan   = document.createElement("span"); teamSpan.className = "sr-team"; teamSpan.textContent = p.team;
+        var arrow      = document.createElement("span"); arrow.className = "sr-arrow"; arrow.textContent = "→";
+        var playerSpan = document.createElement("span"); playerSpan.className = "sr-player"; playerSpan.textContent = p.player;
+        var badge      = document.createElement("span"); badge.className = "sr-badge " + (isConflict ? "conflict-badge" : "safe-badge");
+        badge.textContent = isConflict ? "⚠️ KONFLIKT" : "✅ SICHER";
+        row.appendChild(teamSpan); row.appendChild(arrow); row.appendChild(playerSpan); row.appendChild(badge);
+        el.appendChild(row);
+      });
+    }
 
     var conflictEl = document.getElementById("secureConflict");
-    if (conflicts.length > 0) {
+
+    if (conflicts.length === 0) {
+      // No conflicts — everyone is done, nothing more to do here.
+      // Commissioner will manually start Ban phase.
+      if (conflictEl) conflictEl.style.display = "none";
+      return;
+    }
+
+    if (conflictEl) {
       conflictEl.style.display = "block";
       document.getElementById("conflictMsg").textContent = "Konflikte bei: " + conflicts.join(", ");
-      // Let conflicted teams re-pick
-      if (!currentUser.isCommissioner) {
-        var myEntry = picks.find(function(p) { return p.team === currentUser.team && conflicts.includes(p.player); });
-        if (myEntry) {
-          // Remove old pick
-          get(ref(db, "securePicks")).then(function(s) {
-            var d = s.val() || {};
-            Object.entries(d).forEach(function(pair) {
-              if (pair[1].team === currentUser.team) remove(ref(db, "securePicks/" + pair[0]));
-            });
+    }
+
+    if (currentUser.isCommissioner) return; // commissioner just observes
+
+    var myEntry = picks.find(function(p) { return p.team === currentUser.team; });
+    var amInConflict = myEntry && conflicts.includes(myEntry.player);
+
+    if (amInConflict) {
+      // I am affected — remove MY pick only, then let me choose again
+      var myKeyToRemove = null;
+      get(ref(db, "securePicks")).then(function(s) {
+        var d = s.val() || {};
+        Object.entries(d).forEach(function(pair) {
+          if (pair[1].team === currentUser.team) myKeyToRemove = pair[0];
+        });
+        if (myKeyToRemove) {
+          remove(ref(db, "securePicks/" + myKeyToRemove)).then(function() {
+            mySecurePick = null;
+            var myPickEl = document.getElementById("secureMyPick");
+            if (myPickEl) myPickEl.style.display = "none";
+            if (resultsPanel) resultsPanel.style.display = "none";
+
+            timerValue = draftConfig ? draftConfig.timerSeconds : 90;
+            startTimer("secureTimer", handleSecureTimerExpired);
+
+            var nonConflict = picks
+              .filter(function(p) { return !conflicts.includes(p.player); })
+              .map(function(p) { return p.player; });
+            renderSecurePlayers(nonConflict);
           });
-          mySecurePick = null;
-          document.getElementById("secureMyPick").style.display = "none";
-          // Reset reveal for re-pick round
-          update(ref(db, "draftState"), { secureRevealed: false, secureConflicts: [] });
-          timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-          startTimer("secureTimer", handleSecureTimerExpired);
-          var nonConflict = picks.filter(function(p) { return !conflicts.includes(p.player); }).map(function(p) { return p.player; });
-          renderSecurePlayers(nonConflict);
         }
-      }
+      });
     } else {
-      conflictEl.style.display = "none";
+      // I am NOT affected — I already have a safe pick.
+      // Hide results panel and wait quietly for affected teams to re-pick.
+      if (resultsPanel) resultsPanel.style.display = "none";
+      var statusEl = document.getElementById("secureStatus");
+      if (statusEl) {
+        statusEl.textContent = "Dein Pick ist sicher ✅ — warte auf betroffene Teams...";
+      }
     }
   });
 }
+
+// Commissioner triggers this once all conflicts are resolved (everyone has unique pick)
+window.checkAllSecureResolved = async function() {
+  var configSnap = await get(ref(db, "draftConfig"));
+  var config     = configSnap.val();
+  if (!config) return false;
+
+  var picksSnap = await get(ref(db, "securePicks"));
+  var picks     = Object.values(picksSnap.val() || {});
+
+  if (picks.length < config.teams.length) return false;
+
+  var count = {};
+  picks.forEach(function(p) { count[p.player] = (count[p.player] || 0) + 1; });
+  var stillConflicted = Object.keys(count).filter(function(pl) { return count[pl] > 1; });
+
+  return stillConflicted.length === 0;
+};
 
 async function handleSecureTimerExpired() {
   if (currentUser.isCommissioner || mySecurePick) return;
@@ -754,7 +839,16 @@ async function advanceBan() {
   var nextBan  = state.currentBan + 1;
   var nextTeam = state.banOrder[nextBan - 1] || null;
   timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-  if (!nextTeam) { await window.commForcePhase("draft"); return; }
+
+  if (!nextTeam) {
+    // All bans done — reveal secure picks, then start draft after delay
+    await window.revealSecurePicks();
+    // Wait 5 seconds so all clients can see the reveal overlay before draft starts
+    setTimeout(async function() {
+      await window.commForcePhase("draft");
+    }, 5000);
+    return;
+  }
   await update(ref(db, "draftState"), { currentBan: nextBan, onTheClock: nextTeam, timerValue: timerValue });
 }
 
@@ -970,31 +1064,51 @@ async function advancePick() {
   var state = snap.val();
   if (!state) return;
   var nextPick = state.currentPick + 1;
-  var nextTeam = state.order[nextPick - 1] || null;
+  // Safety: never exceed order array — prevents extra picks
+  var nextTeam = (state.order && nextPick - 1 < state.order.length)
+    ? state.order[nextPick - 1]
+    : null;
   timerValue = draftConfig ? draftConfig.timerSeconds : 90;
-  await update(ref(db, "draftState"), { currentPick: nextPick, onTheClock: nextTeam, timerValue: timerValue });
+  await update(ref(db, "draftState"), {
+    currentPick:  nextPick,
+    onTheClock:   nextTeam,
+    timerValue:   timerValue,
+    draftComplete: !nextTeam
+  });
 }
 
 async function handleDraftTimerExpired() {
   var snap  = await get(ref(db, "draftState"));
   var state = snap.val();
-  if (!state || state.onTheClock !== currentUser.team) return;
+  if (!state) return;
+
+  // Only act if it's this team's turn OR commissioner
+  var isMyTurn = state.onTheClock === currentUser.team;
+  var isComm   = currentUser.isCommissioner;
+  if (!isMyTurn && !isComm) return;
+
+  // Try auto-pick from queue
   if (pickQueue.length > 0) {
     var dSnap   = await get(ref(db, "draftPicks"));
     var drafted = Object.values(dSnap.val() || {}).map(function(p) { return p.player; });
     var secured = allSecurePicks.map(function(s) { return s.player; });
     var banned  = allBans.map(function(b) { return b.player; });
     for (var i = 0; i < pickQueue.length; i++) {
-      if (!drafted.includes(pickQueue[i]) && !secured.includes(pickQueue[i]) && !banned.includes(pickQueue[i])) {
-        var next = pickQueue[i];
-        await executePick(next);
-        pickQueue = pickQueue.filter(function(p) { return p !== next; });
+      var candidate = pickQueue[i];
+      if (!drafted.includes(candidate) && !secured.includes(candidate) && !banned.includes(candidate)) {
+        pickQueue = pickQueue.filter(function(p) { return p !== candidate; });
         renderPickQueue();
+        await executePick(candidate);
         return;
       }
     }
   }
-  if (currentUser.isCommissioner) await advancePick();
+
+  // No queue or queue empty — skip pick (advance without picking)
+  // Any client whose turn it is can trigger this, not just commissioner
+  if (isMyTurn || isComm) {
+    await advancePick();
+  }
 }
 
 // ── DRAFT ORDER ──
@@ -1036,14 +1150,89 @@ function renderPickQueue() {
   pickQueue   = pickQueue.filter(function(p) { return !drafted.includes(p) && !secured.includes(p) && !banned.includes(p); });
   if (pickQueue.length === 0) { if (emptyEl) emptyEl.style.display = "block"; return; }
   if (emptyEl) emptyEl.style.display = "none";
+
   pickQueue.forEach(function(player, i) {
-    var item = document.createElement("div"); item.className = "queue-item";
+    var item = document.createElement("div");
+    item.className = "queue-item";
+    item.draggable = true;
+    item.dataset.index = i;
+    item.dataset.player = player;
+
+    // Drag handle
+    var handle = document.createElement("div");
+    handle.className = "queue-drag-handle";
+    handle.innerHTML = "⠿";
+    handle.title = "Ziehen zum Sortieren";
+
     var pos  = document.createElement("div"); pos.className = "queue-pos"; pos.textContent = i + 1;
     var name = document.createElement("div"); name.className = "queue-name"; name.textContent = player;
     var rm   = document.createElement("button"); rm.className = "queue-remove"; rm.textContent = "×";
     rm.onclick = (function(p) { return function() { window.removeFromQueue(p); }; })(player);
-    item.appendChild(pos); item.appendChild(name); item.appendChild(rm);
+
+    // Move up/down buttons
+    var upBtn = document.createElement("button");
+    upBtn.className = "queue-move-btn";
+    upBtn.textContent = "↑";
+    upBtn.disabled = i === 0;
+    upBtn.onclick = (function(idx) { return function() {
+      if (idx === 0) return;
+      var tmp = pickQueue[idx - 1];
+      pickQueue[idx - 1] = pickQueue[idx];
+      pickQueue[idx] = tmp;
+      renderPickQueue();
+    }; })(i);
+
+    var downBtn = document.createElement("button");
+    downBtn.className = "queue-move-btn";
+    downBtn.textContent = "↓";
+    downBtn.disabled = i === pickQueue.length - 1;
+    downBtn.onclick = (function(idx) { return function() {
+      if (idx === pickQueue.length - 1) return;
+      var tmp = pickQueue[idx + 1];
+      pickQueue[idx + 1] = pickQueue[idx];
+      pickQueue[idx] = tmp;
+      renderPickQueue();
+    }; })(i);
+
+    item.appendChild(handle);
+    item.appendChild(pos);
+    item.appendChild(name);
+    item.appendChild(upBtn);
+    item.appendChild(downBtn);
+    item.appendChild(rm);
     el.appendChild(item);
+
+    // ── Drag & Drop events ──
+    item.addEventListener("dragstart", function(e) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", i.toString());
+      item.classList.add("dragging");
+    });
+    item.addEventListener("dragend", function() {
+      item.classList.remove("dragging");
+      document.querySelectorAll(".queue-item").forEach(function(el) {
+        el.classList.remove("drag-over");
+      });
+    });
+    item.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      item.classList.add("drag-over");
+    });
+    item.addEventListener("dragleave", function() {
+      item.classList.remove("drag-over");
+    });
+    item.addEventListener("drop", function(e) {
+      e.preventDefault();
+      item.classList.remove("drag-over");
+      var fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+      var toIdx   = parseInt(item.dataset.index);
+      if (fromIdx === toIdx) return;
+      // Reorder pickQueue
+      var moved = pickQueue.splice(fromIdx, 1)[0];
+      pickQueue.splice(toIdx, 0, moved);
+      renderPickQueue();
+    });
   });
 }
 
@@ -1075,12 +1264,168 @@ function showPickAnimation(pick, type) {
   else card.classList.add("card-draft");
 
   overlay.classList.add("active");
+
+  // Also show the UFL player card for draft picks
+  if (type === "PICK" && pick.player) {
+    setTimeout(function() {
+      window.showCard(pick.player);
+    }, 400); // slight delay so overlay appears first
+  }
+
   setTimeout(function() { overlay.classList.remove("active"); }, 3500);
   overlay.onclick = function() { overlay.classList.remove("active"); };
 }
 
 // ── Global config subscription ──
 onValue(ref(db, "draftConfig"), function(snap) { draftConfig = snap.val(); });
+
+// ─────────────────────────────────────────────────────────────
+// IMAGE URL EDITOR (Commissioner Panel)
+// ─────────────────────────────────────────────────────────────
+window.filterImgPlayers = function() {
+  var search = document.getElementById("imgPlayerSearch")
+    ? document.getElementById("imgPlayerSearch").value.toLowerCase() : "";
+  renderImgPlayerList(search);
+};
+
+function renderImgPlayerList(search) {
+  var el = document.getElementById("imgPlayerList");
+  if (!el) return;
+  el.innerHTML = "";
+
+  var names = Object.keys(PLAYER_DATA).filter(function(n) {
+    return !search || n.toLowerCase().includes(search);
+  });
+
+  names.forEach(function(name) {
+    var data    = PLAYER_DATA[name];
+    var row     = document.createElement("div");
+    row.style.cssText = "display:flex;gap:8px;align-items:center;";
+
+    var label   = document.createElement("span");
+    label.textContent = name;
+    label.style.cssText = "flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+
+    var inp     = document.createElement("input");
+    inp.type    = "text";
+    inp.placeholder = "https://i.imgur.com/...";
+    inp.value   = data.imgUrl || "";
+    inp.style.cssText = "flex:2;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px;font-size:12px;font-family:inherit;outline:none;";
+    inp.dataset.player = name;
+    inp.className = "img-url-input";
+
+    // Preview button
+    var prev    = document.createElement("button");
+    prev.textContent = "👁";
+    prev.title  = "Vorschau";
+    prev.style.cssText = "background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:5px 8px;cursor:pointer;font-size:13px;flex-shrink:0;";
+    prev.onclick = (function(i) { return function() {
+      var url = i.value.trim();
+      if (url) window.open(url, "_blank");
+    }; })(inp);
+
+    row.appendChild(label);
+    row.appendChild(inp);
+    row.appendChild(prev);
+    el.appendChild(row);
+  });
+}
+
+window.saveImgUrls = function() {
+  var inputs = document.querySelectorAll(".img-url-input");
+  inputs.forEach(function(inp) {
+    var name = inp.dataset.player;
+    if (PLAYER_DATA[name]) {
+      PLAYER_DATA[name].imgUrl = inp.value.trim();
+    }
+  });
+  // Save to Firebase so it persists
+  var imgData = {};
+  Object.keys(PLAYER_DATA).forEach(function(name) {
+    if (PLAYER_DATA[name].imgUrl) {
+      imgData[name.replace(/[.#$/\[\]]/g, "_")] = PLAYER_DATA[name].imgUrl;
+    }
+  });
+  set(ref(db, "playerImages"), imgData).then(function() {
+    alert("✅ Bilder gespeichert!");
+  });
+};
+
+// Load saved image URLs from Firebase on startup
+onValue(ref(db, "playerImages"), function(snap) {
+  var data = snap.val() || {};
+  Object.keys(data).forEach(function(key) {
+    // Find matching player (key has special chars replaced with _)
+    var matched = Object.keys(PLAYER_DATA).find(function(name) {
+      return name.replace(/[.#$\/\[\]]/g, "_") === key;
+    });
+    if (matched) PLAYER_DATA[matched].imgUrl = data[key];
+  });
+});
+
+// Load img list when commissioner panel opens
+var _origLoadComm = loadCommissionerPanel;
+loadCommissionerPanel = function() {
+  var result = _origLoadComm();
+  setTimeout(function() { renderImgPlayerList(""); }, 500);
+  return result;
+};
+
+// ─────────────────────────────────────────────────────────────
+// SECURE REVEAL OVERLAY (for clients not on securePickScreen)
+// ─────────────────────────────────────────────────────────────
+function showSecureRevealOverlay(state) {
+  get(ref(db, "securePicks")).then(function(snap) {
+    var data  = snap.val() || {};
+    var picks = Object.values(data);
+    if (picks.length === 0) return;
+
+    // Build overlay HTML
+    var overlay = document.getElementById("secureRevealOverlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "secureRevealOverlay";
+      overlay.style.cssText = [
+        "position:fixed","inset:0","z-index:900",
+        "background:rgba(0,0,0,.85)","backdrop-filter:blur(6px)",
+        "display:flex","align-items:center","justify-content:center",
+        "animation:fadeUp .4s ease"
+      ].join(";");
+      document.body.appendChild(overlay);
+    }
+
+    var conflicts = state.secureConflicts || [];
+    var rows = picks.map(function(p) {
+      var isConflict = conflicts.includes(p.player);
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;'
+        + 'border-radius:10px;margin-bottom:8px;'
+        + 'background:' + (isConflict ? 'rgba(239,68,68,.08)' : 'rgba(34,197,94,.06)') + ';'
+        + 'border:1px solid ' + (isConflict ? 'rgba(239,68,68,.3)' : 'rgba(34,197,94,.25)') + '">'
+        + '<span style="font-weight:700;flex:1;color:#e2e8f0">' + p.team + '</span>'
+        + '<span style="color:#64748b">→</span>'
+        + '<span style="font-weight:700;flex:2;color:#e2e8f0">' + p.player + '</span>'
+        + '<span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;'
+        + 'background:' + (isConflict ? 'rgba(239,68,68,.15)' : 'rgba(34,197,94,.15)') + ';'
+        + 'color:' + (isConflict ? '#ef4444' : '#22c55e') + '">'
+        + (isConflict ? '⚠️ KONFLIKT' : '✅ SICHER') + '</span>'
+        + '</div>';
+    }).join('');
+
+    overlay.innerHTML = '<div style="background:#0f1929;border:1px solid #1e2d45;border-radius:20px;'
+      + 'padding:36px 40px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto">'
+      + '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;letter-spacing:3px;'
+      + 'color:#facc15;margin-bottom:6px">🔒 SECURE PICKS AUFGEDECKT</div>'
+      + '<p style="color:#64748b;font-size:13px;margin-bottom:20px">'
+      + (conflicts.length > 0 ? 'Konflikte gefunden — betroffene Teams wählen neu.' : 'Alle Picks sind einzigartig!')
+      + '</p>'
+      + rows
+      + '<button onclick="document.getElementById(&quot;secureRevealOverlay&quot;).remove()" '
+      + 'style="margin-top:20px;width:100%;padding:12px;background:#facc15;color:#000;'
+      + 'border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">'
+      + 'Verstanden ✓</button>'
+      + '</div>';
+  });
+}
 
 // ─────────────────────────────────────────────────────────────
 // PLAYER CARD
@@ -1127,9 +1472,13 @@ window.showCard = function(playerName) {
   document.getElementById("cardPlayerName").textContent = playerName.toUpperCase();
 
   if (data) {
-    // Player photo
-    document.getElementById("cardPlayerImg").src =
-      "https://cdn.futwiz.com/assets/img/fc25/players/" + data.eaId + ".png";
+    // Player photo — use custom imgUrl if set, else silhouette
+    var playerImg = document.getElementById("cardPlayerImg");
+    if (data.imgUrl && data.imgUrl.trim() !== "") {
+      playerImg.src = data.imgUrl;
+    } else {
+      playerImg.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
+    }
 
     // Nation flag (w80 for bigger display)
     var nationCode = NATION_CODE[data.nation] || "un";
@@ -1145,7 +1494,7 @@ window.showCard = function(playerName) {
     document.getElementById("cardPosBadge").textContent = data.pos;
 
   } else {
-    document.getElementById("cardPlayerImg").src = "https://cdn.sofifa.net/players/notfound_0_120.png";
+    document.getElementById("cardPlayerImg").src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
     document.getElementById("cardNationImg").src = "";
     document.getElementById("cardNationText").textContent = "—";
     document.getElementById("cardLigaImg").src = "";
