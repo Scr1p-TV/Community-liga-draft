@@ -9,8 +9,13 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
 const COMMISSIONER_PASSWORD = "admin1234";
-const FIXED_TEAMS  = 6;   // Anzahl Teams ist fix
-const FIXED_ROUNDS = 25;  // Picks pro Team ist fix
+const MIN_TEAMS = 5;   // Mindestens 5 Teams nötig um den Draft zu starten
+
+// Liga-Vorlagen — Teamnamen für Apex und Nova
+const LIGA_TEMPLATES = {
+  apex: ["DatSeb", "BennyBroKenobi", "Kira", "Virent90", "Gunzifer_", "Slashabilly"],
+  nova: ["AGE_Kevin", "unomys", "Askeladd", "Scr1p", "x21Tobinho", "GrabaTV"]
+};
 
 let currentUser     = null;
 let draftConfig     = null;
@@ -142,8 +147,18 @@ window.addTeamRow = function(name, pw) {
   list.appendChild(row);
 };
 
+// Load a liga template (Apex/Nova) into the team list — replaces current rows
+window.loadLigaTemplate = function(liga) {
+  if (!liga || !LIGA_TEMPLATES[liga]) return;
+  var list = document.getElementById("teamList");
+  list.innerHTML = "";
+  LIGA_TEMPLATES[liga].forEach(function(name) {
+    window.addTeamRow(name, "");
+  });
+};
+
 window.saveDraftConfig = async function() {
-  var numRounds    = FIXED_ROUNDS;  // fix: 25 Picks pro Team
+  var numRounds    = parseInt(document.getElementById("numRounds").value)    || 1;
   var timerSeconds = parseInt(document.getElementById("timerSeconds").value) || 90;
   var snake        = document.getElementById("snakeToggle").checked;
   var playerPool   = document.getElementById("playerPool").value.split("\n").map(function(s) { return s.trim(); }).filter(Boolean);
@@ -154,8 +169,8 @@ window.saveDraftConfig = async function() {
     var p = row.querySelector(".team-pw-input").value.trim();
     if (n) teams.push({ name: n, password: p });
   });
-  if (teams.length !== FIXED_TEAMS) {
-    alert("Genau " + FIXED_TEAMS + " Teams erforderlich! Aktuell: " + teams.length);
+  if (teams.length < MIN_TEAMS) {
+    alert("Mindestens " + MIN_TEAMS + " Teams erforderlich! Aktuell: " + teams.length);
     return;
   }
 
@@ -209,6 +224,10 @@ window.commForcePhase = async function(phase) {
   var teamNames = c.teams.map(function(t) { return t.name; });
 
   if (phase === "securePick") {
+    if (teamNames.length < MIN_TEAMS) {
+      alert("Mindestens " + MIN_TEAMS + " Teams erforderlich um den Secure Pick zu starten! Aktuell: " + teamNames.length);
+      return;
+    }
     await set(ref(db, "readyTeams"), null);
     await remove(ref(db, "securePicks"));
     await update(ref(db, "draftState"), { phase: "securePick", timerValue: c.timerSeconds, secureRevealed: false, secureConflicts: [] });
