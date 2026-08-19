@@ -9,7 +9,7 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
 const COMMISSIONER_PASSWORD = "admin1234";
-const MIN_TEAMS = 5;   // Mindestens 5 Teams nötig um den Draft zu starten
+const MIN_TEAMS = 4;   // Mindestens 4 Teams nötig um den Draft zu starten
 
 // Liga-Vorlagen — Teamnamen für Apex und Nova
 const LIGA_TEMPLATES = {
