@@ -105,7 +105,10 @@ window.commLogin = function() {
   if (pw !== COMMISSIONER_PASSWORD) { err.textContent = "Falsches Passwort."; return; }
   document.getElementById("commPanel").style.display = "block";
   currentUser = { team: "Commissioner", isCommissioner: true };
-  loadCommissionerPanel().then(function() { initLobby(); });
+  loadCommissionerPanel().then(function() { initLobby(); }).catch(function(e) {
+    console.error(e);
+    alert("Firebase-Fehler beim Laden: " + e.message + "\n\nWahrscheinlich erlauben deine Firebase-Regeln den Pfad 'final6/' noch nicht. Siehe Hinweis in der README bzw. Firebase Console → Realtime Database → Regeln.");
+  });
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -122,6 +125,11 @@ function loadCommissionerPanel() {
     }
     document.getElementById("timerSeconds").value = c.timerSeconds || 90;
     (c.teams || []).forEach(function(t) { addTeamRow(t.name, t.password); });
+  }).catch(function(e) {
+    var list = document.getElementById("teamList");
+    list.innerHTML = "";
+    for (var i = 0; i < NUM_TEAMS; i++) addTeamRow("", "");
+    throw e; // weiterreichen an .catch in commLogin für den Alert
   });
 }
 
@@ -149,11 +157,16 @@ window.saveDraftConfig = async function() {
   });
   if (teams.length !== NUM_TEAMS) { alert("Es müssen genau " + NUM_TEAMS + " Teilnehmer eingetragen werden."); return; }
 
-  await set(ref(db, ROOT + "/config"), { timerSeconds: timerSeconds, teams: teams });
-  await set(ref(db, ROOT + "/state"), { phase: "lobby", timerValue: timerSeconds, teamNames: teams.map(function(t) { return t.name; }) });
-  await remove(ref(db, ROOT + "/picks"));
-  await set(ref(db, ROOT + "/ready"), null);
-  alert("Konfiguration gespeichert! Teilnehmer können sich jetzt einloggen und bereit machen.");
+  try {
+    await set(ref(db, ROOT + "/config"), { timerSeconds: timerSeconds, teams: teams });
+    await set(ref(db, ROOT + "/state"), { phase: "lobby", timerValue: timerSeconds, teamNames: teams.map(function(t) { return t.name; }) });
+    await remove(ref(db, ROOT + "/picks"));
+    await set(ref(db, ROOT + "/ready"), null);
+    alert("Konfiguration gespeichert! Teilnehmer können sich jetzt einloggen und bereit machen.");
+  } catch (e) {
+    console.error(e);
+    alert("Firebase-Fehler beim Speichern: " + e.message + "\n\nWahrscheinlich erlauben deine Firebase-Regeln den Pfad 'final6/' noch nicht.");
+  }
 };
 
 window.resetDraft = async function() {
