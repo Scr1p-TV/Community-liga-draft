@@ -268,9 +268,13 @@ function initLobby() {
   if (teamView) teamView.style.display = currentUser.isCommissioner ? "none"  : "block";
   if (lobbyUnsubscribe) { lobbyUnsubscribe(); lobbyUnsubscribe = null; }
 
-  get(ref(db, ROOT + "/config")).then(function(cSnap) {
-    var c     = cSnap.val();
-    var teams = c ? c.teams.map(function(t) { return t.name; }) : [];
+  get(ref(db, ROOT + "/state")).then(function(sSnap) {
+    var s     = sSnap.val();
+    var teams = (s && s.teamNames) ? s.teamNames : [];
+
+    if (teams.length === 0) {
+      console.warn("final6: keine teamNames in state gefunden – fange bei config an.");
+    }
 
     lobbyUnsubscribe = onValue(ref(db, ROOT + "/ready"), function(snap) {
       var data     = snap.val() || {};
