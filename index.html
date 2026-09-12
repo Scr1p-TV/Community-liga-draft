@@ -1,38 +1,116 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UFL Community Draft</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"/>
-  <style>
-    /* Prevent double-tap zoom on mobile */
-    button, input, select, textarea { touch-action: manipulation; }
-    /* Smooth scrolling on iOS */
-    * { -webkit-overflow-scrolling: touch; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Final 6 Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#00e676;--green-dark:#00b050;--black:#080b0e;--dark:#0f1318;
+    --card:#141920;--surface2:#181e26;--border:#1e2530;--text:#dde5ef;--muted:#6b7585;
+    --accent:#f0a500;--red:#f44336;--radius:12px;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+  button,input,select{touch-action:manipulation;font-family:inherit}
+  h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:.03em}
+  .screen{display:none;min-height:100vh;padding:20px}
+  .screen.active{display:block}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:22px}
+  .logo span{color:var(--green)}
+  .login-box,.commissioner-box{max-width:420px;margin:60px auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:38px;text-align:center;margin-bottom:6px}
+  .login-logo span{color:var(--green)}
+  .login-sub{color:var(--muted);text-align:center;margin-bottom:20px;font-size:14px}
+  .form-group{margin-bottom:14px}
+  .form-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+  .form-group input,.form-group textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-size:14px;outline:none}
+  .btn-primary{width:100%;background:var(--green);color:#04140a;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:6px}
+  .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px}
+  .btn-danger{background:var(--red);color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px}
+  .btn-ready{background:var(--green);color:#04140a;border:none;border-radius:8px;padding:14px;font-weight:700;cursor:pointer;width:100%}
+  .divider{text-align:center;color:var(--muted);font-size:12px;margin:16px 0}
+  .error-msg{color:var(--red);font-size:12px;min-height:16px;margin:4px 0}
+  .back-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;margin-bottom:14px}
+  .team-list{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+  .team-row{display:flex;gap:6px}
+  .team-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px}
+  .remove-team{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;width:32px;cursor:pointer}
+  .comm-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+  header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+  .header-left{display:flex;align-items:center;gap:12px}
+  .phase-badge{background:var(--green);color:#04140a;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.04em}
+  .pick-info{color:var(--muted);font-size:13px}
+  .timer{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--green);text-align:center;line-height:1}
+  .timer.urgent{color:var(--red)}
+  .timer-label{font-size:10px;color:var(--muted);text-align:center;letter-spacing:.1em}
+  .user-info{font-size:13px;color:var(--muted)}
+  main{display:grid;grid-template-columns:1fr 380px;gap:16px;padding:16px 20px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .panel h2{font-size:20px;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase}
+  .search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;margin-bottom:10px;font-size:13px}
+  .cat-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .cat-tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer}
+  .cat-tab.active{background:var(--green);color:#04140a;border-color:var(--green)}
+  .player-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer}
+  .player-row:hover{background:var(--surface2)}
+  .player-name{font-weight:600}
+  .player-meta{color:var(--muted);font-size:11px}
+  .pick-btn{background:var(--green);color:#04140a;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer}
+  .on-clock-banner{background:var(--surface2);border:1px solid var(--green);border-radius:8px;padding:10px;margin-bottom:12px;font-size:14px;text-align:center;font-weight:700}
+  .ready-list{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+  .ready-item{display:flex;justify-content:space-between;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px}
+  .ready-item.is-ready{border-color:var(--green)}
+  .ready-count{text-align:center;color:var(--muted);font-size:13px}
+  .lobby-box{max-width:480px;margin:60px auto;text-align:center}
+  .lobby-logo{font-family:'Bebas Neue',sans-serif;font-size:34px}
+  .lobby-logo span{color:var(--green)}
+  .lobby-title{color:var(--muted);letter-spacing:.2em;font-size:13px;margin:6px 0 20px}
+  .lobby-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .ready-confirm{color:var(--green);font-weight:700;padding:14px}
+  .btn-start-draft{background:var(--green);color:#04140a;border:none;border-radius:8px;padding:14px;font-weight:700;width:100%;cursor:pointer}
+  .btn-start-draft:disabled{opacity:.4;cursor:not-allowed}
+  .start-hint{color:var(--muted);font-size:12px;margin-top:8px}
+  .comm-only{display:none}
+  .round-order{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .order-item{display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;font-size:12px;background:var(--surface2)}
+  .order-item.done{opacity:.4}
+  .order-item.current{border:1px solid var(--green)}
+  .toggle{position:relative;display:inline-block;width:40px;height:22px}
+  .toggle input{opacity:0;width:0;height:0}
+  .slider{position:absolute;cursor:pointer;inset:0;background:var(--surface2);border:1px solid var(--border);border-radius:22px;transition:.2s}
+  .slider::before{content:"";position:absolute;height:16px;width:16px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.2s}
+  .toggle input:checked+.slider{background:var(--green)}
+  .toggle input:checked+.slider::before{background:#04140a;transform:translateX(18px)}
+</style>
 </head>
 <body>
 
   <!-- ===== LOGIN ===== -->
   <div id="loginScreen" class="screen active">
     <div class="login-box">
-      <div class="login-logo">UFL<span>DRAFT</span></div>
-      <p class="login-sub">Wähle dein Team und tritt dem Draft bei</p>
+      <div class="login-logo">FINAL<span>6</span></div>
+      <p class="login-sub">Wähle deinen Teilnehmer-Namen und tritt dem Draft bei</p>
       <div class="form-group">
-        <label>Team Name</label>
-        <input type="text" id="loginTeamName" placeholder="z.B. FC Machtlos" maxlength="30"/>
+        <label>Teilnehmer Name</label>
+        <input type="text" id="loginTeamName" placeholder="z.B. Alex" maxlength="30"/>
       </div>
       <div class="form-group">
         <label>Passwort</label>
-        <input type="password" id="loginPassword" placeholder="Team-Passwort"/>
+        <input type="password" id="loginPassword" placeholder="Passwort"/>
       </div>
       <div id="loginError" class="error-msg"></div>
       <button class="btn-primary" onclick="handleLogin()">Einloggen</button>
       <div class="divider">oder</div>
-      <button class="btn-ghost" onclick="showCommissionerLogin()">Commissioner Login</button>
+      <button class="btn-ghost" onclick="showCommissionerLogin()" style="width:100%">Commissioner Login</button>
     </div>
   </div>
 
@@ -50,72 +128,31 @@
       <div id="commPanel" style="display:none">
         <hr/>
         <h3>Draft Konfiguration</h3>
-        <div class="form-group">
-          <label>Picks pro Team (Runden)</label>
-          <input type="number" id="numRounds" min="1" max="30" value="1"/>
-        </div>
-        <div class="form-group">
-          <label>Timer Sekunden (gilt für alle Phasen)</label>
-          <input type="number" id="timerSeconds" min="10" max="300" value="90"/>
-        </div>
-        <div class="form-group">
-          <label>Snake Draft (Pick-Phase)</label>
-          <label class="toggle">
-            <input type="checkbox" id="snakeToggle" checked/>
-            <span class="slider"></span>
-          </label>
-        </div>
-        <h3>Teams verwalten <span style="font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0">(mindestens 5 Teams)</span></h3>
-        <div class="form-group">
-          <label>Vorlage laden</label>
-          <select id="ligaTemplateSelect" onchange="loadLigaTemplate(this.value)">
-            <option value="">— Liga wählen —</option>
-            <option value="apex">🏆 Liga Apex</option>
-            <option value="nova">🏆 Liga Nova</option>
-          </select>
-        </div>
-        <div id="teamList" class="team-list"></div>
-        <button class="btn-secondary" onclick="addTeamRow()">+ Team hinzufügen</button>
-        <h3>Spieler-Pool</h3>
-        <textarea id="playerPool" rows="8" placeholder="Wird aus players.js geladen..."></textarea>
-        <div class="comm-actions">
-          <button class="btn-primary" onclick="saveDraftConfig()">💾 Konfiguration speichern</button>
-          <button class="btn-danger" onclick="resetDraft()">🗑️ Alles zurücksetzen</button>
-          <button class="btn-warning" onclick="skipCurrentAction()">⏭️ Aktuellen Pick/Ban überspringen</button>
-        </div>
-        <hr/>
-        <h3>🏠 Lobby — Team Status</h3>
-        <div id="commReadyCount" class="comm-ready-count">0 / 0 bereit</div>
-        <div id="commReadyList" class="comm-ready-list"></div>
-        <div class="comm-actions" style="margin-top:12px">
-          <button class="btn-primary" id="commStartBtn" onclick="commForcePhase('securePick')" disabled>🔒 Secure Pick starten</button>
-          <button class="btn-secondary" onclick="goToLobby()">🔄 Lobby zurücksetzen</button>
-        </div>
-
-        <hr/>
-        <h3>🃏 Spielerbilder verwalten</h3>
-        <p style="color:var(--muted);font-size:12px;margin-bottom:10px;">
-          Füge für jeden Spieler eine Bild-URL ein. Empfehlung: Bilder auf
-          <a href="https://imgur.com" target="_blank" style="color:var(--accent)">imgur.com</a>
-          hochladen und den direkten Link (.png/.jpg) hier eintragen.
+        <p style="color:var(--muted);font-size:12px;margin:8px 0">
+          Fix: 6 Teilnehmer · pro Teilnehmer 11 Startelf + 7 Reserve + 6 Backup Picks (24 Runden gesamt).
+          Platz-1-Pick rotiert jede Runde und wiederholt sich alle 6 Runden, sodass jeder Teilnehmer
+          in jedem 6er-Zyklus genau einmal Platz 1 hat.
         </p>
         <div class="form-group">
-          <label>Spieler suchen</label>
-          <input type="text" id="imgPlayerSearch" placeholder="Spieler suchen..."
-            oninput="filterImgPlayers()" style="margin-bottom:8px"/>
+          <label>Timer Sekunden pro Pick</label>
+          <input type="number" id="timerSeconds" min="10" max="300" value="90"/>
         </div>
-        <div id="imgPlayerList" style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
-        <button class="btn-primary" onclick="saveImgUrls()" style="margin-top:10px;width:100%">💾 Bilder speichern</button>
-
-        <hr/>
-        <h3>Phasen manuell steuern</h3>
+        <h3>Teilnehmer (genau 6)</h3>
+        <div id="teamList" class="team-list"></div>
+        <h3>Spieler-Pool</h3>
+        <p style="color:var(--muted);font-size:12px;margin-bottom:6px">Wird automatisch aus der übernommenen Spielerdatenbank geladen (players.js).</p>
         <div class="comm-actions">
-          <button class="btn-phase" onclick="revealSecurePicks()">👁️ Secure Picks aufdecken</button>
-          <button class="btn-phase" onclick="commForcePhase('ban')">🚫 Ban Phase starten</button>
-          <button class="btn-phase" onclick="commForcePhase('draft')">🏆 Draft Phase starten</button>
-          <button class="btn-ghost" onclick="showScreen('securePickScreen')">→ Secure Pick ansehen</button>
-          <button class="btn-ghost" onclick="showScreen('banScreen')">→ Ban Phase ansehen</button>
-          <button class="btn-ghost" onclick="showScreen('draftScreen')">→ Draft Board ansehen</button>
+          <button class="btn-primary" onclick="saveDraftConfig()">💾 Konfiguration speichern &amp; Lobby öffnen</button>
+          <button class="btn-danger" onclick="resetDraft()">🗑️ Alles zurücksetzen</button>
+          <button class="btn-secondary" onclick="skipCurrentPick()">⏭️ Aktuellen Pick überspringen</button>
+        </div>
+        <hr/>
+        <h3>🏠 Lobby — Status</h3>
+        <div id="commReadyCount" class="ready-count">0 / 6 bereit</div>
+        <div id="commReadyList" class="ready-list"></div>
+        <div class="comm-actions">
+          <button class="btn-primary" id="commStartBtn" onclick="commStartDraft()" disabled>🏆 Draft starten</button>
+          <button class="btn-secondary" onclick="goToLobby()">🔄 Lobby zurücksetzen</button>
         </div>
       </div>
     </div>
@@ -124,118 +161,29 @@
   <!-- ===== LOBBY ===== -->
   <div id="lobbyScreen" class="screen">
     <div class="lobby-box">
-      <div class="lobby-logo">UFL<span>DRAFT</span></div>
+      <div class="lobby-logo">FINAL<span>6</span></div>
       <div class="lobby-title">LOBBY</div>
-
       <div id="lobbyTeamView">
         <p class="lobby-sub">Bestätige deine Teilnahme um den Draft zu starten.</p>
-        <div id="lobbyMyStatus" class="lobby-my-status">
-          <button class="btn-ready" id="readyBtn" onclick="setReady()">✅ Ich bin bereit!</button>
-          <div id="readyConfirm" class="ready-confirm" style="display:none">🟢 Du bist bereit!</div>
-        </div>
+        <button class="btn-ready" id="readyBtn" onclick="setReady()">✅ Ich bin bereit!</button>
+        <div id="readyConfirm" class="ready-confirm" style="display:none">🟢 Du bist bereit!</div>
       </div>
-
       <div id="lobbyCommView" style="display:none">
-        <p class="lobby-sub">Warte bis alle Teams bereit sind.</p>
-        <div id="readyStatus" class="ready-status-box"></div>
-        <button class="btn-start-draft" id="startDraftBtn" onclick="commForcePhase('securePick')" disabled>
-          🔒 Secure Pick starten
-        </button>
-        <p id="startHint" class="start-hint">Alle Teams müssen bereit sein.</p>
+        <p class="lobby-sub">Warte bis alle 6 Teilnehmer bereit sind.</p>
+        <button class="btn-start-draft" id="startDraftBtn" onclick="commStartDraft()" disabled>🏆 Draft starten</button>
+        <p id="startHint" class="start-hint">Alle Teilnehmer müssen bereit sein.</p>
       </div>
-
-      <div class="ready-progress">
-        <div id="readyList" class="ready-list"></div>
-        <div id="readyCount" class="ready-count">0 / 0 bereit</div>
-      </div>
+      <div id="readyList" class="ready-list"></div>
+      <div id="readyCount" class="ready-count">0 / 6 bereit</div>
     </div>
-  </div>
-
-  <!-- ===== SECURE PICK ===== -->
-  <div id="securePickScreen" class="screen">
-    <header>
-      <div class="header-left">
-        <div class="logo">UFL<span>DRAFT</span></div>
-        <div class="phase-badge secure">🔒 SECURE PICK</div>
-      </div>
-      <div class="header-center">
-        <div id="secureTimer" class="timer">90</div>
-        <div class="timer-label">SEKUNDEN</div>
-      </div>
-      <div class="header-right">
-        <div id="secureUserInfo" class="user-info"></div>
-        <button id="commBackSecure" class="btn-ghost small comm-only" onclick="commGoBack()" style="display:none">⚙️ Panel</button>
-      </div>
-    </header>
-    <main class="single-col">
-      <section class="panel secure-panel">
-        <h2>🔒 Wähle deinen Secure Pick</h2>
-        <p class="phase-desc">Wähle <strong>einen Spieler</strong> — deine Wahl bleibt geheim bis alle gewählt haben. Bei Konflikten wird neu gewählt.</p>
-        <div id="secureStatus" class="secure-status"></div>
-        <div id="secureMyPick" class="my-secure-pick" style="display:none">
-          <div class="picked-label">Dein Secure Pick:</div>
-          <div id="secureMyPickName" class="picked-name"></div>
-          <p class="picked-hint">Warte bis alle Teams gewählt haben...</p>
-        </div>
-        <input type="text" id="secureSearch" placeholder="Spieler suchen..." oninput="filterSecurePlayers()" class="search-input"/>
-        <div id="securePlayers"></div>
-      </section>
-      <section class="panel" id="secureResultsPanel" style="display:none">
-        <h2>👁️ Ergebnisse</h2>
-        <div id="secureResults"></div>
-        <div id="secureConflict" class="conflict-box" style="display:none">
-          <h3>⚠️ Konflikt!</h3>
-          <p id="conflictMsg"></p>
-          <p>Betroffene Teams wählen erneut.</p>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- ===== BAN PHASE ===== -->
-  <div id="banScreen" class="screen">
-    <header>
-      <div class="header-left">
-        <div class="logo">UFL<span>DRAFT</span></div>
-        <div class="phase-badge ban">🚫 BAN PHASE</div>
-        <div id="banPickInfo" class="pick-info"></div>
-      </div>
-      <div class="header-center">
-        <div id="banTimer" class="timer">90</div>
-        <div class="timer-label">SEKUNDEN</div>
-      </div>
-      <div class="header-right">
-        <div id="banUserInfo" class="user-info"></div>
-        <button id="commBackBan" class="btn-ghost small comm-only" onclick="commGoBack()" style="display:none">⚙️ Panel</button>
-      </div>
-    </header>
-    <main>
-      <section class="panel" id="banBoardPanel">
-        <h2>Gebannte Spieler</h2>
-        <table>
-          <thead><tr><th>#</th><th>Team</th><th>Spieler</th></tr></thead>
-          <tbody id="banBoard"></tbody>
-        </table>
-        <h3 style="margin-top:20px">🕐 Reihenfolge</h3>
-        <div id="banOrder"></div>
-      </section>
-      <div class="right-col">
-        <section class="panel">
-          <h2>🚫 Spieler bannen</h2>
-          <div id="banCurrentTeam" class="on-clock-banner"></div>
-          <input type="text" id="banSearch" placeholder="Spieler suchen..." oninput="filterBanPlayers()" class="search-input"/>
-          <div id="banPlayers"></div>
-        </section>
-      </div>
-    </main>
   </div>
 
   <!-- ===== DRAFT PHASE ===== -->
   <div id="draftScreen" class="screen">
     <header>
       <div class="header-left">
-        <div class="logo">UFL<span>DRAFT</span></div>
-        <div class="phase-badge draft">🏆 DRAFT</div>
+        <div class="logo">FINAL<span>6</span></div>
+        <div class="phase-badge" id="categoryBadge">STARTELF</div>
         <div id="currentPickInfo" class="pick-info"></div>
       </div>
       <div class="header-center">
@@ -244,90 +192,31 @@
       </div>
       <div class="header-right">
         <div id="userInfo" class="user-info"></div>
-        <button id="commBackDraft" class="btn-ghost small comm-only" onclick="commGoBack()" style="display:none">⚙️ Panel</button>
+        <button id="commBackDraft" class="btn-ghost small comm-only" onclick="showScreen('commissionerScreen')">⚙️ Panel</button>
         <button id="logoutBtn" class="btn-ghost small" onclick="showScreen('loginScreen')" style="display:none">Abmelden</button>
       </div>
     </header>
     <main>
       <section class="panel" id="boardPanel">
         <h2>Draft Board</h2>
-        <div id="roundTabs" class="round-tabs"></div>
+        <div class="cat-tabs" id="catTabs"></div>
         <table>
-          <thead><tr><th>#</th><th>Team</th><th>Spieler</th></tr></thead>
+          <thead><tr><th>#</th><th>Teilnehmer</th><th>Spieler</th></tr></thead>
           <tbody id="draftBoard"></tbody>
         </table>
       </section>
-      <div class="right-col">
+      <div class="right-col" style="display:flex;flex-direction:column;gap:16px">
         <section class="panel">
           <h2>Verfügbare Spieler</h2>
           <input type="text" id="playerSearch" placeholder="Spieler suchen..." oninput="filterPlayers()" class="search-input"/>
-          <div id="players"></div>
-        </section>
-        <section class="panel queue-panel">
-          <h2>📋 Meine Pick Queue</h2>
-          <p class="queue-hint">Stern drücken um Spieler vorzumerken</p>
-          <div id="pickQueue"></div>
-          <div id="queueEmpty" class="queue-empty">Keine Spieler in der Queue</div>
+          <div id="players" style="max-height:340px;overflow-y:auto"></div>
         </section>
         <section class="panel">
-          <h2>🕐 Reihenfolge</h2>
-          <div id="draftOrder"></div>
+          <h2>🕐 Reihenfolge (aktuelle Runde)</h2>
+          <div id="draftOrder" class="round-order"></div>
         </section>
       </div>
     </main>
-  </div>
-
-  <!-- ===== PICK/BAN ANIMATION ===== -->
-  <div id="pickOverlay" class="pick-overlay">
-    <div class="pick-card">
-      <div class="pick-badge" id="overlayBadge">PICK</div>
-      <div class="pick-team" id="overlayTeam"></div>
-      <div class="pick-player" id="overlayPlayer"></div>
-      <div class="pick-round" id="overlayRound"></div>
-    </div>
-  </div>
-
-  <!-- PLAYER CARD MODAL -->
-  <div id="cardModal" class="card-modal">
-    <div class="card-modal-backdrop" onclick="closeCard()"></div>
-    <div class="card-modal-inner">
-      <button class="card-close" onclick="closeCard()">×</button>
-      <div class="ufl-card" id="modalCard">
-        <div class="card-glow"></div>
-
-        <img class="league-logo" id="cardLeagueLogo"
-          src="cards/ufl-community-liga-logo.png"
-          alt="UFL Community Liga"
-          onerror="this.style.opacity=\'0.4\'"/>
-
-        <img class="player-image" id="cardPlayerImg" src="" alt="Spieler"
-          onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg=='"/>
-
-        <div class="bottom-panel">
-          <h2 id="cardPlayerName">NAME</h2>
-          <div class="meta">
-
-            <div class="meta-item">
-              <img id="cardNationImg" src="" alt="Nation"
-                onerror="this.style.opacity='.3'"/>
-              <span id="cardNationText">—</span>
-            </div>
-
-            <div class="meta-item">
-              <img id="cardLigaImg" src="" alt="Liga"
-                onerror="this.style.opacity='.3'"/>
-              <span id="cardLigaText">—</span>
-            </div>
-
-            <div class="meta-item">
-              <div id="cardPosBadge" class="pos-badge">—</div>
-              <span>POSITION</span>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script type="module" src="app.js"></script>
