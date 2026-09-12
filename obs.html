@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8"/>
-  <title>UFL Draft – OBS Overlay</title>
+  <title>Final 6 Draft – OBS Overlay</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -26,7 +26,7 @@
       top: 0; left: 0; right: 0;
       height: 72px;
       background: linear-gradient(90deg, rgba(8,14,26,0.96) 0%, rgba(15,25,41,0.92) 70%, transparent 100%);
-      border-bottom: 2px solid rgba(250,204,21,0.5);
+      border-bottom: 2px solid rgba(0,230,118,0.5);
       display: flex;
       align-items: center;
       padding: 0 30px;
@@ -41,7 +41,7 @@
       color: white;
       flex-shrink: 0;
     }
-    .obs-logo span { color: #facc15; }
+    .obs-logo span { color: #00e676; }
 
     .obs-phase-badge {
       font-family: 'Bebas Neue', sans-serif;
@@ -50,11 +50,10 @@
       padding: 4px 14px;
       border-radius: 20px;
       flex-shrink: 0;
+      background: rgba(0,230,118,0.2); color: #00e676; border: 1px solid rgba(0,230,118,0.4);
     }
-    .obs-phase-badge.secure { background: rgba(167,139,250,0.2); color: #a78bfa; border: 1px solid rgba(167,139,250,0.4); }
-    .obs-phase-badge.ban    { background: rgba(249,115,22,0.2);  color: #f97316; border: 1px solid rgba(249,115,22,0.4); }
-    .obs-phase-badge.draft  { background: rgba(250,204,21,0.2);  color: #facc15; border: 1px solid rgba(250,204,21,0.4); }
-    .obs-phase-badge.done   { background: rgba(34,197,94,0.2);   color: #22c55e; border: 1px solid rgba(34,197,94,0.4); }
+    .obs-phase-badge.lobby { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.35); }
+    .obs-phase-badge.done  { background: rgba(240,165,0,0.2);   color: #f0a500; border: 1px solid rgba(240,165,0,0.4); }
 
     #obsCurrentPick {
       font-size: 13px;
@@ -67,7 +66,7 @@
     #obsOnTheClock {
       font-size: 20px;
       font-weight: 700;
-      color: #facc15;
+      color: #00e676;
     }
 
     .obs-timer-wrap {
@@ -96,7 +95,7 @@
       bottom: 0; left: 0; right: 0;
       height: 54px;
       background: linear-gradient(90deg, rgba(8,14,26,0.96) 0%, rgba(15,25,41,0.9) 100%);
-      border-top: 2px solid rgba(250,204,21,0.35);
+      border-top: 2px solid rgba(0,230,118,0.35);
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -107,7 +106,7 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: 20px;
       letter-spacing: 3px;
-      color: #facc15;
+      color: #00e676;
       padding: 0 20px;
       border-right: 1px solid rgba(255,255,255,0.12);
       height: 100%;
@@ -117,7 +116,7 @@
     #tickerTrack {
       display: flex;
       gap: 0;
-      animation: tickerScroll 40s linear infinite;
+      animation: tickerScroll 50s linear infinite;
       white-space: nowrap;
     }
     @keyframes tickerScroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
@@ -130,25 +129,24 @@
       font-weight: 600;
       border-right: 1px solid rgba(255,255,255,0.08);
     }
-    .ticker-item .t-icon  { font-size: 13px; }
+    .ticker-item .t-icon  { font-size: 13px; color: #00e676; }
     .ticker-item .t-team  { color: #94a3b8; }
     .ticker-item .t-arrow { color: #475569; }
     .ticker-item .t-player { color: white; }
-    .ticker-item.secure .t-icon { color: #a78bfa; }
-    .ticker-item.ban    .t-icon { color: #f97316; }
-    .ticker-item.draft  .t-icon { color: #facc15; }
+    .ticker-item .t-cat { color: #f0a500; font-size: 11px; }
 
     /* ════════════════════════════════
        RESULTS PANEL — right side
+       (endet oberhalb des Webcam-Slots)
     ════════════════════════════════ */
     #resultsPanel {
       position: absolute;
       top: 82px;
       right: 24px;
       width: 460px;
-      bottom: 64px;
+      bottom: 305px;
       background: rgba(8,14,26,0.88);
-      border: 1px solid rgba(250,204,21,0.25);
+      border: 1px solid rgba(0,230,118,0.25);
       border-radius: 14px;
       backdrop-filter: blur(10px);
       overflow-y: auto;
@@ -159,14 +157,14 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: 22px;
       letter-spacing: 3px;
-      color: #facc15;
-      border-bottom: 1px solid rgba(250,204,21,0.2);
+      color: #00e676;
+      border-bottom: 1px solid rgba(0,230,118,0.2);
       padding-bottom: 10px;
       margin-bottom: 12px;
     }
 
     .team-block {
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 10px;
       overflow: hidden;
@@ -186,9 +184,32 @@
     .team-header .team-dot {
       width: 8px; height: 8px;
       border-radius: 50%;
-      background: #facc15;
+      background: #00e676;
       flex-shrink: 0;
     }
+
+    /* Fortschritt pro Kategorie statt vollständiger Pick-Liste (bei 24 Runden zu viel) */
+    .cat-progress {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .cat-pill {
+      flex: 1;
+      text-align: center;
+      border-radius: 8px;
+      padding: 4px 2px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #64748b;
+    }
+    .cat-pill.complete { background: rgba(0,230,118,0.12); border-color: rgba(0,230,118,0.35); color: #00e676; }
+    .cat-pill .cat-num { display:block; font-family:'Bebas Neue',sans-serif; font-size:16px; color:inherit; }
 
     .team-row {
       display: flex;
@@ -197,16 +218,11 @@
       padding: 6px 12px;
       font-size: 13px;
       border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(0,230,118,0.04);
     }
     .team-row .row-icon  { font-size: 13px; width: 18px; flex-shrink: 0; }
-    .team-row .row-type  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; width: 48px; flex-shrink: 0; }
+    .team-row .row-type  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; width: 58px; flex-shrink: 0; color: #00e676; }
     .team-row .row-player { font-weight: 600; flex: 1; }
-    .team-row.type-secure { background: rgba(167,139,250,0.06); }
-    .team-row.type-ban    { background: rgba(249,115,22,0.06); }
-    .team-row.type-draft  { background: rgba(250,204,21,0.04); }
-    .team-row.type-secure .row-type  { color: #a78bfa; }
-    .team-row.type-ban    .row-type  { color: #f97316; }
-    .team-row.type-draft  .row-type  { color: #facc15; }
     .team-row.empty .row-player { color: #475569; font-style: italic; }
 
     /* ════════════════════════════════
@@ -217,11 +233,12 @@
       top: 82px;
       left: 24px;
       width: 300px;
+      bottom: 64px;
       background: rgba(8,14,26,0.82);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px;
       backdrop-filter: blur(8px);
-      overflow: hidden;
+      overflow-y: auto;
       z-index: 5;
     }
     .recent-title {
@@ -231,6 +248,8 @@
       color: #64748b;
       padding: 12px 16px 8px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky; top: 0;
+      background: rgba(8,14,26,0.95);
     }
     .recent-item {
       display: flex;
@@ -244,10 +263,34 @@
     .recent-info { flex: 1; }
     .recent-player { font-weight: 700; font-size: 14px; }
     .recent-team   { font-size: 11px; color: #64748b; margin-top: 1px; }
-    .recent-type   { font-family: 'Bebas Neue', sans-serif; font-size: 16px; flex-shrink: 0; }
-    .recent-type.secure { color: #a78bfa; }
-    .recent-type.ban    { color: #f97316; }
-    .recent-type.draft  { color: #facc15; }
+    .recent-type   { font-family: 'Bebas Neue', sans-serif; font-size: 15px; flex-shrink: 0; color: #00e676; text-align:right; }
+    .recent-cat    { font-size: 9px; color: #f0a500; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ════════════════════════════════
+       WEBCAM SLOT — fester Platz, unten rechts
+       (Kamera-Quelle in OBS einfach über diesen Rahmen legen)
+    ════════════════════════════════ */
+    #webcamSlot {
+      position: absolute;
+      bottom: 64px;
+      right: 24px;
+      width: 460px;
+      height: 225px;
+      border: 2px dashed rgba(0,230,118,0.5);
+      border-radius: 14px;
+      background: rgba(8,14,26,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      pointer-events: none;
+    }
+    #webcamSlot span {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 4px;
+      font-size: 18px;
+      color: rgba(0,230,118,0.5);
+    }
 
     /* ════════════════════════════════
        PICK FLASH
@@ -257,35 +300,32 @@
       top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.8);
       background: linear-gradient(135deg, #080e1a 0%, #0f1929 100%);
-      border: 3px solid #facc15;
+      border: 3px solid #00e676;
       border-radius: 20px;
       padding: 44px 70px;
       text-align: center;
       opacity: 0;
       pointer-events: none;
       transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-      box-shadow: 0 0 100px rgba(250,204,21,0.35);
+      box-shadow: 0 0 100px rgba(0,230,118,0.35);
       z-index: 20;
     }
     #pickFlash.active { opacity:1; transform:translate(-50%,-50%) scale(1); }
-    #pickFlash.type-ban    { border-color: #f97316; box-shadow: 0 0 100px rgba(249,115,22,0.35); }
-    #pickFlash.type-secure { border-color: #a78bfa; box-shadow: 0 0 100px rgba(167,139,250,0.35); }
 
-    .flash-badge  { font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:5px; color:#facc15; margin-bottom:10px; }
+    .flash-badge  { font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:5px; color:#00e676; margin-bottom:6px; }
+    .flash-cat    { font-size:13px; color:#f0a500; font-weight:700; letter-spacing:2px; margin-bottom:10px; text-transform:uppercase; }
     .flash-team   { font-size:17px; color:#94a3b8; font-weight:600; margin-bottom:6px; }
     .flash-player { font-family:'Bebas Neue',sans-serif; font-size:70px; letter-spacing:2px; color:white; line-height:1; }
-    #pickFlash.type-ban    .flash-badge { color:#f97316; }
-    #pickFlash.type-secure .flash-badge { color:#a78bfa; }
 
     #audioActivate {
       position: absolute;
-      bottom: 64px; left: 24px;
+      bottom: 300px; left: 24px;
       z-index: 50;
     }
     #audioActivate button {
-      background: rgba(250,204,21,0.15);
-      border: 1px solid rgba(250,204,21,0.4);
-      color: #facc15;
+      background: rgba(0,230,118,0.15);
+      border: 1px solid rgba(0,230,118,0.4);
+      color: #00e676;
       font-family: 'Inter', sans-serif;
       font-size: 13px;
       font-weight: 700;
@@ -294,7 +334,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    #audioActivate button:hover { background: rgba(250,204,21,0.3); }
+    #audioActivate button:hover { background: rgba(0,230,118,0.3); }
     #audioActivate.hidden { display: none; }
   </style>
 </head>
@@ -302,10 +342,10 @@
 
   <!-- TOP BAR -->
   <div id="topBar">
-    <div class="obs-logo">UFL<span>DRAFT</span></div>
-    <div id="obsPhaseBadge" class="obs-phase-badge draft">DRAFT</div>
+    <div class="obs-logo">FINAL<span>6</span></div>
+    <div id="obsPhaseBadge" class="obs-phase-badge lobby">LOBBY</div>
     <div>
-      <div id="obsCurrentPick">Runde <span id="obsRound">—</span> &middot; Pick <span id="obsPickNum">—</span></div>
+      <div id="obsCurrentPick">Runde <span id="obsRound">—</span>/24 &middot; Pick <span id="obsPickNum">—</span>/144</div>
       <div id="obsOnTheClock">On the Clock: <span id="obsTeam">—</span></div>
     </div>
     <div class="obs-timer-wrap">
@@ -325,6 +365,9 @@
     <div class="results-title">TEAM ÜBERSICHT</div>
     <div id="teamBlocks"></div>
   </div>
+
+  <!-- WEBCAM SLOT — hier in OBS die Kamera-Quelle platzieren -->
+  <div id="webcamSlot"><span>WEBCAM</span></div>
 
   <!-- BOTTOM TICKER -->
   <div id="bottomBar">
@@ -354,44 +397,38 @@
       border-radius:34px;
       overflow:hidden;
       background:linear-gradient(160deg,#071226 0%,#0f1f3d 45%,#08111f 100%);
-      border:3px solid rgba(90,180,255,.5);
-      box-shadow:0 0 40px rgba(0,140,255,.5),0 0 100px rgba(0,180,255,.3);
+      border:3px solid rgba(0,230,118,.5);
+      box-shadow:0 0 40px rgba(0,230,118,.5),0 0 100px rgba(0,230,118,.3);
     ">
-      <!-- Glow -->
       <div style="
         position:absolute;inset:-40%;
-        background:radial-gradient(circle,rgba(0,180,255,.2),transparent 70%);
+        background:radial-gradient(circle,rgba(0,230,118,.2),transparent 70%);
         animation:spin 10s linear infinite;z-index:0;
       "></div>
-      <!-- Sheen -->
       <div style="
         position:absolute;inset:0;
-        background:linear-gradient(135deg,transparent 20%,rgba(0,180,255,.1) 50%,transparent 80%);
+        background:linear-gradient(135deg,transparent 20%,rgba(0,230,118,.1) 50%,transparent 80%);
         z-index:1;
       "></div>
-      <!-- Liga Logo -->
       <img id="obsCardLiga" src="" style="
         position:absolute;top:18px;left:50%;
         transform:translateX(-50%);
         width:120px;z-index:5;
-        filter:drop-shadow(0 0 10px rgba(0,180,255,.5));
+        filter:drop-shadow(0 0 10px rgba(0,230,118,.5));
         object-fit:contain;
       " onerror="this.style.display='none'"/>
-      <!-- Player Image -->
       <img id="obsCardPlayer" src="" style="
         position:absolute;bottom:155px;left:50%;
         transform:translateX(-50%);
         width:320px;z-index:4;
         object-fit:contain;
-        filter:drop-shadow(0 0 16px rgba(0,180,255,.3));
+        filter:drop-shadow(0 0 16px rgba(0,230,118,.3));
       " onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg=='"/>
-      <!-- Fade -->
       <div style="
         position:absolute;bottom:145px;left:0;right:0;height:60px;
         background:linear-gradient(to bottom,transparent,rgba(6,15,28,.95));
         z-index:5;
       "></div>
-      <!-- Bottom Panel -->
       <div style="
         position:absolute;bottom:0;width:100%;
         padding:16px 16px 20px;z-index:6;
@@ -403,7 +440,7 @@
           font-size:44px;letter-spacing:4px;
           color:#fff;text-align:center;
           margin-bottom:12px;line-height:1;
-          text-shadow:0 0 20px rgba(0,160,255,.4);
+          text-shadow:0 0 20px rgba(0,230,118,.4);
         ">NAME</div>
         <div style="display:flex;gap:10px;">
           <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 6px;text-align:center;">
@@ -415,7 +452,7 @@
             <span id="obsCardLigaText" style="display:block;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;"></span>
           </div>
           <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 6px;text-align:center;">
-            <div id="obsCardPos" style="width:46px;height:46px;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:24px;color:#facc15;margin:0 auto 6px;">?</div>
+            <div id="obsCardPos" style="width:46px;height:46px;background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:24px;color:#00e676;margin:0 auto 6px;">?</div>
             <span style="display:block;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Position</span>
           </div>
         </div>
@@ -426,6 +463,7 @@
   <!-- PICK FLASH -->
   <div id="pickFlash">
     <div class="flash-badge" id="flashBadge">PICK 1</div>
+    <div class="flash-cat" id="flashCat">STARTELF</div>
     <div class="flash-team"  id="flashTeam"></div>
     <div class="flash-player" id="flashPlayer"></div>
   </div>
@@ -436,8 +474,12 @@
     import { firebaseConfig } from "./firebase-config.js";
     import { PLAYER_DATA } from "./players.js";
 
-    const app = initializeApp(firebaseConfig);
-    const db  = getDatabase(app);
+    const app  = initializeApp(firebaseConfig);
+    const db   = getDatabase(app);
+    const ROOT = "final6"; // gleicher Zweig wie in app.js — separat vom alten Draft-Tool
+
+    const NUM_TEAMS = 6;
+    const STARTELF_ROUNDS = 11, RESERVE_ROUNDS = 7, BACKUP_ROUNDS = 6;
 
     // ── Nation/Liga code maps ──
     const NATION_CODE = {
@@ -452,7 +494,6 @@
       "Guinea":"gn","Serbien":"rs","Slowenien":"si","Slowakei":"sk",
       "Ukraine":"ua","Italien":"it","Mexiko":"mx","Armenien":"am",
     };
-
     const LIGA_FLAG = {
       "England 1":"gb-eng","England 2":"gb-eng",
       "Spanien 1":"es","Spanien 2":"es",
@@ -463,20 +504,22 @@
       "Rest der Welt":"un",
     };
 
+    function categoryForRound(round) {
+      if (round <= STARTELF_ROUNDS) return "Startelf";
+      if (round <= STARTELF_ROUNDS + RESERVE_ROUNDS) return "Reserve";
+      return "Backup";
+    }
+
     // ── Show player card popup ──
     function showObsCard(playerName) {
-      const data   = PLAYER_DATA ? PLAYER_DATA[playerName] : null;
-      const popup  = document.getElementById("obsCardPopup");
-
+      const data  = PLAYER_DATA ? PLAYER_DATA[playerName] : null;
+      const popup = document.getElementById("obsCardPopup");
       document.getElementById("obsCardName").textContent = playerName.toUpperCase();
 
       if (data) {
         var obsImg = document.getElementById("obsCardPlayer");
-        if (data.imgUrl && data.imgUrl.trim() !== "") {
-          obsImg.src = data.imgUrl;
-        } else {
-          obsImg.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
-        }
+        obsImg.src = (data.imgUrl && data.imgUrl.trim() !== "") ? data.imgUrl :
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
         const nCode = NATION_CODE[data.nation] || "un";
         document.getElementById("obsCardNation").src     = "https://flagcdn.com/w80/" + nCode + ".png";
         document.getElementById("obsCardNationText").textContent = data.nation.toUpperCase();
@@ -485,9 +528,8 @@
         document.getElementById("obsCardLigaText").textContent  = data.liga.toUpperCase();
         document.getElementById("obsCardPos").textContent = data.pos;
         document.getElementById("obsCardLiga").src =
-          "cards/ufl-community-liga-logo.png";
+          "https://upload.wikimedia.org/wikipedia/de/thumb/0/04/UFL_video_game_logo.png/240px-UFL_video_game_logo.png";
       } else {
-        document.getElementById("obsCardPlayer").src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzIwIiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLDE2MCwyNTUsMC4yNSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsODAsMTgwLDAuMDgpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGJvZHkgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjgwIiByeD0iMzgiIHJ5PSI0NCIgZmlsbD0idXJsKCNzZykiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMCAzMjAgQzMwIDIyMCAxNzAgMjIwIDE3MCAzMjBaIiBmaWxsPSJ1cmwoI3NnKSIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBqZXJzZXkgbnVtYmVyIGFyZWEgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE5NSIgcng9IjQyIiByeT0iMjgiIGZpbGw9InJnYmEoMCwxNDAsMjU1LDAuMDgpIi8+Cjwvc3ZnPg==";
         document.getElementById("obsCardNation").src = "";
         document.getElementById("obsCardNationText").textContent = "";
         document.getElementById("obsCardLigaFlag").src = "";
@@ -496,12 +538,8 @@
         document.getElementById("obsCardLiga").src = "";
       }
 
-      // Animate in
       popup.style.opacity = "1";
       popup.style.transform = "translate(-50%,-50%) scale(1)";
-      popup.style.pointerEvents = "none";
-
-      // Auto hide after 5 seconds
       setTimeout(function() {
         popup.style.opacity = "0";
         popup.style.transform = "translate(-50%,-50%) scale(0.8)";
@@ -509,21 +547,17 @@
     }
 
     // ── State ──
-    let teams        = [];
-    let securePicks  = {};   // team -> player
-    let banPicks     = {};   // team -> player
-    let draftPicks   = {};   // team -> [players]
-    let lastTotal    = 0;
+    let teams      = [];
+    let draftPicks = {};   // team -> [{player, category}]
+    let allPicksFlat = [];
 
-    // ── Phase labels ──
     const PHASE_LABELS = {
-      securePick: { text: "SECURE PICK", cls: "secure" },
-      ban:        { text: "BAN PHASE",   cls: "ban"    },
-      draft:      { text: "DRAFT",       cls: "draft"  }
+      lobby: { text: "LOBBY", cls: "lobby" },
+      draft: { text: "DRAFT", cls: "" }
     };
 
     // ── Firebase: config ──
-    onValue(ref(db, "draftConfig"), snap => {
+    onValue(ref(db, ROOT + "/config"), snap => {
       const c = snap.val();
       if (!c) return;
       teams = (c.teams || []).map(t => t.name);
@@ -531,73 +565,76 @@
     });
 
     // ── Firebase: state (timer, phase, on the clock) ──
-    onValue(ref(db, "draftState"), snap => {
+    onValue(ref(db, ROOT + "/state"), snap => {
       const state = snap.val();
       if (!state) return;
 
-      // Phase badge
-      const phase = state.phase || "draft";
+      const phase = state.phase || "lobby";
       const pl    = PHASE_LABELS[phase] || PHASE_LABELS.draft;
       const badge = document.getElementById("obsPhaseBadge");
-      badge.textContent = pl.text;
-      badge.className   = "obs-phase-badge " + pl.cls;
 
-      // Timer
+      const currentPick = state.currentPick;
+      const totalPicks  = state.totalPicks || (NUM_TEAMS * (STARTELF_ROUNDS + RESERVE_ROUNDS + BACKUP_ROUNDS));
+
+      if (phase === "draft" && currentPick > totalPicks) {
+        badge.textContent = "FERTIG";
+        badge.className = "obs-phase-badge done";
+      } else if (phase === "draft") {
+        const round = Math.ceil(currentPick / NUM_TEAMS);
+        badge.textContent = categoryForRound(round).toUpperCase();
+        badge.className = "obs-phase-badge";
+      } else {
+        badge.textContent = pl.text;
+        badge.className = "obs-phase-badge " + pl.cls;
+      }
+
       const t       = state.timerValue ?? "—";
       const timerEl = document.getElementById("obsTimer");
       timerEl.textContent = t;
       timerEl.classList.toggle("urgent", typeof t === "number" && t <= 10);
 
-      // Pick info
-      const numTeams = state.numTeams || 1;
-      if (state.currentPick) {
-        const round = Math.ceil(state.currentPick / numTeams);
-        document.getElementById("obsRound").textContent   = round;
-        document.getElementById("obsPickNum").textContent = state.currentPick;
+      if (phase === "draft" && currentPick) {
+        const round = Math.ceil(currentPick / NUM_TEAMS);
+        document.getElementById("obsRound").textContent   = Math.min(round, STARTELF_ROUNDS + RESERVE_ROUNDS + BACKUP_ROUNDS);
+        document.getElementById("obsPickNum").textContent = Math.min(currentPick, totalPicks);
       } else {
         document.getElementById("obsRound").textContent   = "—";
         document.getElementById("obsPickNum").textContent = "—";
       }
-      document.getElementById("obsTeam").textContent = state.onTheClock || "—";
+      document.getElementById("obsTeam").textContent = (currentPick <= totalPicks) ? (state.onTheClock || "—") : "—";
     });
 
-    // securePicks and banPicks listeners are defined in the ANNOUNCEMENTS section below
-
-    // ── Firebase: draft picks ──
+    // ── Firebase: picks ──
     let lastDraftCount = 0;
-    onValue(ref(db, "draftPicks"), snap => {
+    onValue(ref(db, ROOT + "/picks"), snap => {
       const data = snap.val() || {};
       draftPicks = {};
-      const all  = Object.values(data).map((p, i) => ({ ...p, num: i + 1 }));
+      allPicksFlat = Object.values(data).sort((a, b) => a.pickNumber - b.pickNumber);
 
-      all.forEach(p => {
+      allPicksFlat.forEach(p => {
         if (!draftPicks[p.team]) draftPicks[p.team] = [];
-        draftPicks[p.team].push(p.player);
+        draftPicks[p.team].push({ player: p.player, category: p.category });
       });
 
-      // New pick animation + announcement
-      if (all.length > lastDraftCount && lastDraftCount >= 0) {
-        const newest = all[all.length - 1];
+      if (allPicksFlat.length > lastDraftCount && lastDraftCount >= 0) {
+        const newest = allPicksFlat[allPicksFlat.length - 1];
         if (newest) {
-          showFlash("PICK " + newest.num, newest.team, newest.player, "type-draft");
-          // Show player card AFTER flash disappears (2500ms flash + 300ms gap)
+          showFlash("PICK " + newest.pickNumber, newest.category, newest.team, newest.player);
           setTimeout(function() { showObsCard(newest.player); }, 2800);
-          // NFL-style announcement
           const announcement =
-            "Mit dem " + ordinal(newest.num) + " Pick — " +
-            newest.team + " — " +
-            newest.player;
+            "Mit dem " + ordinal(newest.pickNumber) + " Pick, Kategorie " + newest.category + " — " +
+            newest.team + " — " + newest.player;
           speak(announcement);
         }
       }
-      lastDraftCount = all.length;
+      lastDraftCount = allPicksFlat.length;
 
       renderTeamBlocks();
-      renderRecent(all, "draft");
+      renderRecent();
       rebuildTicker();
     });
 
-    // ── TEAM BLOCKS (results panel) ──
+    // ── TEAM BLOCKS (results panel) — Fortschritt statt voller Liste ──
     function renderTeamBlocks() {
       const el = document.getElementById("teamBlocks");
       if (!el || teams.length === 0) return;
@@ -607,7 +644,6 @@
         const block = document.createElement("div");
         block.className = "team-block";
 
-        // Header
         const header = document.createElement("div");
         header.className = "team-header";
         const dot = document.createElement("div"); dot.className = "team-dot";
@@ -615,69 +651,53 @@
         header.appendChild(dot); header.appendChild(nameEl);
         block.appendChild(header);
 
-        // Secure pick row
-        const secRow = makeRow("🔒", "SECURE", securePicks[team] || null, "type-secure");
-        block.appendChild(secRow);
-
-        // Ban row
-        const banRow = makeRow("🚫", "BAN", banPicks[team] || null, "type-ban");
-        block.appendChild(banRow);
-
-        // Draft pick rows
         const picks = draftPicks[team] || [];
-        if (picks.length > 0) {
-          picks.forEach((player, i) => {
-            const draftRow = makeRow("🏆", "PICK " + (i + 1), player, "type-draft");
-            block.appendChild(draftRow);
-          });
-        } else {
-          const draftRow = makeRow("🏆", "PICK", null, "type-draft");
-          block.appendChild(draftRow);
-        }
+        const counts = { Startelf: 0, Reserve: 0, Backup: 0 };
+        picks.forEach(p => { if (counts[p.category] !== undefined) counts[p.category]++; });
+
+        const progress = document.createElement("div");
+        progress.className = "cat-progress";
+        [["Startelf", STARTELF_ROUNDS], ["Reserve", RESERVE_ROUNDS], ["Backup", BACKUP_ROUNDS]].forEach(([cat, max]) => {
+          const pill = document.createElement("div");
+          pill.className = "cat-pill" + (counts[cat] >= max ? " complete" : "");
+          pill.innerHTML = "<span class='cat-num'>" + counts[cat] + "/" + max + "</span>" + cat;
+          progress.appendChild(pill);
+        });
+        block.appendChild(progress);
+
+        const last = picks[picks.length - 1];
+        const row = makeRow(last ? last.player : null);
+        block.appendChild(row);
 
         el.appendChild(block);
       });
     }
 
-    function makeRow(icon, typeLabel, player, typeClass) {
+    function makeRow(player) {
       const row = document.createElement("div");
-      row.className = "team-row " + typeClass + (player ? "" : " empty");
-      const iconEl   = document.createElement("span"); iconEl.className = "row-icon";   iconEl.textContent = icon;
-      const typeEl   = document.createElement("span"); typeEl.className = "row-type";   typeEl.textContent = typeLabel;
-      const playerEl = document.createElement("span"); playerEl.className = "row-player"; playerEl.textContent = player || "Ausstehend...";
+      row.className = "team-row" + (player ? "" : " empty");
+      const iconEl   = document.createElement("span"); iconEl.className = "row-icon";   iconEl.textContent = "🏆";
+      const typeEl   = document.createElement("span"); typeEl.className = "row-type";   typeEl.textContent = "LETZTER";
+      const playerEl = document.createElement("span"); playerEl.className = "row-player"; playerEl.textContent = player || "Noch kein Pick";
       row.appendChild(iconEl); row.appendChild(typeEl); row.appendChild(playerEl);
       return row;
     }
 
     // ── RECENT ITEMS ──
-    function renderRecent(draftAll, type) {
+    function renderRecent() {
       const el = document.getElementById("recentItems");
       if (!el) return;
-
-      // Merge all events into a unified recent list
-      const events = [];
-
-      Object.entries(securePicks).forEach(([team, player]) => {
-        events.push({ type: "secure", icon: "🔒", team, player, typeLabel: "SECURE" });
-      });
-      Object.entries(banPicks).forEach(([team, player]) => {
-        events.push({ type: "ban", icon: "🚫", team, player, typeLabel: "BAN" });
-      });
-      draftAll.forEach(p => {
-        events.push({ type: "draft", icon: "🏆", team: p.team, player: p.player, typeLabel: "PICK " + p.num });
-      });
-
-      // Show last 7
-      const recent = events.slice(-7).reverse();
+      const recent = allPicksFlat.slice(-10).reverse();
       el.innerHTML = "";
-      recent.forEach(e => {
+      recent.forEach(p => {
         const item = document.createElement("div"); item.className = "recent-item";
-        const iconEl   = document.createElement("div"); iconEl.className = "recent-icon"; iconEl.textContent = e.icon;
+        const iconEl   = document.createElement("div"); iconEl.className = "recent-icon"; iconEl.textContent = "🏆";
         const infoEl   = document.createElement("div"); infoEl.className = "recent-info";
-        const playerEl = document.createElement("div"); playerEl.className = "recent-player"; playerEl.textContent = e.player;
-        const teamEl   = document.createElement("div"); teamEl.className = "recent-team"; teamEl.textContent = e.team;
+        const playerEl = document.createElement("div"); playerEl.className = "recent-player"; playerEl.textContent = p.player;
+        const teamEl   = document.createElement("div"); teamEl.className = "recent-team"; teamEl.textContent = p.team;
         infoEl.appendChild(playerEl); infoEl.appendChild(teamEl);
-        const typeEl = document.createElement("div"); typeEl.className = "recent-type " + e.type; typeEl.textContent = e.typeLabel;
+        const typeEl = document.createElement("div"); typeEl.className = "recent-type";
+        typeEl.innerHTML = "PICK " + p.pickNumber + "<div class='recent-cat'>" + p.category + "</div>";
         item.appendChild(iconEl); item.appendChild(infoEl); item.appendChild(typeEl);
         el.appendChild(item);
       });
@@ -685,50 +705,33 @@
 
     // ── TICKER ──
     function rebuildTicker() {
-      const events = [];
-      Object.entries(securePicks).forEach(([team, player]) => {
-        events.push({ cls: "secure", icon: "🔒", team, player });
-      });
-      Object.entries(banPicks).forEach(([team, player]) => {
-        events.push({ cls: "ban", icon: "🚫", team, player });
-      });
-      Object.values(draftPicks).forEach((picks, ti) => {
-        picks.forEach(player => {
-          events.push({ cls: "draft", icon: "🏆", team: teams[ti] || "?", player });
-        });
-      });
-
-      if (events.length === 0) {
+      if (allPicksFlat.length === 0) {
         document.getElementById("tickerTrack").innerHTML =
           '<span class="ticker-item"><span class="t-player">Noch keine Picks...</span></span>';
         return;
       }
-
-      // Double for infinite scroll
-      const doubled = [...events, ...events];
-      document.getElementById("tickerTrack").innerHTML = doubled.map(e =>
-        `<span class="ticker-item ${e.cls}">
-          <span class="t-icon">${e.icon}</span>
-          <span class="t-team">${e.team}</span>
+      const doubled = [...allPicksFlat, ...allPicksFlat];
+      document.getElementById("tickerTrack").innerHTML = doubled.map(p =>
+        `<span class="ticker-item">
+          <span class="t-icon">🏆</span>
+          <span class="t-team">${p.team}</span>
           <span class="t-arrow">→</span>
-          <span class="t-player">${e.player}</span>
+          <span class="t-player">${p.player}</span>
+          <span class="t-cat">(${p.category})</span>
         </span>`
       ).join("");
     }
 
-    // ── SPEECH ──
-    // ── TTS via Google Translate Audio (works in OBS without installed voices) ──
+    // ── SPEECH via Google Translate Audio (funktioniert in OBS ohne installierte Stimmen) ──
     let speechQueue = [];
     let isSpeaking  = false;
     let audioCtx    = null;
 
-    // Unlock AudioContext on load — works with OBS "Allow autoplay"
     window.addEventListener("load", function() {
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === "suspended") audioCtx.resume();
         document.getElementById("audioActivate").classList.add("hidden");
-        // Play silent buffer to unlock
         const buf = audioCtx.createBuffer(1, 1, 22050);
         const src = audioCtx.createBufferSource();
         src.buffer = buf;
@@ -745,10 +748,9 @@
     window.activateAudio = function() {
       if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
       document.getElementById("audioActivate").classList.add("hidden");
-      speak("Audio aktiviert. Bereit für den Draft.");
+      speak("Audio aktiviert. Bereit für den Final 6 Draft.");
     };
 
-    // Speak via Google Translate TTS — no voice installation needed
     function speak(text) {
       speechQueue.push(text);
       processQueue();
@@ -758,44 +760,30 @@
       if (isSpeaking || speechQueue.length === 0) return;
       isSpeaking = true;
       const text = speechQueue.shift();
-
-      // Google Translate TTS — reliable in OBS Chromium
       const encoded = encodeURIComponent(text);
       const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=de&client=tw-ob&q=" + encoded;
 
       const audio = new Audio(url);
       audio.volume = 1.0;
 
-      audio.onended = function() {
-        isSpeaking = false;
-        setTimeout(processQueue, 300);
-      };
+      audio.onended = function() { isSpeaking = false; setTimeout(processQueue, 300); };
       audio.onerror = function() {
         console.warn("TTS error, retrying with Web Speech API");
-        // Fallback to Web Speech API
         if (window.speechSynthesis) {
           const utt = new SpeechSynthesisUtterance(text);
-          utt.lang = "de-DE";
-          utt.rate = 0.88;
-          utt.onend = utt.onerror = function() {
-            isSpeaking = false;
-            setTimeout(processQueue, 300);
-          };
+          utt.lang = "de-DE"; utt.rate = 0.88;
+          utt.onend = utt.onerror = function() { isSpeaking = false; setTimeout(processQueue, 300); };
           window.speechSynthesis.speak(utt);
         } else {
-          isSpeaking = false;
-          setTimeout(processQueue, 300);
+          isSpeaking = false; setTimeout(processQueue, 300);
         }
       };
-
       audio.play().catch(function(e) {
         console.warn("Audio play failed:", e);
-        isSpeaking = false;
-        processQueue();
+        isSpeaking = false; processQueue();
       });
     }
 
-    // Ordinal helper
     function ordinal(n) {
       if (n === 1) return "ersten";
       if (n === 2) return "zweiten";
@@ -804,59 +792,15 @@
     }
 
     // ── PICK FLASH ──
-    function showFlash(badge, team, player, typeClass) {
+    function showFlash(badge, category, team, player) {
       const el = document.getElementById("pickFlash");
       document.getElementById("flashBadge").textContent  = badge;
+      document.getElementById("flashCat").textContent    = category;
       document.getElementById("flashTeam").textContent   = team;
       document.getElementById("flashPlayer").textContent = player;
-      el.className = "active " + typeClass;
-      // Auto-hide after 2.5s (shorter so card can follow)
+      el.classList.add("active");
       setTimeout(() => { el.classList.remove("active"); }, 2500);
     }
-
-    // ── ANNOUNCEMENTS ──
-    // Called after showFlash for each type
-
-    let lastSecureCount = 0;
-    let lastBanCount    = 0;
-
-    // Override secure picks listener to add announcement
-    onValue(ref(db, "securePicks"), snap => {
-      const data  = snap.val() || {};
-      const picks = Object.values(data);
-      securePicks = {};
-      picks.forEach(p => { securePicks[p.team] = p.player; });
-
-      if (picks.length > lastSecureCount && lastSecureCount >= 0) {
-        const newest = picks[picks.length - 1];
-        if (newest) {
-          showFlash("🔒 SECURE PICK", newest.team, newest.player, "type-secure");
-          speak(newest.team + " sichert sich " + newest.player);
-        }
-      }
-      lastSecureCount = picks.length;
-      renderTeamBlocks();
-      rebuildTicker();
-    });
-
-    // Override ban picks listener to add announcement
-    onValue(ref(db, "banPicks"), snap => {
-      const data = snap.val() || {};
-      const bans = Object.values(data).map((b, i) => ({ ...b, num: i + 1 }));
-      banPicks = {};
-      bans.forEach(b => { banPicks[b.team] = b.player; });
-
-      if (bans.length > lastBanCount && lastBanCount >= 0) {
-        const newest = bans[bans.length - 1];
-        if (newest) {
-          showFlash("🚫 BAN " + newest.num, newest.team, newest.player, "type-ban");
-          speak(newest.team + " bannt " + newest.player);
-        }
-      }
-      lastBanCount = bans.length;
-      renderTeamBlocks();
-      rebuildTicker();
-    });
   </script>
 </body>
 </html>
